@@ -10,7 +10,11 @@ module.exports = {
     // 别名
     resolve: {
       alias: {
-        'assets': resolve('src/assets')
+        'assets': resolve('src/assets'),
+        'components': resolve('src/components'),
+        'utils': resolve('src/utils'),
+        'api': resolve('src/api'),
+        'base': resolve('src/base'),
         // 'assets': path.join(__dirname, 'src/assets')
       }
     },

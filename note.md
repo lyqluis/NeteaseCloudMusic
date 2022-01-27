@@ -39,6 +39,7 @@ Vue CLI v4.5.15
     ├── components					# 组件
     │   └── HelloWorld.vue
     ├── layout							# 页面模版
+    ├── base								# 基础组件库
     ├── main.js
     ├── router							# 路由
     ├── static							# 静态资源
@@ -46,6 +47,8 @@ Vue CLI v4.5.15
     ├── utils								# 通用工具函数
     └── views								# 页面
 ```
+
+通常业务中，基础组件库 `base` 会抽离成 npm 模块，通过 npm 安装依赖来使用
 
 #### 基本样式
 
@@ -249,6 +252,44 @@ module.exports = ({ webpack }) => {
 
 }
 ```
+
+> 上述插件方案只是适用于将在 css 样式里写的 `px` 自动转化为 `vw`；
+>
+> 在 js 文件中自行配置了一个 `transPxToVw` 函数实现转化
+>
+> ```js
+> export const BASE_DESIGN_WIDTH = 375
+> 
+> export function transPxToVw(px) {
+>   const baseWidth = BASE_DESIGN_WIDTH
+>   return px / baseWidth * 100
+> }
+> ```
+
+
+
+##### 1px
+
+- **transform: scale(0.5) + :before / :after**
+
+此种方式能解决例如标签上下左右边框 1px 的场景，以及有嵌套元素存在的场景，比较通用
+
+```css
+.class1 {
+  position: relative;
+  &::after {
+    content:"";
+    position: absolute;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    border-top:1px solid #666;
+    transform: scaleY(0.5);
+  }
+}
+```
+
+
 
 #### svg图标项目配置
 
@@ -474,4 +515,243 @@ import '@/icons'
 </style>
 ```
 
-# 
+#### 全局样式
+
+##### 全局样式
+
+> https://www.weipxiu.com/7115.html
+
+```css
+/* 在伪根节点上，使用--来创建变量 */
+:root{
+  --color-body-bg: #fff;
+}
+
+/* 在组件中用var()来使用变量 */
+.someComponent{
+  background: var(--color-body-bg)
+}
+```
+
+
+
+##### 透明磨砂背景
+
+> https://juejin.cn/post/6979391400844460068
+
+```css
+backdrop-filter: blur(5px);
+```
+
+- *FireFox 不兼容*
+
+> https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
+
+##### active方案
+
+模版节点内判断 `$route.name === nav.name`，并添加 `active` 样式
+
+```vue
+<template>
+  <div class="navigation">
+    <div
+      :class="{ active: $route.name === nav.name }"
+      class="nav"
+      v-for="(nav, i) in menus"
+      :key="i"
+    >
+      <icon :icon="nav.icon" class="nav-icon"></icon>
+      <router-link :to="nav.path" tag="p">{{ nav.name }}</router-link>
+    </div>
+  </div>
+</template>
+
+<style>
+  .nav{
+    color: #000;
+  }
+  .nav.active{
+    color: red;
+  }
+</style>
+```
+
+#### 数据交互
+
+#### axios
+
+安装 axios
+
+```bash
+npm i axios
+```
+
+##### 封装axios
+
+```js
+// src/utils/axios.js
+import axios from 'axios'
+
+// 在项目根目录中.env环境文件中设置的变量
+const baseURL = process.env.VUE_APP_BASE_API;
+
+const service = axios.create({
+  baseURL,
+  withCredentials: true,
+  timeout: 15000,
+});
+
+// 请求拦截器
+service.interceptors.request.use(
+  // todo auth cookies
+  // config => {
+  // }
+)
+
+// // 回应拦截器
+// service.interceptors.response.use(
+//   response => {
+//     const res = response.data;
+//     return res;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   }
+// );
+
+export default service
+```
+
+使用的时候，在 api 目录下增加对应请求接口的方法，调用该方法获取数据
+
+```js
+// src/api/data.js
+/**
+ * @func: get backend data: '/url'
+ * @param {*}
+ * @return {*}
+ */
+export function getData() {
+  return axios({
+    url: '/url',
+    method: 'get',
+  })
+}
+```
+
+#### api
+
+>https://binaryify.github.io/NeteaseCloudMusicApi
+
+#### 组件swiper
+
+```html
+<div class="swiper">
+  <ul class="swiper-group">
+    <slot></slot>
+  </ul>
+</div>
+```
+
+通过 `onTouchStart`、`onTouchMove`、`onTouchEnd` 3 个事件监听，判断滑动操作，控制 `<swiper-group>` 的 `        transform: translateX` 来实现
+
+#### 组件scroll
+
+实现组件上划可以加载数据
+
+#### lazy-load
+
+#### 组件loading
+
+> [Vue 函数式组件的使用技巧](https://segmentfault.com/a/1190000022937276)
+
+函数式组件
+
+- 无状态
+- 无实例
+- 只接受 `props`
+
+```vue
+<template functional>
+  <div class="loading">
+    <div class="loading-icon">
+      <i v-for="i in 12" :key="`loading_${i}`"></i>
+    </div>
+    <p class="loading-text">{{ props.loadingText }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Loading",
+  props: {
+    loadingText: {
+      type: String,
+      default: "载入中",
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-text-detail);
+  font-size: 0;
+  vertical-align: middle;
+  &-icon {
+    margin: 5px;
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    animation: loading-rotate 1s linear infinite;
+    animation-timing-function: steps(12);
+    i {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      &::before {
+        display: block;
+        width: 2px;
+        height: 25%;
+        margin: 0 auto;
+        background-color: currentColor;
+        border-radius: 40%;
+        content: " ";
+      }
+    }
+  }
+  .loading-text {
+    display: inline-block;
+    color: var(--color-text-detail);
+    font-size: var(--font-size-medium);
+    vertical-align: middle;
+  }
+}
+
+@for $i from 1 through 12 {
+  .loading-icon i:nth-of-type(#{$i}) {
+    transform: rotate($i * 30deg);
+    opacity: 1 - calc(0.75 / 12) * ($i - 1);
+  }
+}
+
+@keyframes loading-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
+```
+

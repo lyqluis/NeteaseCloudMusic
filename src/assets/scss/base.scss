@@ -1,11 +1,60 @@
-@import "variable.scss";
+:root {
+	// color
+	--color-background: #fff;
+	--color-background-blur: rgba(225, 225, 225, 0.5);
+	// $color-hightlight-background: ;
+	--color-line: #c6c6c8;
+	--color-inactive: #91918e;
+	--color-theme: #f9243d;
+	// $color-themed-d: ;
+	// $color-sub-theme: ;
+	--color-text: #424240;
+	--color-text-detail: #8a898e;
+	--color-title: #000;
+	--color-text-sub: #fff;
+	// $color-text-ll: ;
+
+	// filter
+	--filter-blur: blur(5px);
+	// padding
+	--padding-row: 19px;
+	--padding-col: 10px;
+	// font
+	--font-size-small: 10px;
+	--font-size-small-plus: 12px;
+	--font-size-medium: 14px;
+	--font-size-medium-plus: 16px;
+	--font-size-large: 18px;
+	--font-size-large-plus: 22px;
+	--font-size-large-page: 28px;
+}
 
 body,
 html {
 	line-height: 1;
 	font-family: "PingFang SC", "STHeitiSC-Light", "Helvetica-Light", arial,
 		sans-serif, "Droid Sans Fallback";
-  user-select: none;  // 用户无法选中文本
-  -webkit-tap-heighlight-color: transparent;
-  background: $color-background;
+	user-select: none; // 用户无法选中文本
+	-webkit-tap-heighlight-color: transparent;
+	background: var(--color-background);
+}
+
+a {
+	text-decoration: none;
+	&:link{
+		color: var(--color-inactive);
+	}
+	&:active{
+		color: inherit;
+	}
+	&:visited{
+		color: inherit;
+	}
+}
+
+.page_title{
+	font-size: var(--font-size-large-page);
+	font-weight: 900;
+	padding-left: var(--padding-row);
+	margin: 20px 0;
 }
