@@ -2,7 +2,7 @@
   <div class="scroller">
     <slot></slot>
     <div class="placeholder" ref="placeholder">
-      <loading :loadingText="placeHolderText"></loading>
+      <loading v-show="innerLoading" :loadingText="placeHolderText"></loading>
     </div>
   </div>
 </template>
@@ -49,6 +49,7 @@ export default {
   watch: {
     loading() {
       this.innerLoading = this.loading;
+      this.check();
     },
     finished: "check",
   },
@@ -89,7 +90,7 @@ export default {
 
 <style lang="scss" scoped>
 .scroller {
-  overflow-y: auto;
+  // overflow-y: auto;
   .placeholder {
     color: var(--color-text-detail);
     font-size: var(--font-size-medium-plus);

@@ -1,7 +1,6 @@
-<template functional>
+<template>
   <div class="list">
-    <div class="list-item" v-for="item in props.list" :key="item.id">
-      
+    <div class="list-item" v-for="item in list" :key="item.id">
     </div>
   </div>
 </template>
@@ -16,7 +15,8 @@ export default {
     },
     type: {
       type: String,
-      default: "normal",
+      default: "playlist",
+      // album | playlist | artist | rank | songlist (播放列表)
     },
   },
 };
