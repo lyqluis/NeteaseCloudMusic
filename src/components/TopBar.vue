@@ -43,7 +43,7 @@ export default {
     align-items: center;
   }
   &.top-line {
-    @include line-1px-top;
+    @include line-1px(top);
   }
 }
 </style>

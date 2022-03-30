@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view />
+      <router-view v-if="$route.meta.keepAlive" />
     </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive" />
     <navigation></navigation>
   </div>
 </template>
@@ -24,6 +25,7 @@ export default {
 
 <style lang="scss">
 #app {
+  height: 100%;
   padding-bottom: 80px;
 }
 </style>

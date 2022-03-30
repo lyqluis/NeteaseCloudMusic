@@ -1,9 +1,9 @@
-@mixin line-1px-top {
-	position: relative;
+@mixin line-1px($topOrBottom: top, $pos: relative) {
+	position: $pos;
 	&::after {
 		content: "";
 		position: absolute;
-		top: 0px;
+		#{$topOrBottom}: 0px;
 		left: 0px;
 		right: 0px;
 		border-top: 1px solid var(--color-line);
@@ -11,15 +11,10 @@
 	}
 }
 
-@mixin line-1px-top {
-	position: relative;
-	&::after {
-		content: "";
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		right: 0px;
-		border-top: 1px solid var(--color-line);
-		transform: scaleY(0.5);
-	}
+@mixin inline-text-ellipsis($row) {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box; //作为弹性伸缩盒子模型展示
+	-webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式，从上至下垂直排列
+	-webkit-line-clamp: $row;
 }

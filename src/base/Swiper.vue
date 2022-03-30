@@ -191,6 +191,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "assets/scss/mixin.scss";
+
 .swiper {
   width: 100%;
   overflow: hidden;
@@ -218,6 +220,7 @@ export default {
       .swiper-item_title-m {
         font-size: var(--font-size-large);
         font-weight: 400;
+        @include inline-text-ellipsis(1);
       }
       .swiper-item_title-sub {
         color: var(--color-text-detail);

@@ -9,3 +9,17 @@ export function transPxToVw(px) {
 export function clamp(val, min, max) {
   return Math.min(Math.max(val, min), max)
 }
+
+// group array
+export function chunk(arr, groupByNum) {
+  const n = groupByNum
+  return Array.from(Array(Math.ceil(arr.length / n))).map((_, i) => arr.slice(i * n, (i + 1) * n))
+}
+
+// 三次方 ease-out 缓动函数，制造类似橡皮筋的效果
+export const easeOutCubic = (t, b, c, d) => {
+  t /= d;
+  t--;
+  return c * (t * t * t + 1) + b;
+};
+

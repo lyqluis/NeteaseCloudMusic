@@ -2,7 +2,8 @@
   <div class="scroller">
     <slot></slot>
     <div class="placeholder" ref="placeholder">
-      <loading :loadingText="placeHolderText"></loading>
+      <loading :loadingText="placeHolderText" v-if="!finished"></loading>
+      <p v-else>{{ placeHolderText }}</p>
     </div>
   </div>
 </template>
@@ -23,7 +24,7 @@ export default {
     finished: { type: Boolean, default: false },
     error: { type: Boolean, default: false },
     errorText: { type: String, default: "error" },
-    finishedText: { type: String, default: "finished" },
+    finishedText: { type: String, default: "This is end" },
     loadingText: { type: String, default: "loading" },
   },
   data() {
@@ -49,8 +50,9 @@ export default {
   watch: {
     loading() {
       this.innerLoading = this.loading;
+      this.check();
     },
-    finished: "check",
+    // finished: "check",
   },
   methods: {
     _initScroller(el) {
@@ -61,6 +63,7 @@ export default {
     _initScroll(el = this.$el) {
       if (!this.scroller) {
         this.scroller = getScroller(el);
+        console.log(this.scroller);
       }
       bindEvent(this.scroller, "scroll", this.check);
     },
@@ -77,6 +80,7 @@ export default {
         let isReachEdge = false;
         const placeholderRect = getDOMRect(this.$refs.placeholder);
         isReachEdge = placeholderRect.bottom - rect.bottom <= offset;
+        console.log("scroller check", isReachEdge);
         // emit update
         if (isReachEdge) {
           this.$emit("load");
@@ -89,11 +93,15 @@ export default {
 
 <style lang="scss" scoped>
 .scroller {
-  overflow-y: auto;
+  // overflow-y: auto;
   .placeholder {
     color: var(--color-text-detail);
     font-size: var(--font-size-medium-plus);
     text-align: center;
+    padding: 5px;
+    p {
+      margin: 5px 0;
+    }
   }
 }
 </style>

@@ -52,7 +52,7 @@ export default {
     padding-top: var(--padding-col);
     padding-bottom: var(--padding-col);
     &.top-line {
-      @include line-1px-top;
+      @include line-1px(top);
     }
     .block-title-right {
       font-size: var(--font-size-medium);

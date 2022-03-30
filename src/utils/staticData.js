@@ -35,3 +35,31 @@ export const menus = [
     routes: ['searchhot', 'searchresult']
   }
 ];
+
+export const listTypes ={
+  'playlist': {
+    hasNum: 0,
+    hasImg: 1,
+    circleImg: 0,
+  },
+  'album': {
+    hasNum: 1,
+    hasImg: 0,
+    circleImg: 0,
+  },
+  'artist': {
+    hasNum: 0,
+    hasImg: 1,
+    circleImg: 1,
+  },
+  'rank': {
+    hasNum: 1,
+    hasImg: 1,
+    circleImg: 0,
+  },
+  'songlist': {
+    hasNum: 0,
+    hasImg: 0,
+    circleImg: 0,
+  },
+}
