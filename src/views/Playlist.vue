@@ -31,8 +31,7 @@
                 @click="tst"
               ></icon>
             </ellipsis>
-            <!-- {{ playlist.description }} -->
-            <popup v-model="show"> {{ playlist.description }} </popup>
+            <popup v-model="show" class="description"> {{ playlist.description }} </popup>
           </template>
         </description>
       </template>
@@ -104,6 +103,10 @@ export default {
   }
   .icon_vertical {
     vertical-align: top;
+  }
+  .description{
+    padding-top: 20px;
+    text-shadow: none;
   }
 }
 </style>

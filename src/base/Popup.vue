@@ -36,9 +36,9 @@ export default {
   left: 0;
   z-index: 2;
   width: 100%;
-  min-height: 50%;
-  max-height: 90%;
-  background: lightblue;
+  height: 80%;
+  background: var(--color-background);
+  color: var(--color-text);
   overflow-y: auto;
   padding: 16px;
   -webkit-overflow-scrolling: touch;
