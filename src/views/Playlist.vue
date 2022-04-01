@@ -22,7 +22,6 @@
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
           </template>
-          <!-- // todo popup component style-->
           <template #des v-if="playlist.description">
             <ellipsis :rawText="playlist.description">
               <icon
