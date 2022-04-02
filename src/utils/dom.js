@@ -33,6 +33,11 @@ export function removeEvent(el, eventName, callback) {
   el.removeEventListener(eventName, callback)
 }
 
+export function preventDefault(event, isStopPropagation) {
+  event.preventDefault()
+  isStopPropagation && event.stopPropagation()
+}
+
 export function getDOMRect(el) {
   // element
   if (el.getBoundingClientRect) return el.getBoundingClientRect()
@@ -56,9 +61,4 @@ export function getScroller(el, root = window) {
     el = el.parentNode
   }
   return root
-}
-
-export function preventDefault(event, isStopPropagation) {
-  event.preventDefault()
-  isStopPropagation && event.stopPropagation()
 }

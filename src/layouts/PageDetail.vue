@@ -48,6 +48,8 @@ export default {
       [img, content].map((el) => removeClass(el, "rebound"));
       const { top } = getDOMRect(img);
       drag.imgTop = top;
+      // event.preventDefault()
+      // event.stopPropagation()
     },
     handleTouchMove(event) {
       // use requestAnimationFrame()
@@ -103,6 +105,7 @@ export default {
 
 .page-detail {
   .page-header {
+    display: none;
     width: 100%;
     position: fixed;
     top: 0;
@@ -111,6 +114,7 @@ export default {
     background: transparent;
   }
   .page-header-show {
+    display: block;
     background: var(--color-background-blur);
     backdrop-filter: var(--filter-blur);
     -webkit-backdrop-filter: var(--filter-blur);

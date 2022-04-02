@@ -1,9 +1,13 @@
 <template>
   <div class="playlist">
     <page-detail>
-      <!-- // todo header component -->
       <template #header>
-        this is playlist detail page, id: {{ $route.params.id }}
+        <!-- // todo touchstart covers the click event -->
+        <!-- // todo router go back -->
+        <nav-header @click-left="$router.go(-1)">
+          <!-- // todo page title -->
+          this is playlist detail id: {{ $route.params.id }}
+        </nav-header>
       </template>
       <template #img>
         <div class="img">
@@ -30,7 +34,9 @@
                 @click="tst"
               ></icon>
             </ellipsis>
-            <popup v-model="show" class="description"> {{ playlist.description }} </popup>
+            <popup v-model="show" class="description">
+              {{ playlist.description }}
+            </popup>
           </template>
         </description>
       </template>
@@ -60,6 +66,7 @@ import playlistDetail from "mixins/playlistDetail";
 import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
+import NavHeader from "base/Header";
 
 export default {
   name: "Playlist",
@@ -71,6 +78,7 @@ export default {
     Ellipsis,
     BaseButton,
     Popup,
+    NavHeader,
   },
   mixins: [playlistDetail],
   // todo
@@ -91,6 +99,9 @@ export default {
       console.log("tst", e);
       this.show = true;
     },
+    tstOnClick(e){
+      console.log(e)
+    }
   },
 };
 </script>
@@ -103,7 +114,7 @@ export default {
   .icon_vertical {
     vertical-align: top;
   }
-  .description{
+  .description {
     padding-top: 20px;
     text-shadow: none;
   }
