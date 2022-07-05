@@ -8,7 +8,6 @@
 </template>
 
 <script>
-// todo 参考vant-button
 
 export default {
   name: "BaseButton",

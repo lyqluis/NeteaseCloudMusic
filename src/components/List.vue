@@ -2,12 +2,13 @@
   <div class="list">
     <list-item
       class="list-item"
-      v-for="(item, i) in tracks"
-      :key="item.id"
+      v-for="(track, i) in tracks"
+      :key="track.id"
       :index="i"
-      :track="item"
+      :track="track"
       :type="type"
       :topOrBottomLine="topOrBottomLine"
+      @click.native="playTrack(track, i)"
     >
     </list-item>
   </div>
@@ -15,6 +16,8 @@
 
 <script>
 import ListItem from "components/ListItem";
+import { mapActions } from "vuex";
+// todo 上划没有反应
 
 export default {
   name: "List",
@@ -43,11 +46,18 @@ export default {
     },
   },
   computed: {},
+  methods: {
+    ...mapActions("player", ["play"]),
+    playTrack(track, i) {
+      console.log("play song", track);
+      this.play({ list: this.tracks, index: i });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.list{
-  padding: 0 var(--padding-row)
+.list {
+  padding: 0 var(--padding-row);
 }
 </style>

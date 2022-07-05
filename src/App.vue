@@ -4,16 +4,19 @@
       <router-view v-if="$route.meta.keepAlive" />
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive" />
+    <player></player>
     <navigation></navigation>
   </div>
 </template>
 
 <script>
 import Navigation from "components/Navigation.vue";
+import Player from 'components/Player.vue'
 
 export default {
   components: {
     Navigation,
+    Player
   },
   methods: {
     goback(e) {

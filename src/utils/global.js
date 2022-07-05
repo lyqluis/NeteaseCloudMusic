@@ -5,7 +5,7 @@ export function transPxToVw(px) {
   return px / baseWidth * 100
 }
 
-// val < min, return min; val > max, return max; else return val
+// val > max, return max; val < min, return min; else return val
 export function clamp(val, min, max) {
   return Math.min(Math.max(val, min), max)
 }

@@ -1,19 +1,19 @@
 <template>
-  <div class="header">
-    <div class="header_left" @click="onClickLeft">
+  <div class="nav-header" :class="className">
+    <div class="nav-header_left" @click.stop="onClickLeft">
       <slot name="left">
         <icon
           v-if="leftIcon"
-          icon="arrow-left"
-          className="header_left-icon"
+          :icon="leftIconName"
+          className="nav-header_left-icon"
         ></icon>
-        <span v-if="leftText">返回</span>
+        <span v-if="leftText">{{ leftText }}</span>
       </slot>
     </div>
-    <div class="header_center">
+    <div class="nav-header_center">
       <slot></slot>
     </div>
-    <div class="header_right" @click="onClickRight">
+    <div class="nav-header_right" @click.stop="onClickRight">
       <slot name="right"></slot>
     </div>
   </div>
@@ -21,16 +21,21 @@
 
 <script>
 export default {
-  name: "Header",
+  name: "NavHeader",
   props: {
     leftIcon: {
       type: Boolean,
       default: true,
     },
-    leftText: {
-      type: Boolean,
-      default: true,
+    leftIconName: {
+      type: String,
+      default: "arrow-left",
     },
+    leftText: {
+      type: String,
+      default: "返回",
+    },
+    className: String,
   },
   methods: {
     onClickLeft(e) {
@@ -44,7 +49,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header {
+.nav-header {
+  position: relative;
+  width: 100%;
   height: 45px;
   display: flex;
   align-items: center;
@@ -55,6 +62,10 @@ export default {
   &_center {
     margin: 0 auto;
     max-width: 60%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
   &_left,
@@ -68,8 +79,8 @@ export default {
       width: var(--font-size-large-plus);
       height: var(--font-size-large-plus);
     }
-    &:active{
-      color: var(--color-theme)
+    &:active {
+      color: var(--color-theme);
     }
   }
   &_left {

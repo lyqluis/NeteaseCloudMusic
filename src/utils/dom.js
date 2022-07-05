@@ -62,3 +62,12 @@ export function getScroller(el, root = window) {
   }
   return root
 }
+
+export function observeResize(el, fn, unobserve = false) {
+  const observer = new ResizeObserver(fn)
+  if (unobserve) {
+    observer.unobserve(el)
+    return
+  }
+  observer.observe(el)
+}

@@ -99,5 +99,9 @@ module.exports = {
     //     modules: false
     //     // requireModuleExtension: true
   },
+  // 自动获取当前ip
+  devServer: {
+    public: require("os").networkInterfaces()['en0'][0].address + `:${process.env.port || 8080}`
+  }
   //   // ...
 }

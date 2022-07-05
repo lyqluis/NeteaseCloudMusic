@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { addClass, bindEvent } from "utils/dom";
+import { addClass } from "utils/dom";
+import { initTouch } from "utils/touch";
 import { transPxToVw, clamp } from "utils/global";
 
 export default {
@@ -70,7 +71,7 @@ export default {
   methods: {
     _initSwiper() {
       this._setSwiperWidth();
-      this._initTouch();
+      this._initTouch(this.$refs.swiperGroup, this);
     },
     // 设置swiper中group的item的宽度，group的宽度以及offset偏移量
     _setSwiperWidth() {
@@ -90,19 +91,7 @@ export default {
       }
     },
     // 给el绑定touch事件
-    _initTouch() {
-      const el = this.$refs.swiperGroup;
-      const events = ["start", "move", "end"];
-      events.forEach((type) => {
-        let name = "touch";
-        const event = name + type;
-        const method =
-          "handle" +
-          name.replace(/^./, name[0].toUpperCase()) +
-          type.replace(/^./, type[0].toUpperCase());
-        bindEvent(el, event, (e) => this[method](e));
-      });
-    },
+    _initTouch: initTouch,
     handleTouchStart(e) {
       const drag = this.drag;
       const touch = e.touches[0];

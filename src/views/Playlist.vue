@@ -66,7 +66,7 @@ import playlistDetail from "mixins/playlistDetail";
 import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
-import NavHeader from "base/Header";
+import NavHeader from "base/NavHeader";
 
 export default {
   name: "Playlist",
@@ -99,9 +99,9 @@ export default {
       console.log("tst", e);
       this.show = true;
     },
-    tstOnClick(e){
-      console.log(e)
-    }
+    tstOnClick(e) {
+      console.log(e);
+    },
   },
 };
 </script>

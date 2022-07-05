@@ -37,8 +37,10 @@ export function onTouchMove(e, fn) {
   const touch = e.touches[0];
   // const deltaX = (drag.deltaX = touch.pageX - drag.startX);
   // drag.deltaY = touch.pageY - drag.startY;
-  const deltaX = (drag.deltaX =
-    touch.clientX < 0 ? 0 : touch.clientX - drag.startX);
+  // ??
+  // ?? const deltaX = (drag.deltaX =
+  // ??   touch.clientX < 0 ? 0 : touch.clientX - drag.startX);
+  const deltaX = (drag.deltaX = touch.clientX - drag.startX);
   const deltaY = drag.deltaY = touch.clientY - drag.startY;
   const offsetX = (drag.offsetX = Math.abs(drag.deltaX));
   const offsetY = (drag.offsetY = Math.abs(drag.deltaY));

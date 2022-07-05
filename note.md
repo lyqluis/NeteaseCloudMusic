@@ -944,7 +944,7 @@ function handleTouchEnd(event) {
     // reset style
     [img, content].map((el) => addClass(el, "rebound"));	// 添加回弹class
     img.style.transform = "scale(1)";
-    content.style.transform = `translateY(0px)`;
+    content.style.transform = "";	// 如果设为translateY(0)会影响content内的元素（比如overlay的全局高度）
     // reset touch
     drag = {}
   }
@@ -1609,6 +1609,189 @@ if(this.deltaY < 0 && scrollTop + offsetHeight >= scrollHeight){
 }
 ```
 
+#### 播放器
+
+2 种方案
+
+- vuex
+- 使用 [howler.js](https://github.com/goldfire/howler.js) 包
+
+##### howlerjs
+
+> [demo with vue-howler](https://codesandbox.io/s/xvv93ywqjo)
+>
+> [Music Player App Built With Vue.js (Vue3) & Howler.js](https://morioh.com/p/626d0a079f8f)
+
+##### vuex
+
+@todo 
+
+###### play 逻辑
+
+1. 获取 id
+2. get url by id
+3. 等待 url 加载
+4. 开始播放
+
+###### cd 旋转
+
+```css
+.cd.play{
+  animation: rotate 20s linear infinite;
+}
+
+.cd.pause{
+  animation-play-state: paused;
+}
+
+@keyframe rotate{
+  0%{
+    transform: rotate(0);
+  }
+  100%{
+    transform: rotate(360eg);
+  }
+}
+```
+
+使用时，如果需要暂停，在标签上的 class 一定要在 `play` 样式上叠加 `pause`，否则暂停时旋转图片会恢复到旋转角度为 0 的正位
+
+@todo 切歌时，新图片替换并没有将图片回正，需要换到正位
+
+##### @todo 动画
+
+> [使用create-keyframe-animation库完成复杂动画](https://xlwt123.github.io/2020/01/07/%E4%BD%BF%E7%94%A8create-keyframe-animation%E5%BA%93%E5%AE%8C%E6%88%90%E5%A4%8D%E6%9D%82%E5%8A%A8%E7%94%BB/#more)
+
+#### 文字滚动
+
+> [「纯 CSS 实现」超长内容滚动播放](https://zhuanlan.zhihu.com/p/431956735)
+
+```vue
+<template>
+  <div class="wrapper" ref="wrapper">
+    <div
+      class="content"
+      ref="content"
+      :style="contentStyle"
+      @transitionend="onTransitionEnd"
+    >
+      <slot>this is tst block balabalabala</slot>
+    </div>
+  </div>
+</template>
+
+<script>
+// todo change path
+import { getDOMRect } from "./dom";
+
+export default {
+  props: {
+    scrollable: {
+      type: Boolean,
+      default: true,
+    },
+    speed: {
+      type: Number,
+      default: 60,
+    },
+    text: String,
+  },
+  data() {
+    return {
+      offset: 0,
+      duration: 0,
+      wrapperWidth: 0,
+      contentWidth: 0,
+    };
+  },
+  computed: {
+    contentStyle() {
+      return {
+        transform: this.offset ? `translateX(${this.offset}px)` : "",
+        transitionDuration: `${this.duration}s`,
+      };
+    },
+  },
+  mounted() {
+    this.init();
+  },
+  activated() {
+    this.reset();
+  },
+  methods: {
+    init() {
+      if (this.inited) return;
+      this.inited = true;
+      const { wrapper, content } = this.$refs;
+      if (!wrapper || !content || !this.scrollable) return;
+      const wrapperWidth = (this.wrapperWidth = getDOMRect(wrapper).width);
+      const contentWidth = (this.contentWidth = getDOMRect(content).width);
+      // set offset & duration
+      if (this.scrollable && contentWidth > wrapperWidth) {
+        this.$nextTick(() => {
+          this.offset = -contentWidth;
+          this.duration = contentWidth / this.speed;
+        });
+      }
+    },
+    onTransitionEnd() {
+      console.log("transition end");
+      this.offset = this.wrapperWidth;
+      this.duration = 0;
+      console.log(this.$refs.content.style.transform);
+      // window.requestAnimationFrame(() => {
+      //   window.requestAnimationFrame(() => {
+      this.timer = setTimeout(() => {
+        // this.$nextTick(() => {
+        this.offset = -this.contentWidth;
+        this.duration = (this.wrapperWidth + this.contentWidth) / this.speed;
+        // });
+      }, 0);
+      //   });
+      // });
+    },
+    reset() {
+      this.offset = 0;
+      this.duration = 0;
+      this.wrapperWidth = 0;
+      this.contentWidth = 0;
+      clearTimeout(this.timer);
+      this.init();
+    },
+  },
+};
+</script>
+
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+/* .tst {
+  background: lightblue;
+  width: 100%;
+  padding: 0 20px;
+} */
+.wrapper {
+  /* width: 100%; */
+  position: relative;
+  /* display: flex;
+  flex: 1;
+  align-items: center; */
+  height: 100%;
+
+  overflow: hidden;
+}
+.content {
+  position: absolute;
+  white-space: nowrap;
+
+  transition-timing-function: linear;
+}
+</style>
+```
+
+
+
 
 
 #### 问题
@@ -1638,3 +1821,16 @@ if(this.deltaY < 0 && scrollTop + offsetHeight >= scrollHeight){
 ##### 当popup禁止背景滑动，解除popup，会造成原页面无法滑动
 
 > MDN：[el.addEventListener：option支持的安全检测](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener#option%E6%94%AF%E6%8C%81%E7%9A%84%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B)
+
+##### @todo event-scroll & touch
+
+> https://www.cnblogs.com/chao202426/p/11765233.html
+>
+> https://www.cnblogs.com/mengff/p/13452704.html
+
+##### @todo click & touchstart
+
+> https://www.baidu.com/s?ie=UTF-8&wd=touchstart%20click%20%E5%86%B2%E7%AA%81
+>
+> https://www.yisu.com/zixun/235409.html
+

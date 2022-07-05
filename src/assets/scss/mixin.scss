@@ -18,3 +18,9 @@
 	-webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式，从上至下垂直排列
 	-webkit-line-clamp: $row;
 }
+
+@mixin background-blur($color, $filter) {
+	background: var($color);
+	backdrop-filter: var($filter);
+	-webkit-backdrop-filter: var($filter);
+}

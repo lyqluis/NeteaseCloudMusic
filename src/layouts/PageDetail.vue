@@ -91,7 +91,7 @@ export default {
         // reset style
         [img, content].map((el) => addClass(el, "rebound"));
         img.style.transform = "scale(1)";
-        content.style.transform = `translateY(0px)`;
+        content.style.transform = "";
         // reset touch
         resetTouch();
       }
@@ -105,7 +105,7 @@ export default {
 
 .page-detail {
   .page-header {
-    display: none;
+    // display: none;
     width: 100%;
     position: fixed;
     top: 0;
@@ -114,10 +114,8 @@ export default {
     background: transparent;
   }
   .page-header-show {
-    display: block;
-    background: var(--color-background-blur);
-    backdrop-filter: var(--filter-blur);
-    -webkit-backdrop-filter: var(--filter-blur);
+    // display: block;
+    @include background-blur(--color-background-blur, --filter-blur);
     @include line-1px(bottom, fixed);
   }
   .page-img {
