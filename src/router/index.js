@@ -104,6 +104,12 @@ const routes = [
       scrollToTop: true
     }
   },
+  // todo delete
+  {
+    path: '/tst',
+    name: 'tst',
+    component: () => import('../base/tst.vue')
+  },
 ]
 
 const router = new VueRouter({

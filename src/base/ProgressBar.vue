@@ -1,11 +1,16 @@
 <template>
-  <div>
-    <div class="progress-bar" :class="{ active: active }" ref="progressBar">
-      <div class="progress-bar-progress" ref="progress"></div>
+  <div class="progress-bar" :class="{ active: active }">
+    <div
+      class="progress-bar-inner"
+      ref="progressBar"
+      @click="handleProgressClick"
+    >
+      <div class="progress-bar-inner-progress" ref="progress"></div>
       <!-- :style="{ width: `${percent * 100}%` }" -->
-      <!-- :style="{ transform: `translate(${percent * width}px)` }" -->
     </div>
     <div class="progress-bar-btn" ref="progressBtn"></div>
+    <!-- :style="{ transform: `translate(${percent * width}px)` }" -->
+    <!-- // todo add time stamp -->
   </div>
 </template>
 
@@ -17,7 +22,6 @@ import {
   onTouchEnd,
   resetTouch,
 } from "utils/touch.js";
-
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -66,11 +70,9 @@ export default {
     },
     updateProgress(percent) {
       this.$refs.progress.style.width = `${percent * 100}%`;
-      // console.log(this.$refs.progressBtn.style.transform);
       this.$refs.progressBtn.style.transform = `translate(${
         percent * this.width - this.btnWidth / 2
       }px)`;
-      // ${this.active ? "scaleX(1.5)" : ""}
     },
     handleTouchStart(e) {
       this.active = true;
@@ -97,6 +99,16 @@ export default {
       // trigger parent's percent change
       this.$emit("percentChange", changedPercent);
     },
+    handleProgressClick(e) {
+      // todo 全都放到 audio.@canplay 来复原
+      // todo audio.@canplay 有必要 3 个 state 区分必要？
+      this.active = true;
+      this.setChangingState(true);
+      const changedPercent = e.offsetX / this.width;
+      this.updateProgress(changedPercent);
+      this.$emit("percentChange", changedPercent);
+      this.active = false;
+    },
   },
 };
 </script>
@@ -104,38 +116,37 @@ export default {
 <style lang="scss" scoped>
 .progress-bar {
   position: relative;
-  height: 3px;
-  background: var(--color-background-blur);
-  border-radius: 2px;
   display: flex;
-  align-items: center;
-  &-progress {
-    position: absolute;
-    height: 100%;
-    background: var(--color-background);
-    // width: 0;
-    // todo when width less than 100%, right side's border-radius cancell
+  flex-direction: column;
+  justify-content: center;
+  &-inner {
+    position: relative;
+    height: 3px;
+    background: var(--color-background-blur);
     border-radius: 2px;
+    &-progress {
+      position: absolute;
+      height: 100%;
+      background: var(--color-background);
+      // todo when width less than 100%, right side's border-radius cancell
+      border-radius: 2px;
+    }
   }
   &-btn {
     position: absolute;
     height: var(--font-size-small);
     width: var(--font-size-small);
     border-radius: 50%;
-    top: -10px;
-    transform: translateX(-50%);
+    transform: translate(-50%);
     background: var(--color-line);
-    // &.active {
-    //   transform: scale(1.25);
-    // }
   }
   &.active {
-    // height: 5px;
-    transform: scaleY(1.5);
+    .progress-bar-inner {
+      transform: scaleY(1.5);
+    }
     .progress-bar-btn {
-      transform: scaleY(0.667);
-      // height: var(--font-size-small-plus);
-      // width: var(--font-size-small-plus);
+      height: var(--font-size-small-plus);
+      width: var(--font-size-small-plus);
       background: var(--color-background);
     }
   }

@@ -716,7 +716,7 @@ const router = new VueRouter({
 
 通过 `onTouchStart`、`onTouchMove`、`onTouchEnd` 3 个事件监听，判断滑动操作，控制 `<swiper-group>` 的 `        transform: translateX` 来实现
 
-#### css样式
+##### css样式
 
 - 通过子组件内定义的 class 控制父组件中子组件节点内插槽节点的样式
 

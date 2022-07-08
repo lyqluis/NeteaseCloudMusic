@@ -34,16 +34,30 @@
           <rolling-bar :text="spliceArtists(currentTrack.ar)"></rolling-bar>
         </div>
       </nav-header>
+
       <div class="player-img" :class="playerCD">
         <img :src="currentTrack.al.picUrl" alt="" />
       </div>
+
+      <!-- // todo 偏移 -->
+      <progress-circle
+        :width="48"
+        :percent="progressPercent"
+        v-show="!fullScreen"
+      ></progress-circle>
+
+      <div class="player-mini-title" v-show="!fullScreen">
+        {{ `${currentTrack.name} - ${spliceArtists(currentTrack.ar)}` }}
+      </div>
+
       <div class="player-ops" v-show="fullScreen">
         <icon icon="heart" class-name="player-ops-btn"></icon>
         <icon icon="talk" class-name="player-ops-btn"></icon>
         <icon icon="plus-square" class-name="player-ops-btn"></icon>
         <icon icon="more-vertical" class-name="player-ops-btn"></icon>
       </div>
-      <div class="player-progress">
+
+      <div class="player-progress" v-show="fullScreen">
         <progress-bar
           :percent="progressPercent"
           @percentChange="handleProgressBar"
@@ -97,6 +111,7 @@ import BaseButton from "base/BaseButton";
 import NavHeader from "base/NavHeader";
 import RollingBar from "base/RollingBar";
 import ProgressBar from "base/ProgressBar";
+import ProgressCircle from "base/ProgressCircle";
 import { spliceArtists, formateProgressTime } from "utils/song";
 import { clamp } from "utils/global";
 
@@ -109,6 +124,7 @@ export default {
     NavHeader,
     RollingBar,
     ProgressBar,
+    ProgressCircle,
   },
   data() {
     return {
@@ -169,7 +185,7 @@ export default {
       console.log("toggle play", flag);
       this.setPlayingState(flag);
       const { audio } = this.$refs;
-      this.playing ? audio.play() : audio.pause();
+      this.playing && !this.changing ? audio.play() : audio.pause();
     },
     // when audio.src changes / audio.currentTime changes, will trigger @canplay event
     canplay(e) {
@@ -349,6 +365,11 @@ export default {
   padding: 0 20px;
   justify-content: space-between;
   .player-img {
+    border: 2px solid transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     img {
       width: 48px;
       height: 48px;
@@ -357,14 +378,21 @@ export default {
     }
   }
 
+  .progress-circle {
+    position: absolute;
+  }
+
+  .player-mini-title {
+    width: 50%;
+    line-height: 1.25;
+    @include inline-text-ellipsis(1);
+    font-size: var(--font-size-medium);
+  }
+
   .player-controls {
     .player-control-btn {
       width: 24px;
       height: 24px;
-      // color: var(--color-text-sub);
-      // &:active {
-      //   color: var(--color-theme);
-      // }
     }
   }
 }
