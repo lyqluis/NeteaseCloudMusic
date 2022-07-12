@@ -92,11 +92,11 @@ export default {
       }, this.delay);
     },
     onTransitionEnd() {
-      console.log("transition end");
+      // console.log("transition end");
       // 将文字移动带容器最右边
       this.offset = this.wrapperWidth;
       this.duration = 0;
-      console.log(this.$refs.content.style.transform);
+      // console.log(this.$refs.content.style.transform);
       // 文字从容器最右移动到容器最左直至消失
       // 为了兼容，否则可以用两层raf
       // window.requestAnimationFrame(() => {
@@ -116,7 +116,7 @@ export default {
       this.wrapperWidth = 0;
       this.contentWidth = 0;
       clearTimeout(this.timer);
-      this.init();
+      this.$nextTick(this.init);
     },
   },
 };

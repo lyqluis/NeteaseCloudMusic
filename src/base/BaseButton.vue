@@ -1,5 +1,10 @@
 <template functional>
-  <button class="base-button" :class="`base-button-${props.size}`">
+  <button
+    class="base-button"
+    :class="`base-button-${props.size}`"
+    v-bind="data.attrs"
+    v-on="listeners"
+  >
     <icon :icon="props.icon" class="base-button-icon"></icon>
     <div class="base-button-name">
       <slot></slot>
@@ -8,7 +13,6 @@
 </template>
 
 <script>
-
 export default {
   name: "BaseButton",
   props: {

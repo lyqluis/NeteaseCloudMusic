@@ -105,3 +105,6 @@ export function getPlaylistTrackAll({ id, limit, offset }) {
     params: { id, limit, offset }
   })
 }
+
+// todo 使用 api/song { getSongDetail } 获取所有的 song tracks
+// todo 创建分页函数，模拟本地的数据分页加载

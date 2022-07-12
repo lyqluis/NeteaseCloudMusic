@@ -21,7 +21,9 @@
             {{ playlist.creator.nickname }}
           </template>
           <template #btns>
-            <base-button icon="play" size="big">播放</base-button>
+            <base-button icon="play" size="big" @click="playAllList"
+              >播放</base-button
+            >
             <base-button icon="heart"></base-button>
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
@@ -67,6 +69,7 @@ import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
+import { getSongDetail } from "api/song";
 
 export default {
   name: "Playlist",
@@ -101,6 +104,11 @@ export default {
     },
     tstOnClick(e) {
       console.log(e);
+    },
+    async playAllList(e) {
+      console.log(e);
+      const res = await getSongDetail(this.trackIds.map((idObj) => idObj.id));
+      console.log(res);
     },
   },
 };

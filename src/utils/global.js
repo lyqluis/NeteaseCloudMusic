@@ -23,3 +23,16 @@ export const easeOutCubic = (t, b, c, d) => {
   return c * (t * t * t + 1) + b;
 };
 
+// random num between min to max (includes min & max)
+export function getRandomNum(min, max) {
+  return ~~(Math.random() * (max - min + 1) + min)
+}
+
+// 洗牌算法
+export function shuffle(arr) {
+  for (let i = 0, len = arr.length; i < len; i++) {
+    const j = getRandomNum(0, i)
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}

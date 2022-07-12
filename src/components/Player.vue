@@ -72,9 +72,10 @@
       </div> -->
       <div class="player-controls">
         <icon
-          icon="repeat"
+          :icon="playModeIcon"
           className="player-control-btn"
           v-show="fullScreen"
+          @click="changeMode"
         ></icon>
         <icon
           icon="previous"
@@ -101,6 +102,7 @@
         :src="currentTrack.mp3 && currentTrack.mp3.url"
         @canplay="canplay"
         @timeupdate="getCurrentTime"
+        @ended="handleEnd"
       ></audio>
     </div>
   </transition>
@@ -114,6 +116,7 @@ import ProgressBar from "base/ProgressBar";
 import ProgressCircle from "base/ProgressCircle";
 import { spliceArtists, formateProgressTime } from "utils/song";
 import { clamp } from "utils/global";
+import { playModeIcon } from "utils/staticData";
 
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -140,8 +143,9 @@ export default {
       "mode",
       "playlist",
       "currentIndex",
+      "mode",
     ]),
-    ...mapGetters("player", ["currentTrack"]),
+    ...mapGetters("player", ["currentTrack", "currentMode"]),
     playIcon() {
       return this.playing ? "pause" : "play";
     },
@@ -154,6 +158,9 @@ export default {
     },
     progressPercent() {
       return clamp(this.currentTime / this.durationTime, 0, 1);
+    },
+    playModeIcon() {
+      return playModeIcon[this.currentMode];
     },
   },
   watch: {
@@ -173,8 +180,9 @@ export default {
       "setLoadingState",
       "setChangingState",
       "setCurrentIndex",
+      "setMode",
     ]),
-    ...mapActions("player", ["play"]),
+    ...mapActions("player", ["play", "changeMode"]),
     spliceArtists,
     formateProgressTime,
     handlePlayer(flag) {
@@ -221,6 +229,12 @@ export default {
     },
     handleProgressBar(percent) {
       this.updateCurrentTime(percent * this.durationTime);
+    },
+    handleEnd() {
+      this.currentMode === "loop" ? this.loop() : this.next();
+    },
+    loop() {
+      this.$refs.audio.currentTime = 0;
     },
   },
 };

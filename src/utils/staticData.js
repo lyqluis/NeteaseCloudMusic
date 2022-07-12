@@ -36,7 +36,7 @@ export const menus = [
   }
 ];
 
-export const listTypes ={
+export const listTypes = {
   'playlist': {
     hasNum: 0,
     hasImg: 1,
@@ -62,4 +62,10 @@ export const listTypes ={
     hasImg: 0,
     circleImg: 0,
   },
+}
+
+export const playModeIcon = {
+  'sequence': 'repeat',
+  'loop': 'repeat-1',
+  'shuffle': 'shuffle'
 }

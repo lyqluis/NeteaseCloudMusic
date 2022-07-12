@@ -6,6 +6,10 @@ import axios from 'utils/axios.js'
  * 必选参数 : ids: 音乐 id, 如 ids=347230
  * 接口地址 : /song/detail
  * 调用例子 : /song/detail?ids=347230,/song/detail?ids=347230,347231
+ * return: {
+ *  {Array} privileges
+ *  {Array} songs
+ * }
  */
 export function getSongDetail(ids) {
   return axios({
