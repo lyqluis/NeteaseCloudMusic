@@ -1,4 +1,5 @@
 import axios from 'utils/axios.js'
+import { lyricParser } from 'utils/song'
 
 /**
  * 获取歌曲详情
@@ -42,4 +43,37 @@ export function getSongUrl(id) {
   }).then(
     res => res.data
   );
+}
+
+/**
+ * 获取歌词
+ * 说明 : 调用此接口 , 传入音乐 id 可获得对应音乐的歌词 ( 不需要登录 )
+ * @param {Number} id - 音乐 id
+ * @return {[Object]}
+ * {
+ *  code: 200
+ *  klyric: {Object}
+ *  lrc: {
+ *    version: 8, 
+ *    lyric: {String}
+ *  },
+ *  lyricUser: {Object}
+ *  qfy: false
+ *  sfy: false
+ *  sgc: false
+ *  tlyric: {
+ *    version: 5, 
+ *    lyric: '[by:andy0613]\n[00:07.55]爱情啊，不要再消失了，u um\n[00:14.15]…[03:44.96]爱情啊，不要再消失了，u um\n[03:51.46]我需要你，一直在寻找着你\n'
+ *  }
+ *  transUser: {Object}
+ * }
+ */
+export function getLyric(id) {
+  return axios({
+    url: '/lyric',
+    method: 'get',
+    params: { id },
+  }).then(res => {
+    return lyricParser(res)
+  });
 }

@@ -10,8 +10,9 @@
       class="player"
       :class="fullScreen ? 'player-page' : 'player-mini'"
       v-show="playlist.length"
-      @click.stop="setFullScreen(true)"
+      @click.stop="handlePlayerPage"
     >
+      <!-- @click.stop="setFullScreen(true)" -->
       <div class="player-page-background" v-show="fullScreen">
         <img :src="currentTrack.al.picUrl" alt="" />
       </div>
@@ -35,7 +36,9 @@
         </div>
       </nav-header>
 
-      <div class="player-img" :class="playerCD">
+      <lyric v-show="showLyric" :lyric="currentTrack.lyric"></lyric>
+
+      <div class="player-img" :class="playerCD" v-show="!showLyric">
         <img :src="currentTrack.al.picUrl" alt="" />
       </div>
 
@@ -75,13 +78,13 @@
           :icon="playModeIcon"
           className="player-control-btn"
           v-show="fullScreen"
-          @click="changeMode"
+          @click.stop="changeMode"
         ></icon>
         <icon
           icon="previous"
           className="player-control-btn"
           v-show="fullScreen"
-          @click="prev"
+          @click.stop="prev"
         ></icon>
         <icon
           :icon="playIcon"
@@ -92,7 +95,7 @@
           icon="next"
           className="player-control-btn"
           v-show="fullScreen"
-          @click="next"
+          @click.stop="next"
         ></icon>
         <icon icon="list" className="player-control-btn"></icon>
       </div>
@@ -112,6 +115,7 @@
 import BaseButton from "base/BaseButton";
 import NavHeader from "base/NavHeader";
 import RollingBar from "base/RollingBar";
+import Lyric from "components/Lyric";
 import ProgressBar from "base/ProgressBar";
 import ProgressCircle from "base/ProgressCircle";
 import { spliceArtists, formateProgressTime } from "utils/song";
@@ -125,6 +129,7 @@ export default {
   components: {
     // BaseButton,
     NavHeader,
+    Lyric,
     RollingBar,
     ProgressBar,
     ProgressCircle,
@@ -140,6 +145,7 @@ export default {
       "changing",
       "loading",
       "fullScreen",
+      "showLyric",
       "mode",
       "playlist",
       "currentIndex",
@@ -181,12 +187,20 @@ export default {
       "setChangingState",
       "setCurrentIndex",
       "setMode",
+      "setShowLyric",
     ]),
     ...mapActions("player", ["play", "changeMode"]),
     spliceArtists,
     formateProgressTime,
-    handlePlayer(flag) {
-      // this.se
+    handlePlayerPage(flag) {
+      if (this.fullScreen) {
+        // todo open lyric
+        console.log("handle lyric");
+        this.setShowLyric(!this.showLyric);
+      } else {
+        // todo set fullscreen to false, close the lyric
+        this.setFullScreen(true);
+      }
     },
     // todo when click mini to page, ?? trigger play btn ??
     togglePlay(e, flag = !this.playing) {
@@ -320,6 +334,7 @@ export default {
   .player-img {
     margin-top: 84px;
     margin-bottom: 50px;
+    line-height: 0;
     img {
       width: 239px;
       height: 239px;
