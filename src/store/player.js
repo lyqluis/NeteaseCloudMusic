@@ -1,4 +1,4 @@
-import { getSongUrl } from "../api/song"
+import { getSongUrl, getLyric } from "../api/song"
 import { shuffle } from 'utils/global'
 import Vue from 'vue'
 
@@ -15,6 +15,7 @@ export default {
     loading: false,
     changing: false,
     fullScreen: false,
+    showLyric: false,
     mode: 0,
     playlist: [],
     sequenceList: [],
@@ -35,11 +36,17 @@ export default {
     setTrackUrl(state, url) {
       Vue.set(state.playlist[state.currentIndex], 'mp3', url)
     },
+    setTrackLyric(state, lyric) {
+      Vue.set(state.playlist[state.currentIndex], 'lyric', lyric)
+    },
     setPlayingState(state, flag) {
       state.playing = flag
     },
     setFullScreen(state, flag) {
       state.fullScreen = flag
+    },
+    setShowLyric(state, flag) {
+      state.showLyric = flag
     },
     setPlaylist(state, list) {
       state.playlist = list
@@ -75,7 +82,7 @@ export default {
         } else {
           list = state.sequenceList
         }
-        
+
         if (getters.currentMode === 'shuffle') {
           list = shuffle(list.slice())
           commit('setShuffledList', list)
@@ -90,8 +97,15 @@ export default {
       } else {
         commit('setCurrentIndex', index)
       }
-      // get song url
-      const { id, mp3 } = getters.currentTrack
+
+      // get song url & lyric
+      const { id, mp3, lyric } = getters.currentTrack
+      if (!lyric) {
+        getLyric(id).then(parsedLyric => {
+          console.log(parsedLyric);
+          commit('setTrackLyric', parsedLyric)
+        })
+      }
       let url
       if (!mp3) {
         url = await getSongUrl(id)

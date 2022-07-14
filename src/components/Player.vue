@@ -1,23 +1,15 @@
 <template>
   <transition name="slide-up">
-    <!-- <div
-      class="player"
-      :class="{ 'player-page': fullScreen }"
-      v-show="playlist.length"
-      @click.prevent="setFullScreen(!fullScreen)"
-    > -->
     <div
       class="player"
       :class="fullScreen ? 'player-page' : 'player-mini'"
       v-show="playlist.length"
-      @click.stop="setFullScreen(true)"
+      @click.stop="handlePlayerPage"
     >
       <div class="player-page-background" v-show="fullScreen">
-        <img :src="currentTrack.al.picUrl" alt="" />
+        <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" />
       </div>
-      <!-- <div class="btns">
-        <button class="btn" @click="setPlaylist([])">close</button>
-      </div> -->
+
       <nav-header
         v-if="fullScreen"
         class-name="player-header"
@@ -35,8 +27,15 @@
         </div>
       </nav-header>
 
+      <lyric
+        :lyric="currentTrack.lyric"
+        :currentTime="currentTime"
+        @trackProgressChange="handleLyricProgress"
+        :class="lyricStyle"
+      ></lyric>
+
       <div class="player-img" :class="playerCD">
-        <img :src="currentTrack.al.picUrl" alt="" />
+        <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" />
       </div>
 
       <!-- // todo 偏移 -->
@@ -67,21 +66,19 @@
           <p>{{ formateProgressTime(durationTime) }}</p>
         </div>
       </div>
-      <!-- <div class="tst" style="color: #fff">
-        {{ currentTrack.mp3 && currentTrack.mp3.url }}
-      </div> -->
+
       <div class="player-controls">
         <icon
           :icon="playModeIcon"
           className="player-control-btn"
           v-show="fullScreen"
-          @click="changeMode"
+          @click.stop="changeMode"
         ></icon>
         <icon
           icon="previous"
           className="player-control-btn"
           v-show="fullScreen"
-          @click="prev"
+          @click.stop="prev"
         ></icon>
         <icon
           :icon="playIcon"
@@ -92,10 +89,11 @@
           icon="next"
           className="player-control-btn"
           v-show="fullScreen"
-          @click="next"
+          @click.stop="next"
         ></icon>
         <icon icon="list" className="player-control-btn"></icon>
       </div>
+
       <audio
         ref="audio"
         autoplay
@@ -112,6 +110,7 @@
 import BaseButton from "base/BaseButton";
 import NavHeader from "base/NavHeader";
 import RollingBar from "base/RollingBar";
+import Lyric from "components/Lyric";
 import ProgressBar from "base/ProgressBar";
 import ProgressCircle from "base/ProgressCircle";
 import { spliceArtists, formateProgressTime } from "utils/song";
@@ -125,6 +124,7 @@ export default {
   components: {
     // BaseButton,
     NavHeader,
+    Lyric,
     RollingBar,
     ProgressBar,
     ProgressCircle,
@@ -140,6 +140,7 @@ export default {
       "changing",
       "loading",
       "fullScreen",
+      "showLyric",
       "mode",
       "playlist",
       "currentIndex",
@@ -150,8 +151,20 @@ export default {
       return this.playing ? "pause" : "play";
     },
     playerCD() {
-      if (this.loading) return "";
-      return this.playing ? "player-img-play" : "player-img-play pause";
+      const opacity =
+        !this.fullScreen ||
+        (!this.showLyric && this.fullScreen) ||
+        (this.loading && !this.showLyric)
+          ? ""
+          : "no_opacity";
+      const play = this.playing ? "player-img-play" : "player-img-play pause";
+      if (this.loading) return `${opacity}`; // 切歌的时候用来回正旋转角度
+      return `${play} ${opacity}`;
+    },
+    lyricStyle() {
+      return this.showLyric && this.fullScreen && !this.loading
+        ? ""
+        : "no_opacity";
     },
     durationTime() {
       return this.currentTrack && this.currentTrack.dt / 1000;
@@ -181,12 +194,20 @@ export default {
       "setChangingState",
       "setCurrentIndex",
       "setMode",
+      "setShowLyric",
     ]),
     ...mapActions("player", ["play", "changeMode"]),
     spliceArtists,
     formateProgressTime,
-    handlePlayer(flag) {
-      // this.se
+    handlePlayerPage(flag) {
+      if (this.fullScreen) {
+        // todo open lyric
+        console.log("handle lyric");
+        this.setShowLyric(!this.showLyric);
+      } else {
+        // todo set fullscreen to false, close the lyric
+        this.setFullScreen(true);
+      }
     },
     // todo when click mini to page, ?? trigger play btn ??
     togglePlay(e, flag = !this.playing) {
@@ -230,11 +251,15 @@ export default {
     handleProgressBar(percent) {
       this.updateCurrentTime(percent * this.durationTime);
     },
+    handleLyricProgress(time) {
+      this.updateCurrentTime(time);
+    },
     handleEnd() {
       this.currentMode === "loop" ? this.loop() : this.next();
     },
     loop() {
       this.$refs.audio.currentTime = 0;
+      this.$refs.audio.play();
     },
   },
 };
@@ -320,6 +345,7 @@ export default {
   .player-img {
     margin-top: 84px;
     margin-bottom: 50px;
+    line-height: 0;
     img {
       width: 239px;
       height: 239px;
@@ -327,6 +353,17 @@ export default {
       box-shadow: 0 0 20px 5px var(--color-player-background-blur);
     }
   }
+
+  .lyric,
+  .player-img {
+    transition: opacity 0.3s ease-in-out;
+
+    &.no_opacity {
+      opacity: 0;
+      z-index: -1;
+    }
+  }
+
   .player-ops {
     width: 100%;
     padding: 0 calc(2 * var(--padding-row));
