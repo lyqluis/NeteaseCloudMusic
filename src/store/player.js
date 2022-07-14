@@ -63,12 +63,33 @@ export default {
     async play({ commit, state, getters }, { track, list, index }) {
       commit('setPlayingState', false)
       commit('setLoadingState', true)
-      if (list) {
-        commit('setSequenceList', list.slice())
-        // todo diff by play mode
-        commit('setPlaylist', state.sequenceList)
+      // adjust params
+      if (!track) {
+        track = list ? list[index] : state.playlist[index]
       }
-      commit('setCurrentIndex', index)
+      // set playlist by play mode
+      if (list) {
+        if (list.length > state.sequenceList.length) {
+          list = list.slice()
+          commit('setSequenceList', list)
+        } else {
+          list = state.sequenceList
+        }
+        
+        if (getters.currentMode === 'shuffle') {
+          list = shuffle(list.slice())
+          commit('setShuffledList', list)
+        }
+        commit('setPlaylist', list)
+      }
+
+      // set currentIndex by play mode
+      if (getters.currentMode === 'shuffle') {
+        const shuffleIndex = state.playlist.findIndex(t => t.id === track.id)
+        commit('setCurrentIndex', shuffleIndex)
+      } else {
+        commit('setCurrentIndex', index)
+      }
       // get song url
       const { id, mp3 } = getters.currentTrack
       let url

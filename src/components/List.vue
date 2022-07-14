@@ -16,7 +16,7 @@
 
 <script>
 import ListItem from "components/ListItem";
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 // todo 上划没有反应
 
 export default {
@@ -45,12 +45,15 @@ export default {
       default: "top",
     },
   },
-  computed: {},
+  computed: {
+    ...mapGetters("player", ["currentTrack"]),
+  },
   methods: {
     ...mapActions("player", ["play"]),
     playTrack(track, i) {
       console.log("play song", track);
-      this.play({ list: this.tracks, index: i });
+      if (track.id === this.currentTrack.id) return;
+      this.play({ track, list: this.tracks, index: i });
     },
   },
 };

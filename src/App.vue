@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'app-with-player': playlist.length }">
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive" />
     </keep-alive>
@@ -11,12 +11,16 @@
 
 <script>
 import Navigation from "components/Navigation.vue";
-import Player from 'components/Player.vue'
+import Player from "components/Player.vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
     Navigation,
-    Player
+    Player,
+  },
+  computed: {
+    ...mapState("player", ["playlist"]),
   },
   methods: {
     goback(e) {
@@ -30,5 +34,8 @@ export default {
 #app {
   height: 100%;
   padding-bottom: 80px;
+  &.app-with-player {
+    padding-bottom: calc(80px + 64px);
+  }
 }
 </style>

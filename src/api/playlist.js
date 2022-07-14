@@ -7,6 +7,7 @@ import axios from 'utils/axios.js'
  * 可选参数 : s : 歌单最近的 s 个收藏者,默认为 8
  * 接口地址 : /playlist/detail
  * 调用例子 : /playlist/detail?id=24381616
+ * @return {Object} res: {playlist}
  */
 export function getPlaylistDetail(id) {
   return axios({
@@ -105,6 +106,3 @@ export function getPlaylistTrackAll({ id, limit, offset }) {
     params: { id, limit, offset }
   })
 }
-
-// todo 使用 api/song { getSongDetail } 获取所有的 song tracks
-// todo 创建分页函数，模拟本地的数据分页加载
