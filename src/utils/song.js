@@ -26,7 +26,7 @@ function pad(num, n = 2) {
   return num
 }
 
-// lyric
+// ** lyric
 const extractLrcRegex =
   /^(?<lyricTimestamps>(?:\[.+?\])+)(?!\[)(?<content>.+)$/gm  // m - 多行匹配
 const extractTimestampRegex =
@@ -34,10 +34,12 @@ const extractTimestampRegex =
 
 
 export function lyricParser(lrcObj) {
+  const lrc = parseLyric(lrcObj?.lrc?.lyric ?? '')
+  const tlyric = parseLyric(lrcObj?.tlyric?.lyric ?? '')
+  const lyric = mergeLrc(lrc, tlyric)
   return {
-    lrc: parseLyric(lrcObj?.lrc?.lyric ?? ''),
+    lyric,
     lyricUser: lrcObj?.lyricUser,
-    tlyric: parseLyric(lrcObj?.tlyric?.lyric ?? ''),
     transUser: lrcObj?.transUser,
   }
 }
@@ -76,17 +78,16 @@ function trim(content) {
   return res.length < 1 ? content : res
 }
 
-export function mergeLrc(lyric, tlyric) {
+function mergeLrc(lyric, tlyric) {
   const res = []
   for (let i = 0, j = 0, len = lyric.length; i < len; i++) {
     const l = lyric[i];
     const tl = tlyric[j];
-    res.push(l)
     if (l.time === tl.time) {
-      l.content = l.content + '\n' + tl.content
-      // res.push(tl)
+      l.tcontent = tl.content
       j++
     }
+    res.push(l)
   }
   return res
 }

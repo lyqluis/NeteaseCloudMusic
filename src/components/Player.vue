@@ -53,6 +53,7 @@
         {{ `${currentTrack.name} - ${spliceArtists(currentTrack.ar)}` }}
       </div>
 
+      <!-- // todo 歌词切换回来无法继续转动 -->
       <div class="player-ops" v-show="fullScreen">
         <icon icon="heart" class-name="player-ops-btn"></icon>
         <icon icon="talk" class-name="player-ops-btn"></icon>
@@ -70,9 +71,7 @@
           <p>{{ formateProgressTime(durationTime) }}</p>
         </div>
       </div>
-      <!-- <div class="tst" style="color: #fff">
-        {{ currentTrack.mp3 && currentTrack.mp3.url }}
-      </div> -->
+
       <div class="player-controls">
         <icon
           :icon="playModeIcon"
@@ -99,6 +98,7 @@
         ></icon>
         <icon icon="list" className="player-control-btn"></icon>
       </div>
+
       <audio
         ref="audio"
         autoplay

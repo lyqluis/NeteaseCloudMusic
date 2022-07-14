@@ -1,9 +1,9 @@
 <template>
   <div class="lyric">
     <div class="lyric-lines">
-      <p v-for="line in lyricLines" :key="line.time + line.content">
-        {{ line.content }}
-        <p></p>
+      <p v-for="line in lyricLines" :key="line.time">
+        <span v-show="mode !== 1">{{ line.content }}</span>
+        <span v-show="mode !== 0">{{ line.tcontent }}</span>
       </p>
     </div>
     <div class="lyric-controls">
@@ -13,8 +13,7 @@
 </template>
 
 <script>
-import { mergeLrc } from "utils/song";
-
+// todo 歌词自动滚动 跟随 高亮
 export default {
   name: "Lyric",
   props: {
@@ -29,18 +28,11 @@ export default {
   },
   computed: {
     lyricLines() {
-      if (this.mode === 0) return this.lyric?.lrc;
-      if (this.mode === 1) return this.lyric?.tlyric;
-      return this.mergedLrc;
-    },
-    mergedLrc() {
-      const { lrc, tlyric } = this.lyric;
-      return mergeLrc(lrc, tlyric);
+      return this.lyric?.lyric;
     },
   },
   methods: {
     switchLyric() {
-      console.log("switch lyric");
       this.mode = this.mode === 2 ? 0 : this.mode + 1;
     },
   },
@@ -53,20 +45,24 @@ export default {
   width: 100%;
   height: calc(239px + 84px + 50px); // due to the disk img height
   background: transparent;
-  // margin-bottom: 10px;
   display: flex;
   flex-direction: column;
   &-lines {
-    // height: 90%;
     padding: 10px 0;
     overflow: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
-    line-height: 3;
     color: var(--color-text-detail);
     p {
+      margin: 10px;
       font-size: var(--font-size-medium);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      span {
+        line-height: 1.5;
+      }
     }
   }
   &-controls {
