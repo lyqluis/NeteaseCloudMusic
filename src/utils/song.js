@@ -79,6 +79,7 @@ function trim(content) {
 }
 
 function mergeLrc(lyric, tlyric) {
+  if (!tlyric.length) return lyric
   const res = []
   for (let i = 0, j = 0, len = lyric.length; i < len; i++) {
     const l = lyric[i];

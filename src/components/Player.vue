@@ -36,9 +36,18 @@
         </div>
       </nav-header>
 
-      <lyric v-show="showLyric" :lyric="currentTrack.lyric"></lyric>
+      <lyric
+        v-show="showLyric && fullScreen"
+        :lyric="currentTrack.lyric"
+        :currentTime="currentTime"
+        @trackProgressChange="handleLyricProgress"
+      ></lyric>
 
-      <div class="player-img" :class="playerCD" v-show="!showLyric">
+      <div
+        class="player-img"
+        :class="playerCD"
+        v-show="!showLyric || !fullScreen"
+      >
         <img :src="currentTrack.al.picUrl" alt="" />
       </div>
 
@@ -54,6 +63,7 @@
       </div>
 
       <!-- // todo 歌词切换回来无法继续转动 -->
+      <!-- // todo 使用 opacity 来切换 -->
       <div class="player-ops" v-show="fullScreen">
         <icon icon="heart" class-name="player-ops-btn"></icon>
         <icon icon="talk" class-name="player-ops-btn"></icon>
@@ -244,11 +254,15 @@ export default {
     handleProgressBar(percent) {
       this.updateCurrentTime(percent * this.durationTime);
     },
+    handleLyricProgress(time) {
+      this.updateCurrentTime(time);
+    },
     handleEnd() {
       this.currentMode === "loop" ? this.loop() : this.next();
     },
     loop() {
       this.$refs.audio.currentTime = 0;
+      this.$refs.audio.play();
     },
   },
 };

@@ -3,7 +3,7 @@
     <div
       class="progress-bar-inner"
       ref="progressBar"
-      @click="handleProgressClick"
+      @click.stop="handleProgressClick"
     >
       <div class="progress-bar-inner-progress" ref="progress"></div>
       <!-- :style="{ width: `${percent * 100}%` }" -->
@@ -22,7 +22,7 @@ import {
   onTouchEnd,
   resetTouch,
 } from "utils/touch.js";
-import { mapState, mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   name: "ProgressBar",
