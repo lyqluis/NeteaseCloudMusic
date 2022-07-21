@@ -36,18 +36,20 @@
         </div>
       </nav-header>
 
+      <!-- v-show="showLyric && fullScreen" -->
       <lyric
-        v-show="showLyric && fullScreen"
         :lyric="currentTrack.lyric"
         :currentTime="currentTime"
         @trackProgressChange="handleLyricProgress"
+        :class="lyricStyle"
       ></lyric>
+      <!-- :class="{ no_opacity: !showLyric || !fullScreen }" -->
 
-      <div
-        class="player-img"
-        :class="playerCD"
-        v-show="!showLyric || !fullScreen"
-      >
+      <!-- // todo 歌词切换回来无法继续转动 -->
+      <!-- // todo 使用 opacity 来切换 -->
+      <!-- v-show="!showLyric || !fullScreen" -->
+      <!-- :class="{ playerCD: true, no_opacity: showLyric && fullScreen }" -->
+      <div class="player-img" :class="playerCD">
         <img :src="currentTrack.al.picUrl" alt="" />
       </div>
 
@@ -62,8 +64,6 @@
         {{ `${currentTrack.name} - ${spliceArtists(currentTrack.ar)}` }}
       </div>
 
-      <!-- // todo 歌词切换回来无法继续转动 -->
-      <!-- // todo 使用 opacity 来切换 -->
       <div class="player-ops" v-show="fullScreen">
         <icon icon="heart" class-name="player-ops-btn"></icon>
         <icon icon="talk" class-name="player-ops-btn"></icon>
@@ -166,8 +166,20 @@ export default {
       return this.playing ? "pause" : "play";
     },
     playerCD() {
-      if (this.loading) return "";
-      return this.playing ? "player-img-play" : "player-img-play pause";
+      const opacity =
+        !this.fullScreen ||
+        (!this.showLyric && this.fullScreen) ||
+        (this.loading && !this.showLyric)
+          ? ""
+          : "no_opacity";
+      const play = this.playing ? "player-img-play" : "player-img-play pause";
+      if (this.loading) return `${opacity}`; // 切歌的时候用来回正旋转角度
+      return `${play} ${opacity}`;
+    },
+    lyricStyle() {
+      return this.showLyric && this.fullScreen && !this.loading
+        ? ""
+        : "no_opacity";
     },
     durationTime() {
       return this.currentTrack && this.currentTrack.dt / 1000;
@@ -356,6 +368,17 @@ export default {
       box-shadow: 0 0 20px 5px var(--color-player-background-blur);
     }
   }
+
+  .lyric,
+  .player-img {
+    transition: opacity 0.3s ease-in-out;
+
+    &.no_opacity {
+      opacity: 0;
+      z-index: -1;
+    }
+  }
+
   .player-ops {
     width: 100%;
     padding: 0 calc(2 * var(--padding-row));

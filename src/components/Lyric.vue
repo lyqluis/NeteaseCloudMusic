@@ -5,7 +5,7 @@
         <p
           ref="lyric"
           v-for="(line, i) in lyricLines"
-          :key="line.time"
+          :key="i + line.time"
           :class="{ active: activeLineIndex === i }"
           @click.stop="changeTrackProgress(line.time)"
         >
@@ -142,7 +142,9 @@ export default {
 <style lang="scss" scoped>
 @import "assets/scss/animation.scss";
 .lyric {
-  position: relative;
+  position: absolute;
+  top: 70px;
+  // position: relative;
   width: 100%;
   height: calc(239px + 84px + 50px); // due to the disk img height
   background: transparent;
