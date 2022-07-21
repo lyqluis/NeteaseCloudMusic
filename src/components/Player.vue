@@ -36,19 +36,13 @@
         </div>
       </nav-header>
 
-      <!-- v-show="showLyric && fullScreen" -->
       <lyric
         :lyric="currentTrack.lyric"
         :currentTime="currentTime"
         @trackProgressChange="handleLyricProgress"
         :class="lyricStyle"
       ></lyric>
-      <!-- :class="{ no_opacity: !showLyric || !fullScreen }" -->
 
-      <!-- // todo 歌词切换回来无法继续转动 -->
-      <!-- // todo 使用 opacity 来切换 -->
-      <!-- v-show="!showLyric || !fullScreen" -->
-      <!-- :class="{ playerCD: true, no_opacity: showLyric && fullScreen }" -->
       <div class="player-img" :class="playerCD">
         <img :src="currentTrack.al.picUrl" alt="" />
       </div>
