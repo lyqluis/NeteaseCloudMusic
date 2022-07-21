@@ -35,6 +35,7 @@ const extractTimestampRegex =
 
 
 export function lyricParser(lrcObj) {
+  console.log(lrcObj)
   const lrc = parseLyric(lrcObj?.lrc?.lyric ?? '')
   const tlyric = parseLyric(lrcObj?.tlyric?.lyric ?? '')
   const lyric = mergeLrc(lrc, tlyric)
@@ -82,10 +83,11 @@ function trim(content) {
 function mergeLrc(lyric, tlyric) {
   if (!tlyric.length) return lyric
   const res = []
-  for (let i = 0, j = 0, len = lyric.length; i < len; i++) {
+  const len = lyric.length, tlen = tlyric.length
+  for (let i = 0, j = 0; i < len; i++) {
     const l = lyric[i];
     const tl = tlyric[j];
-    if (l.time === tl.time) {
+    if (j < tlen && l.time === tl.time) {
       l.tcontent = tl.content
       j++
     }

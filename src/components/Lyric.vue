@@ -1,7 +1,7 @@
 <template>
   <div class="lyric">
     <div class="lyric-wrapper" ref="lyricWrapper">
-      <div class="lyric-lines" :style="translateStyle">
+      <div class="lyric-lines" :style="translateStyle" v-if="lyric">
         <p
           ref="lyric"
           v-for="(line, i) in lyricLines"
@@ -13,6 +13,7 @@
           <span v-show="mode !== 0 && line.tcontent">{{ line.tcontent }}</span>
         </p>
       </div>
+      <div class="lyric-wrapper empty" v-else>暂时没有歌词</div>
     </div>
     <div class="lyric-controls">
       <div class="trans" @click.stop="switchLyric">
@@ -35,6 +36,7 @@ import { mapMutations } from "vuex";
 
 export default {
   name: "Lyric",
+  // todo if has no lyrics
   props: {
     lyric: {
       type: Object,
@@ -156,11 +158,11 @@ export default {
     overflow: scroll;
     scroll-behavior: smooth;
     padding: 0 var(--padding-row);
+    color: var(--color-text-detail);
     .lyric-lines {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: var(--color-text-detail);
       transform: translateY(calc(333px / 2 - 16px));
       p {
         margin: 10px;
@@ -176,6 +178,13 @@ export default {
         &.active {
           color: var(--color-text-sub);
         }
+      }
+      &.empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--color-text-detail);
+        font-size: var(--font-size-medium);
       }
     }
   }
