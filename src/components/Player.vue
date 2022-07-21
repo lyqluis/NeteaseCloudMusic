@@ -1,24 +1,15 @@
 <template>
   <transition name="slide-up">
-    <!-- <div
-      class="player"
-      :class="{ 'player-page': fullScreen }"
-      v-show="playlist.length"
-      @click.prevent="setFullScreen(!fullScreen)"
-    > -->
     <div
       class="player"
       :class="fullScreen ? 'player-page' : 'player-mini'"
       v-show="playlist.length"
       @click.stop="handlePlayerPage"
     >
-      <!-- @click.stop="setFullScreen(true)" -->
       <div class="player-page-background" v-show="fullScreen">
-        <img :src="currentTrack.al.picUrl" alt="" />
+        <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" />
       </div>
-      <!-- <div class="btns">
-        <button class="btn" @click="setPlaylist([])">close</button>
-      </div> -->
+
       <nav-header
         v-if="fullScreen"
         class-name="player-header"
@@ -44,7 +35,7 @@
       ></lyric>
 
       <div class="player-img" :class="playerCD">
-        <img :src="currentTrack.al.picUrl" alt="" />
+        <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" />
       </div>
 
       <!-- // todo 偏移 -->

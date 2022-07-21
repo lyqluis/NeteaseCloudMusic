@@ -53,6 +53,7 @@ export default {
     playTrack(track, i) {
       console.log("play song", track);
       if (track.id === this.currentTrack.id) return;
+      // playlist-detail
       this.play({ track, list: this.tracks, index: i });
     },
   },

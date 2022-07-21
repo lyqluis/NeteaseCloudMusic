@@ -1,19 +1,20 @@
 <template>
   <div class="playlist">
     <page-detail>
+
       <template #header>
-        <!-- // todo touchstart covers the click event -->
-        <!-- // todo router go back -->
         <nav-header @click-left="$router.go(-1)">
           <!-- // todo page title -->
-          this is playlist detail id: {{ $route.params.id }}
+          <!-- this is playlist detail id: {{ $route.params.id }} -->
         </nav-header>
       </template>
+
       <template #img>
         <div class="img">
           <img :src="playlist.coverImgUrl" alt="" />
         </div>
       </template>
+
       <template #description>
         <description>
           <template #name v-if="playlist.name">{{ playlist.name }}</template>
@@ -42,6 +43,7 @@
           </template>
         </description>
       </template>
+
       <template #content>
         <scroller
           :loading="scrollLoading"
@@ -55,6 +57,7 @@
           ></list>
         </scroller>
       </template>
+
     </page-detail>
   </div>
 </template>

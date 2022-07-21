@@ -7,6 +7,7 @@ function formateSong(src) {
 }
 
 export function spliceArtists(artists) {
+  if (!artists) return
   return artists.map(artist => artist.name).join(' / ')
 }
 
