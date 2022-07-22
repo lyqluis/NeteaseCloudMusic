@@ -99,8 +99,9 @@ export default {
       this.mode = this.mode === n ? 0 : this.mode + 1;
     },
     updateHeight() {
+      if (this.height) return;
       const height = this.$refs?.lyricWrapper.offsetHeight;
-      if (height && !this.height) {
+      if (height) {
         this.height = height;
         this.inited = true;
       }
