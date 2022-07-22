@@ -1800,6 +1800,49 @@ export default {
 
 
 
+#### lyric
+
+##### 需求
+
+1. 歌曲播放时，歌词滚动 & 高亮
+
+- 高亮：解析歌词的时间戳和内容，拿到 `player` 的 `currentTime`，根据 `currentTime` 来找到对应的歌词的 `index` 设置高亮 css
+
+- 滚动：
+
+  - 插件：用滚动插件 [better-scroll](https://link.juejin.cn/?target=https%3A%2F%2Fbetter-scroll.github.io%2Fdocs%2Fzh-CN%2F) 进行滚动
+
+  - 原生：可以设置 `translate` 和 `transform` 属性
+
+    - 设置 `translate` 会造成在正常 `scroll` 或者拖动的时候位置偏移
+    - 需要写一份 `touch` 事件来监听拖动歌词从而模拟滚动事件
+
+  - 原生：设置歌词 `wrapper` 的 `scrollTo` / `scrollTop`
+
+    - `scroll` 是 js 方法，无法设置动画，可以通过设置 css 属性 `scroll-behavior: smooth` 来实现滚动的动画
+
+    ```scss
+    .wrapper{
+      overflow: sroll;
+      scroll-behavior: smooth;
+    }
+    ```
+
+    > [MDN - scroll-behavior](https://developer.mozilla.org/zh-CN/docs/Web/CSS/scroll-behavior)
+
+2. 拖动歌词并跳转播放
+
+- 由于 1 功能使用了 `scrollTop`，所以本身可以滚动，只需要点击具体某行歌词时将对应的时间戳通过触发 `$emit` 传递给外层组件 `<player>`，父组件进行更新即可
+
+#### 相关
+
+> [vue3实现移动端音乐播放器中歌词相关功能](https://juejin.cn/post/6922680524544671752)
+
+bug
+
+- disk 和 lyric 切换时，disk 切换回来后就变为重新旋转
+  - 让 disk 不消失，设为透明为 0
+
 
 
 #### 问题
@@ -1844,43 +1887,4 @@ export default {
 
 ### todo
 
-#### lyric
-
-##### 需求
-
-1. 歌曲播放时，歌词滚动 & 高亮
-
-- 高亮：解析歌词的时间戳和内容，拿到 `player` 的 `currentTime`，根据 `currentTime` 来找到对应的歌词的 `index` 设置高亮 css
-
-- 滚动：
-
-   - 插件：用滚动插件 [better-scroll](https://link.juejin.cn/?target=https%3A%2F%2Fbetter-scroll.github.io%2Fdocs%2Fzh-CN%2F) 进行滚动
-   - 原生：可以设置 `translate` 和 `transform` 属性
-   
-     - 设置 `translate` 会造成在正常 `scroll` 或者拖动的时候位置偏移
-     - 需要写一份 `touch` 事件来监听拖动歌词从而模拟滚动事件
-   - 原生：设置歌词 `wrapper` 的 `scrollTo` / `scrollTop`
-   
-     - `scroll` 是 js 方法，无法设置动画，可以通过设置 css 属性 `scroll-behavior: smooth` 来实现滚动的动画
-   
-     ```scss
-     .wrapper{
-       overflow: sroll;
-       scroll-behavior: smooth;
-     }
-     ```
-   
-     > [MDN - scroll-behavior](https://developer.mozilla.org/zh-CN/docs/Web/CSS/scroll-behavior)
-
-2. 拖动歌词并跳转播放
-
-- 由于 1 功能使用了 `scrollTop`，所以本身可以滚动，只需要点击具体某行歌词时将对应的时间戳通过触发 `$emit` 传递给外层组件 `<player>`，父组件进行更新即可
-
-#### 相关
-
-> [vue3实现移动端音乐播放器中歌词相关功能](https://juejin.cn/post/6922680524544671752)
-
-bug
-
-- disk 和 lyric 切换时，disk 切换回来后就变为重新旋转
-  - 让 disk 不消失，设为透明为 0
+- 

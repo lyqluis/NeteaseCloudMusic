@@ -26,7 +26,7 @@
         <template #title>
           <div class="swiper-item_title">
             <p class="swiper-item_title-s swiper-item_title-sub">
-              {{ item.copywriter || `热门推荐`}}
+              {{ item.copywriter || `热门推荐` }}
             </p>
             <p class="swiper-item_title-m">
               {{ item.name }}
@@ -36,6 +36,7 @@
         <img :src="item.picUrl" :alt="item.picUrl" />
       </base-block>
     </swiper>
+
     <base-block>
       <template #title>新专辑</template>
       <slider type="album">
@@ -43,6 +44,7 @@
           class="slider-group-item"
           v-for="album in newAlbums"
           :key="album.id"
+          @click="$router.push(`/album/${album.id}`)"
         >
           <div class="slider-group-item-img">
             <img :src="album.picUrl" alt="" />
@@ -62,6 +64,7 @@
         </div>
       </slider>
     </base-block>
+    
     <base-block>
       <template #title>新歌速递</template>
       <swiper v-if="newSongs.length" :width="347" :offset="14">

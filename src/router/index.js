@@ -92,6 +92,11 @@ const routes = [
     component: () => import('../views/Playlist.vue'),
   },
   {
+    path: '/album/:id',
+    name: 'Album',
+    component: () => import('../views/Album.vue'),
+  },
+  {
     path: '/Rank/:id',
     name: 'Rank',
     component: () => import('../views/Playlist.vue'),
