@@ -36,7 +36,6 @@ import { mapMutations } from "vuex";
 
 export default {
   name: "Lyric",
-  // todo if has no lyrics
   props: {
     lyric: {
       type: Object,
