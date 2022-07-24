@@ -21,6 +21,7 @@
         <description>
           <template #name v-if="album.name">{{ album.name }}</template>
           <template #creator v-if="album.artist">
+            <!-- // todo go to artist page -->
             {{ album.artist.name }}
           </template>
           <template #btns>
@@ -67,7 +68,6 @@ import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
 import { mapActions } from "vuex";
-import showHeaderScroller from "mixins/showHeaderScroller";
 
 export default {
   name: "Album",
@@ -138,6 +138,16 @@ export default {
     // display: block;
     @include background-blur(--color-background-blur, --filter-blur);
     @include line-1px(bottom, fixed);
+  }
+}
+</style>
+
+<style lang="scss">
+.album {
+  .description {
+    .creator {
+      color: var(--color-theme);
+    }
   }
 }
 </style>
