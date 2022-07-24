@@ -1834,7 +1834,7 @@ export default {
 
 - 由于 1 功能使用了 `scrollTop`，所以本身可以滚动，只需要点击具体某行歌词时将对应的时间戳通过触发 `$emit` 传递给外层组件 `<player>`，父组件进行更新即可
 
-#### 相关
+##### 相关
 
 > [vue3实现移动端音乐播放器中歌词相关功能](https://juejin.cn/post/6922680524544671752)
 
@@ -1842,50 +1842,6 @@ bug
 
 - disk 和 lyric 切换时，disk 切换回来后就变为重新旋转
   - 让 disk 不消失，设为透明为 0
-
-
-
-#### 问题
-
-##### touch & scroll
-
-```markdown
-[Intervention] Ignored attempt to cancel a touchmove event with cancelable=false, for example because scrolling is in progress and cannot be interrupted.
-```
-
-##### 在popup中使用event.preventDefault()
-
-在 popup 组件中禁止 `touchmove` 事件中的默认行为，会出现警报
-
-```markdown
-[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. 
-```
-
-- 解决
-
-在添加事件监听函数时，添加 `addEventListener` 的第三参数，设置为 `{passive: false}` 即可
-
-> 参考1：[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener#syntax)
->
-> 参考2：[错误提示 Unable to preventDefault inside passive event listener 解决方法](https://www.jq22.com/web-skill53)
-
-##### 当popup禁止背景滑动，解除popup，会造成原页面无法滑动
-
-> MDN：[el.addEventListener：option支持的安全检测](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener#option%E6%94%AF%E6%8C%81%E7%9A%84%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B)
-
-##### @todo event-scroll & touch
-
-> https://www.cnblogs.com/chao202426/p/11765233.html
->
-> https://www.cnblogs.com/mengff/p/13452704.html
-
-##### @todo click & touchstart
-
-> https://www.baidu.com/s?ie=UTF-8&wd=touchstart%20click%20%E5%86%B2%E7%AA%81
->
-> https://www.yisu.com/zixun/235409.html
-
-### todo
 
 #### layout/pagedetail
 
@@ -1973,7 +1929,47 @@ export default {
 
 > [vue-router 完整导航钩子流程](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%AE%8C%E6%95%B4%E7%9A%84%E5%AF%BC%E8%88%AA%E8%A7%A3%E6%9E%90%E6%B5%81%E7%A8%8B)
 
-#### albumdetail
 
-- 改写 mixin - showHeaderScroller.js
-- album detail 中的 tracksAll
+
+#### 问题
+
+##### touch & scroll
+
+```markdown
+[Intervention] Ignored attempt to cancel a touchmove event with cancelable=false, for example because scrolling is in progress and cannot be interrupted.
+```
+
+##### 在popup中使用event.preventDefault()
+
+在 popup 组件中禁止 `touchmove` 事件中的默认行为，会出现警报
+
+```markdown
+[Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. 
+```
+
+- 解决
+
+在添加事件监听函数时，添加 `addEventListener` 的第三参数，设置为 `{passive: false}` 即可
+
+> 参考1：[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener#syntax)
+>
+> 参考2：[错误提示 Unable to preventDefault inside passive event listener 解决方法](https://www.jq22.com/web-skill53)
+
+##### 当popup禁止背景滑动，解除popup，会造成原页面无法滑动
+
+> MDN：[el.addEventListener：option支持的安全检测](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener#option%E6%94%AF%E6%8C%81%E7%9A%84%E5%AE%89%E5%85%A8%E6%A3%80%E6%B5%8B)
+
+##### @todo event-scroll & touch
+
+> https://www.cnblogs.com/chao202426/p/11765233.html
+>
+> https://www.cnblogs.com/mengff/p/13452704.html
+
+##### @todo click & touchstart
+
+> https://www.baidu.com/s?ie=UTF-8&wd=touchstart%20click%20%E5%86%B2%E7%AA%81
+>
+> https://www.yisu.com/zixun/235409.html
+
+### todo
+
