@@ -1,7 +1,6 @@
 <template>
   <div class="playlist">
     <page-detail>
-
       <template #header>
         <nav-header @click-left="$router.go(-1)">
           <!-- // todo page title -->
@@ -34,7 +33,7 @@
               <icon
                 icon="arrow-right"
                 class="icon_vertical"
-                @click="tst"
+                @click="openPopup"
               ></icon>
             </ellipsis>
             <popup v-model="show" class="description">
@@ -57,7 +56,6 @@
           ></list>
         </scroller>
       </template>
-
     </page-detail>
   </div>
 </template>
@@ -88,6 +86,7 @@ export default {
   },
   mixins: [playlistDetail],
   // todo
+  // 重复调用组件激活
   beforeRouteUpdate(to, from, next) {
     this.show = false;
     // this.loadData(to.params.id);
@@ -101,14 +100,10 @@ export default {
     };
   },
   methods: {
-    tst(e) {
-      console.log("tst", e);
+    ...mapActions("player", ["play"]),
+    openPopup(e) {
       this.show = true;
     },
-    tstOnClick(e) {
-      console.log(e);
-    },
-    ...mapActions("player", ["play"]),
     playAllList(e) {
       this.play({ list: this.tracksAll, index: 0 });
     },
