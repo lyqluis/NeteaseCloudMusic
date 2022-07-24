@@ -1,25 +1,27 @@
 <template>
   <div class="album">
-    <page-detail>
-
+    <page-detail
+      :imgClass="false"
+      :contentClass="false"
+      :desClass="false"
+      edgeName="top"
+      :headerOffset="8"
+    >
       <template #header>
-        <nav-header @click-left="$router.go(-1)">
-          <!-- // todo page title -->
-          <!-- this is playlist detail id: {{ $route.params.id }} -->
-        </nav-header>
+        <nav-header @click-left="$router.go(-1)" ref="navHeader"></nav-header>
       </template>
 
       <template #img>
-        <div class="img">
-          <img :src="album.coverImgUrl" alt="" />
+        <div class="album-img" ref="albumImg">
+          <img :src="album.picUrl" alt="" />
         </div>
       </template>
 
       <template #description>
         <description>
           <template #name v-if="album.name">{{ album.name }}</template>
-          <template #creator v-if="album.creator">
-            {{ album.creator.nickname }}
+          <template #creator v-if="album.artist">
+            {{ album.artist.name }}
           </template>
           <template #btns>
             <base-button icon="play" size="big" @click="playAllList"
@@ -34,7 +36,7 @@
               <icon
                 icon="arrow-right"
                 class="icon_vertical"
-                @click="tst"
+                @click="openPopup"
               ></icon>
             </ellipsis>
             <popup v-model="show" class="description">
@@ -45,40 +47,32 @@
       </template>
 
       <template #content>
-        <scroller
-          :loading="scrollLoading"
-          :finished="scrollFinished"
-          @load="getPlaylistDetailAll"
-        >
-          <list
-            :type="$route.name.toLowerCase()"
-            :tracks="list"
-            topOrBottomLine="bottom"
-          ></list>
-        </scroller>
+        <list
+          :type="$route.name.toLowerCase()"
+          :tracks="list"
+          topOrBottomLine="bottom"
+        ></list>
       </template>
-
     </page-detail>
   </div>
 </template>
 
 <script>
 import PageDetail from "layouts/PageDetail";
-import Scroller from "base/Scroller";
 import List from "components/List";
 import Description from "components/Description";
-import playlistDetail from "mixins/playlistDetail";
+import albumDetail from "mixins/albumDetail";
 import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
 import { mapActions } from "vuex";
+import showHeaderScroller from "mixins/showHeaderScroller";
 
 export default {
   name: "Album",
   components: {
     PageDetail,
-    Scroller,
     List,
     Description,
     Ellipsis,
@@ -86,7 +80,7 @@ export default {
     Popup,
     NavHeader,
   },
-  mixins: [playlistDetail],
+  mixins: [albumDetail],
   // todo
   beforeRouteUpdate(to, from, next) {
     this.show = false;
@@ -101,14 +95,10 @@ export default {
     };
   },
   methods: {
-    tst(e) {
-      console.log("tst", e);
+    ...mapActions("player", ["play"]),
+    openPopup(e) {
       this.show = true;
     },
-    tstOnClick(e) {
-      console.log(e);
-    },
-    ...mapActions("player", ["play"]),
     playAllList(e) {
       this.play({ list: this.tracksAll, index: 0 });
     },
@@ -117,9 +107,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "assets/scss/mixin.scss";
+
 .album {
-  .img {
-    width: 100%;
+  padding-bottom: 10px;
+  &-img {
+    margin: 10px auto;
+    margin-top: calc(45px + 10px);
+    width: 231px;
+    height: 231px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 10px 50px 5px var(--color-player-background-blur);
+    img {
+      width: 100%;
+    }
   }
   .icon_vertical {
     vertical-align: top;
@@ -127,6 +129,15 @@ export default {
   .description {
     padding-top: 20px;
     text-shadow: none;
+    color: var(--color-title);
+  }
+  .list {
+    @include line-1px();
+  }
+  .page-header-show {
+    // display: block;
+    @include background-blur(--color-background-blur, --filter-blur);
+    @include line-1px(bottom, fixed);
   }
 }
 </style>

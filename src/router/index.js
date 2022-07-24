@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+
 Vue.use(VueRouter)
 
 const scrollBehavior = (to, from, savedPosition) => {
@@ -120,6 +121,17 @@ const routes = [
 const router = new VueRouter({
   routes,
   scrollBehavior
+})
+
+import { SET_NEED_ZOOM } from "utils/global.js";
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'Playlist') {
+    SET_NEED_ZOOM(true)
+  } else {
+    SET_NEED_ZOOM(false)
+  }
+  next()
 })
 
 export default router

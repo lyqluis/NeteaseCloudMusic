@@ -63,7 +63,7 @@ export default {
 
   &_index {
     flex: none;
-    width: 25px;
+    // width: 25px;
     display: flex;
     align-items: center;
     justify-content: flex-end;

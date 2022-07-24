@@ -1887,4 +1887,93 @@ bug
 
 ### todo
 
-- 
+#### layout/pagedetail
+
+所有 detail page 都使用 `PageDetail.vue` 作为骨架
+
+```html
+<template>
+  <div class="page-detail">
+    <div class="page-header" ref="pageHeader">
+      <slot name="header"></slot>
+    </div>
+    <div class="page-img" ref="pageImg">
+      <slot name="img"> this is page img </slot>
+    </div>
+    <div class="page-content" ref="pageContent">
+      <div class="page-des">
+        <slot name="description"> this is page slot description </slot>
+      </div>
+      <slot name="content"> this is page slot content </slot>
+    </div>
+  </div>
+</template>
+```
+
+##### 动态 mixin
+
+在 PageDetail 中导入不同的功能 mixin 文件
+
+```js
+import showHeaderScroller from "mixins/showHeaderScroller";
+import { globalVariable } from "utils/global";
+
+export default {
+  name: "PageDetail",
+  mixins: [
+    showHeaderScroller,	// 上划到一定程度显示 header
+    globalVariable.NEED_ZOOM ? import("mixins/zoomScroller") : ""	// 针对不同页面引入下拉页面使页面背景图放大的功能
+  ],
+};
+```
+
+> [vue 动态切换 mixins](https://juejin.cn/post/7081931786787225636)
+>
+> *这个虽然是解决方法，但是不推荐这样使用，因为脱离了 mixin 的本质，应该使用不同的组件来实现不同的功能，而非不同的 mixin 来实现*
+
+- 定义一个全局变量
+
+```js
+// utils/global.js
+export const globalVariable = {
+  NEED_ZOOM: false
+}
+
+export const SET_NEED_ZOOM = flag => {
+  globalVariable.NEED_ZOOM = flag
+}
+```
+
+- 在 `router.beforeEach()` 钩子函数中修改该变量，触发该钩子时组件文件的配置还没有初始化，实例还没有被创建
+
+```js
+// router.js
+router.beforeEach((to, from, next) => {
+  if (/*满足引用MB条件
+  	to.name === 'Playlist'
+  */) SET_NEED_ZOOM(true)
+  else SET_NEED_ZOOM(false)
+  next()
+})
+```
+
+- 在组件中通过引入该全局变量来判断是否需要引入指定的 mixin 文件
+
+```js
+// component.vue
+import { globalVariable } from 'utils/global.js'
+
+export default {
+	mixin: [
+    otherMixin,
+    globalVariable.NEED_ZOOM ? import('mixins/zoom') : ''
+  ]
+}
+```
+
+> [vue-router 完整导航钩子流程](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%AE%8C%E6%95%B4%E7%9A%84%E5%AF%BC%E8%88%AA%E8%A7%A3%E6%9E%90%E6%B5%81%E7%A8%8B)
+
+#### albumdetail
+
+- 改写 mixin - showHeaderScroller.js
+- album detail 中的 tracksAll
