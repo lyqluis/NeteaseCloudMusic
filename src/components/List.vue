@@ -17,7 +17,6 @@
 <script>
 import ListItem from "components/ListItem";
 import { mapGetters, mapActions } from "vuex";
-// todo 上划没有反应
 
 export default {
   name: "List",
@@ -56,6 +55,7 @@ export default {
       if (track.id === this.currentTrack.id) return;
       // playlist-detail | album
       this.play({ track, list: this.tracks, index: i });
+      // block-list
     },
   },
 };
