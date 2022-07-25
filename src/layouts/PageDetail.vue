@@ -17,13 +17,14 @@
 
 <script>
 import showHeaderScroller from "mixins/showHeaderScroller";
+import zoomScroller from "mixins/zoomScroller";
 import { globalVariable } from "utils/global";
 
 export default {
   name: "PageDetail",
   mixins: [
     showHeaderScroller,
-    globalVariable.NEED_ZOOM ? import("mixins/zoomScroller") : "",
+    globalVariable.NEED_ZOOM ? zoomScroller : "",
   ],
   props: {
     headerClass: {

@@ -1918,11 +1918,13 @@ router.beforeEach((to, from, next) => {
 ```js
 // component.vue
 import { globalVariable } from 'utils/global.js'
+import zoomScroller from "mixins/zoomScroller";
 
 export default {
 	mixin: [
     otherMixin,
-    globalVariable.NEED_ZOOM ? import('mixins/zoom') : ''
+    globalVariable.NEED_ZOOM ? zoomScroller : "",	// 只支持这样的静态写法
+    // globalVariable.NEED_ZOOM ? import('mixins/zoom') : ''	// 不支持这样的动态导入
   ]
 }
 ```
