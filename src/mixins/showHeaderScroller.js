@@ -1,4 +1,7 @@
-import { addClass, removeClass, getScroller, bindEvent, getDOMRect } from "utils/dom";
+import {
+  addClass, removeClass, getScroller,
+  bindEvent, getDOMRect, removeEvent
+} from "utils/dom";
 
 export default {
   props: {
@@ -23,14 +26,19 @@ export default {
     return {
       header: null,
       headerBottom: 0,
+      scroller: null,
     }
   },
   mounted() {
     this._initScroller();
   },
+  destroyed() {
+    removeEvent(this.scroller, "scroll", this._check);
+  },
+
   methods: {
     _initScroller() {
-      const scroller = getScroller(this.$el);
+      const scroller = (this.scroller = getScroller(this.$el));
       bindEvent(scroller, "scroll", this._check);
       const header = (this.header = this.$refs[this.headerName]);
       const { bottom } = getDOMRect(header);

@@ -10,7 +10,7 @@
 
 <script>
 import Loading from "base/Loading";
-import { bindEvent, getDOMRect, getScroller } from "utils/dom";
+import { bindEvent, getDOMRect, getScroller, removeEvent } from "utils/dom";
 
 export default {
   name: "Scroller",
@@ -46,6 +46,9 @@ export default {
   },
   mounted() {
     this._initScroller(this.$el);
+  },
+  destroyed() {
+    removeEvent(this.scroller, "scroll", this.check);
   },
   watch: {
     loading() {
