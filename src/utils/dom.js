@@ -29,8 +29,8 @@ export function bindEvent(el, eventName, callback, options) {
   el.addEventListener(eventName, callback, options)
 }
 
-export function removeEvent(el, eventName, callback) {
-  el.removeEventListener(eventName, callback)
+export function removeEvent(el, eventName, callback, options) {
+  el.removeEventListener(eventName, callback, options)
 }
 
 export function preventDefault(event, isStopPropagation) {
