@@ -38,10 +38,10 @@ export function shuffle(arr) {
 }
 
 
-export const globalVariable = {
-  NEED_ZOOM: false
-}
+// export const globalVariable = {
+//   NEED_ZOOM: false
+// }
 
-export const SET_NEED_ZOOM = flag => {
-  globalVariable.NEED_ZOOM = flag
-}
+// export const SET_NEED_ZOOM = flag => {
+//   globalVariable.NEED_ZOOM = flag
+// }

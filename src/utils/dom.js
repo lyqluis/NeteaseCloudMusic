@@ -48,6 +48,7 @@ export function getDOMRect(el) {
   }
 }
 
+// 滚动元素需要在css中显性标记
 export function getScroller(el, root = window) {
   const overflowScrollReg = /scroll|auto/i;
   while (el &&
@@ -61,6 +62,19 @@ export function getScroller(el, root = window) {
     el = el.parentNode
   }
   return root
+}
+
+export function getScrollTop(el) {
+  const { scrollTop } = el
+  return scrollTop ?? window.scrollY
+}
+
+export function scrollTo(el, top) {
+  if (el === window) {
+    window.scrollTo({ top })
+  } else {
+    el.scrollTop = top
+  }
 }
 
 export function observeResize(el, fn, unobserve = false) {

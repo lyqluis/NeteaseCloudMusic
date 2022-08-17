@@ -12,9 +12,7 @@
       </template>
 
       <template #img>
-        <div class="album-img" ref="albumImg">
-          <img :src="album.picUrl" alt="" />
-        </div>
+        <cover class="album-img" :imgSrc="album.picUrl"></cover>
       </template>
 
       <template #description>
@@ -51,7 +49,9 @@
         <list
           :type="$route.name.toLowerCase()"
           :tracks="list"
+          :id="id"
           topOrBottomLine="bottom"
+          @changePlaylist="setPlaylist"
         ></list>
       </template>
     </page-detail>
@@ -67,6 +67,7 @@ import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
+import Cover from "base/Cover";
 import { mapActions } from "vuex";
 
 export default {
@@ -79,6 +80,7 @@ export default {
     BaseButton,
     Popup,
     NavHeader,
+    Cover,
   },
   mixins: [albumDetail],
   // todo
@@ -95,12 +97,15 @@ export default {
     };
   },
   methods: {
-    ...mapActions("player", ["play"]),
+    ...mapActions("player", ["play", "isSamePlaylist"]),
     openPopup(e) {
       this.show = true;
     },
     playAllList(e) {
-      this.play({ list: this.tracksAll, index: 0 });
+      if (this.isSamePlaylist({ id: this.id, type: "album" })) {
+        this.setPlaylist();
+      }
+      this.play({ list: this.list, index: 0 });
     },
   },
 };

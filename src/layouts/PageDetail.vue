@@ -1,6 +1,9 @@
 <template>
   <div class="page-detail">
-    <div :class="{ 'page-header': headerClass }" ref="pageHeader">
+    <div
+      :class="[{ 'page-header': headerClass }, showHeaderClass]"
+      ref="pageHeader"
+    >
       <slot name="header"></slot>
     </div>
     <div :class="{ 'page-img': imgClass }" ref="pageImg">
@@ -16,15 +19,20 @@
 </template>
 
 <script>
-import showHeaderScroller from "mixins/showHeaderScroller";
+import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 import zoomScroller from "mixins/zoomScroller";
-import { globalVariable } from "utils/global";
 
 export default {
   name: "PageDetail",
   mixins: [
-    showHeaderScroller,
-    globalVariable.NEED_ZOOM ? zoomScroller : "",
+    showHeaderScrollerMixin({
+      topEls: ["pageHeader"],
+      offset: 10,
+      bottomEl: "pageImg",
+      bottomElEdge: "bottom",
+      className: "page-header-show",
+    }),
+    zoomScroller,
   ],
   props: {
     headerClass: {
@@ -52,18 +60,11 @@ export default {
 
 .page-detail {
   .page-header {
-    // display: none;
     width: 100%;
     position: fixed;
     top: 0;
     z-index: 10;
     transition: all 0.2s ease-out;
-    background: transparent;
-  }
-  .page-header-show {
-    // display: block;
-    @include background-blur(--color-background-blur, --filter-blur);
-    @include line-1px(bottom, fixed);
   }
   .page-img {
     height: 280px;

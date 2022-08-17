@@ -37,45 +37,6 @@ export default {
   },
   methods: {
     ...mapMutations('player', ['setSequenceList']),
-    // getPlaylistDetail(id = this.id) {
-    //   console.log("get playlist detail!")
-    //   this.scrollLoading = true
-    //   if (!this.list.length) {
-    //     getPlaylistDetail(id).then((res) => {
-    //       console.log("get playlistdetail !")
-    //       this.playlist = res.playlist;
-    //       const { tracks, trackIds } = this.playlist;
-    //       this.list = tracks
-    //       this.trackIds = trackIds
-    //       this.scrollLoading = false
-    //     });
-    //   } else {
-    //     // get more tracks by trackid
-    //     // getSongDetail(this.moreTrackIds).then((res) => {
-    //     //   console.log("get more playlist tracks !");
-    //     //   console.log(res);
-    //     //   this.list.push(...res.songs);
-    //     //   this.scrollLoading = false;
-    //     // });
-    //     // get rest tracks of playlist
-    //     getPlaylistTrackAll({
-    //       id: this.id,
-    //       limit: this.limit,
-    //       offset: ++this.offset,
-    //     }).then(res => {
-    //       console.log('get playlist all tracks !')
-    //       // check whether the offset is max
-    //       let songs = res.songs
-    //       const gap = this.tracksLength - this.currentListLength
-    //       if (gap < this.limit) {
-    //         const restIdx = this.limit - gap
-    //         songs = songs.slice(restIdx)
-    //       }
-    //       this.list.push(...songs)
-    //       this.scrollLoading = false
-    //     });
-    //   }
-    // },
 
     async getPlaylistDetailAll(id = this.id) {
       console.log("get playlist detail!")
@@ -89,11 +50,10 @@ export default {
         // 通过 trackIds 来获取所有 track
         const { privileges, songs } = await getSongDetail(trackIds.map(idObj => idObj.id))
         songs.map((song, i) => {
-          song.privileges = privileges[i]
+          song.privilege = privileges[i]
           return song
         })
-        // set vuex player sequence list
-        this.setSequenceList(this.tracksAll = songs)
+        this.tracksAll = songs
       }
       // pagination
       const start = this.offset * this.limit
@@ -105,5 +65,9 @@ export default {
       this.scrollLoading = false
     },
 
+    // set vuex player sequence list
+    setPlaylist() {
+      this.setSequenceList(this.tracksAll);
+    },
   }
 }

@@ -53,6 +53,7 @@ export default {
   .des {
     margin-top: 10px;
     font-size: var(--font-size-medium);
+    text-shadow: none;
     @include inline-text-ellipsis(2);
     line-height: 1.2;
     align-self: flex-start;

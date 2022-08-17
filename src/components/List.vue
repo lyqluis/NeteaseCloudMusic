@@ -16,7 +16,7 @@
 
 <script>
 import ListItem from "components/ListItem";
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "List",
@@ -38,24 +38,42 @@ export default {
       default: "playlist",
       // album | playlist | artist | rank | songlist (播放列表)
     },
-    id: Number, // ?
+    id: [String, Number], // ?
     topOrBottomLine: {
       type: String,
       default: "top",
     },
   },
   computed: {
+    ...mapState("player", ["playlistSrc"]),
     ...mapGetters("player", ["currentTrack"]),
   },
   methods: {
+    ...mapMutations("player", ["setPlaylistSrc"]),
     ...mapActions("player", ["play"]),
     // todo diff from different list
     playTrack(track, i) {
       console.log("play song", track);
       if (track.id === this.currentTrack.id) return;
+      // handle play list
+      let list;
+      if (this.id === undefined) {
+        // newsong list
+        this.setPlaylistSrc({ id: this.id, type: this.type });
+        list = this.tracks;
+      } else if (
+        this.type !== this.playlistSrc.type ||
+        this.id !== this.playlistSrc.id
+      ) {
+        // if is new playlist
+        this.setPlaylistSrc({ id: this.id, type: this.type });
+        // set list to sequence list
+        this.$emit("changePlaylist");
+        list = true;
+      }
       // playlist-detail | album
-      this.play({ track, list: this.tracks, index: i });
-      // block-list
+      this.play({ track, list, index: i });
+      // todo block-list
     },
   },
 };

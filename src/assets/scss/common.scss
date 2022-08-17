@@ -1,0 +1,8 @@
+@import "assets/scss/mixin.scss";
+
+.page-header-show {
+	// display: block;
+	transition: all 0.2s ease-in-out;
+	@include background-blur(--color-background-blur, --filter-blur);
+	@include line-1px(bottom, fixed);
+}

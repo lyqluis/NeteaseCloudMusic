@@ -23,3 +23,13 @@ $animation-duration: 0.3s;
 		transform: rotate(360deg);
 	}
 }
+
+// skeleton
+$skeleton-animation-duration: 1.2s;
+$skeleton-animation: skeleton-change $skeleton-animation-duration ease-in-out infinite;
+
+@keyframes skeleton-change {
+  50% {
+    opacity: 0.6;
+  }
+}

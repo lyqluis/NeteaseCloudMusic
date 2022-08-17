@@ -186,10 +186,7 @@ export default {
   width: 100%;
   overflow: hidden;
   padding-bottom: var(--padding-col);
-  &::-webkit-scrollbar {
-    width: 0 !important;
-    height: 0 !important;
-  }
+  @include no-scrollbar();
   .swiper-group {
     display: flex;
     box-sizing: content-box;
@@ -214,7 +211,7 @@ export default {
       .swiper-item_title-sub {
         color: var(--color-text-detail);
       }
-      img {
+      &_img {
         width: 100%;
         border-radius: 5px;
       }

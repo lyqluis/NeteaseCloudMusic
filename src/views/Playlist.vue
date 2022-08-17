@@ -52,7 +52,9 @@
           <list
             :type="$route.name.toLowerCase()"
             :tracks="list"
+            :id="id"
             topOrBottomLine="bottom"
+            @changePlaylist="setPlaylist"
           ></list>
         </scroller>
       </template>
@@ -100,11 +102,14 @@ export default {
     };
   },
   methods: {
-    ...mapActions("player", ["play"]),
+    ...mapActions("player", ["play", "isSamePlaylist"]),
     openPopup(e) {
       this.show = true;
     },
     playAllList(e) {
+      if (this.isSamePlaylist({ id: this.id, type: "album" })) {
+        this.setPlaylist();
+      }
       this.play({ list: this.tracksAll, index: 0 });
     },
   },
@@ -121,7 +126,6 @@ export default {
   }
   .description {
     padding-top: 20px;
-    text-shadow: none;
   }
 }
 </style>

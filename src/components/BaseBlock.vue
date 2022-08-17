@@ -30,6 +30,7 @@ export default {
   methods: {
     handleRight(e, url) {
       console.log(e, url);
+      this.$emit("click-right", e, url);
     },
   },
 };

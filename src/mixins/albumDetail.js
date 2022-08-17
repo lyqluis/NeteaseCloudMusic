@@ -1,4 +1,6 @@
 import { getAlbumDetail } from "api/album"
+import { mapMutations } from "vuex"
+
 
 export default {
   data() {
@@ -8,25 +10,37 @@ export default {
       // id: 2809577409, // rank
       list: [],
       album: {},
+      tracksAll: [],
       scrollLoading: false,
       albumScrollFinished: false,
+    }
+  },
+  computed: {
+    trackIds() {
+      return this.list.map(song => song.id)
     }
   },
   created() {
     this.getAlbumDetail()
   },
   methods: {
+    ...mapMutations('player', ['setSequenceList']),
+
     getAlbumDetail(id = this.id) {
       this.scrollLoading = true;
-      getAlbumDetail(id).then((res) => {
+      getAlbumDetail(id).then(async (res) => {
         console.log("get albumdetail !");
-        console.log(res)
         const { album, songs } = res
         this.list = songs;
         this.album = album
         this.scrollLoading = false;
         this.albumScrollFinished = true;
       });
+    },
+
+    // set vuex player sequence list
+    setPlaylist() {
+      this.setSequenceList(this.list);
     },
   }
 }
