@@ -736,6 +736,12 @@ swiper 组件中定义了 `slot` 插槽后，当父组件在插槽中添加内�
 
 #### lazy-load
 
+> [vue-lazyload](https://github.com/hilongjw/vue-lazyload)
+
+- vue-lazyload 是一个 Vue 插件
+
+
+
 #### 组件loading
 
 > [Vue 函数式组件的使用技巧](https://segmentfault.com/a/1190000022937276)
@@ -1867,6 +1873,8 @@ bug
 ```
 
 ##### 动态 mixin
+
+@todo 失效
 
 在 PageDetail 中导入不同的功能 mixin 文件
 

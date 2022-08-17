@@ -16,7 +16,7 @@
         <scroller
           :loading="scrollLoading"
           :finished="scrollFinished"
-          @load="getPlaylistDetail"
+          @load="getPlaylistDetailAll"
         >
           <list type="rank" :tracks="list" topOrBottomLine="bottom"></list>
         </scroller>

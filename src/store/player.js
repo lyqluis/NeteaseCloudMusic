@@ -17,13 +17,18 @@ export default {
     fullScreen: false,
     showLyric: false,
     mode: 0,
-    playlist: [],
+    // playlist: [],
     sequenceList: [],
     shuffledList: [],
-    currentIndex: 0
+    currentIndex: 0,
+    playlistSrc: {
+      id: 0,
+      type: 'playlist'
+    },
   }),
   getters: {
-    currentTrack: state => state.playlist[state.currentIndex] || {},
+    playlist: (state, getters) => getters.currentMode === 'shuffle' ? state.shuffledList : state.sequenceList,
+    currentTrack: (state, getters) => getters.playlist[state.currentIndex] || {},
     currentMode: state => PLAY_MODE[state.mode]
   },
   mutations: {
@@ -34,10 +39,12 @@ export default {
       state.loading = flag
     },
     setTrackUrl(state, url) {
-      Vue.set(state.playlist[state.currentIndex], 'mp3', url)
+      const list = PLAY_MODE[state.mode] === 'shuffle' ? state.shuffledList : state.sequenceList
+      Vue.set(list[state.currentIndex], 'mp3', url)
     },
     setTrackLyric(state, lyric) {
-      Vue.set(state.playlist[state.currentIndex], 'lyric', lyric)
+      const list = PLAY_MODE[state.mode] === 'shuffle' ? state.shuffledList : state.sequenceList
+      Vue.set(list[state.currentIndex], 'lyric', lyric)
     },
     setPlayingState(state, flag) {
       state.playing = flag
@@ -48,9 +55,9 @@ export default {
     setShowLyric(state, flag) {
       state.showLyric = flag
     },
-    setPlaylist(state, list) {
-      state.playlist = list
-    },
+    // setPlaylist(state, list) {
+    //   state.playlist = list
+    // },
     setSequenceList(state, list) {
       state.sequenceList = list
     },
@@ -64,35 +71,48 @@ export default {
     },
     setCurrentIndex(state, i) {
       state.currentIndex = i
-    }
+    },
+    setPlaylistSrc(state, { id, type }) {
+      state.playlistSrc.id = id
+      state.playlistSrc.type = type
+    },
   },
   actions: {
+
+    /**
+     * @func: 
+     * @param {*} track
+     * @param {*} list
+     * @param {*} index
+     */
     async play({ commit, state, getters }, { track, list, index }) {
       commit('setPlayingState', false)
       commit('setLoadingState', true)
-      // adjust params
+
+      // set track
       if (!track) {
-        track = list ? list[index] : state.playlist[index]
+        track = list ? state.sequenceList[index] : getters.playlist[index]
       }
-      // set playlist by play mode
+
+      // set playlist
       if (list) {
-        if (list.length > state.sequenceList.length) {
+        if (list.length) {  // list
           list = list.slice()
           commit('setSequenceList', list)
-        } else {
+        } else {  // true, sequencelist is setted already
           list = state.sequenceList
         }
 
+        // set playlist by play mode
         if (getters.currentMode === 'shuffle') {
           list = shuffle(list.slice())
           commit('setShuffledList', list)
         }
-        commit('setPlaylist', list)
       }
 
       // set currentIndex by play mode
       if (getters.currentMode === 'shuffle') {
-        const shuffleIndex = state.playlist.findIndex(t => t.id === track.id)
+        const shuffleIndex = getters.playlist.findIndex(t => t.id === track.id)
         commit('setCurrentIndex', shuffleIndex)
       } else {
         commit('setCurrentIndex', index)
@@ -115,20 +135,22 @@ export default {
     },
 
     async changeMode({ dispatch, commit, state, getters }) {
-      commit('setMode', state.mode + 1)
-      const mode = PLAY_MODE[state.mode]
+      const track = getters.currentTrack
       let list = state.sequenceList
       let index = state.currentIndex
+      
+      commit('setMode', state.mode + 1)
+      const mode = getters.currentMode
       if (mode === 'shuffle') {
         list = shuffle(list.slice())
         commit('setShuffledList', list)
       }
-      // update new current track index
+      // update current track's new index
       // do not use dispatch action cause it is async, that will cause current track auto play when current track paused when changing mode
-      index = list.findIndex(t => t.id === getters.currentTrack.id)
+      index = list.findIndex(t => t.id === track.id)
       commit('setCurrentIndex', index)
       // update play list
-      commit('setPlaylist', list)
+      // commit('setPlaylist', list)
     },
   },
 }

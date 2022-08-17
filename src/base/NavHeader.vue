@@ -36,6 +36,10 @@ export default {
       default: "返回",
     },
     className: String,
+    sticky: Boolean,
+  },
+  computed:{
+
   },
   methods: {
     onClickLeft(e) {
@@ -66,6 +70,7 @@ export default {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   &_left,

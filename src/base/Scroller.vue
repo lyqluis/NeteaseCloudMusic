@@ -66,7 +66,7 @@ export default {
     _initScroll(el = this.$el) {
       if (!this.scroller) {
         this.scroller = getScroller(el);
-        console.log(this.scroller);
+        console.log("scroller: ", this.scroller);
       }
       bindEvent(this.scroller, "scroll", this.check);
     },

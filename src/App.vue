@@ -12,7 +12,7 @@
 <script>
 import Navigation from "components/Navigation.vue";
 import Player from "components/Player.vue";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
@@ -20,7 +20,7 @@ export default {
     Player,
   },
   computed: {
-    ...mapState("player", ["playlist"]),
+    ...mapGetters("player", ["playlist"]),
   },
   methods: {
     goback(e) {

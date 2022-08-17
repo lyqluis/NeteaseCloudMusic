@@ -1,52 +1,40 @@
 <template>
   <div class="tst">
-    <p>this is tst page</p>
-    <p>this is tst page</p>
-    <p>this is tst page</p>
-    <div class="wrapper">
-      <div class="img-wrapper">
-        <div class="img"></div>
-      </div>
-      <progress-circle :width="48"></progress-circle>
-    </div>
+    <cover :imgSrc="imgSrc"></cover>
   </div>
 </template>
 
 <script>
-import ProgressCircle from "base/ProgressCircle";
+import Cover from "./Cover.vue";
+import Tab from "./Tab.vue";
+import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 
 export default {
-  name: " tst",
-  components: { ProgressCircle },
+  // name: " tst",
+  mixins: [],
+  components: {
+    Cover,
+  },
+  data() {
+    return {
+      imgSrc: "",
+    };
+  },
+  created() {
+    setTimeout(() => {
+      this.imgSrc =
+        "https://p1.music.126.net/99AYOCL3zLCQigljK2-B4A==/109951165145793107.jpg";
+    }, 5000);
+  },
+  methods: {
+    getData(item) {
+      console.log("get data from tst.vue");
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .tst {
-  position: relative;
-  .wrapper {
-    height: 64px;
-    bottom: 80px;
-    padding: 0 20px;
-    justify-content: space-between;
-    // common
-    display: flex;
-    align-items: center;
-    .img-wrapper {
-      // width: auto;
-      border: 5px solid transparent;
-      border-radius: 50%;
-      .img {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: lightblue;
-        box-shadow: 0 0 7px 2.5px var(--color-player-background-blur);
-      }
-    }
-    .progress-circle {
-      position: absolute;
-    }
-  }
 }
 </style>

@@ -5,6 +5,25 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const scrollBehavior = (to, from, savedPosition) => {
+  const position = {}
+
+  if (to.matched.some(m => m.meta.scrollToTop)) {
+    return new Promise(resolve => {
+      // check if any matched route config has meta that requires scrolling to top
+      // coords will be used if no selector is provided,
+      // or if the selector didn't match any element.
+      position.x = 0
+      position.y = 0
+
+      //   // wait for the out transition to complete (if necessary)
+      //   this.app.$root.$once('triggerScroll', () => {
+      //     // if the resolved position is falsy or an empty object,
+      //     // will retain current scroll position.
+      resolve(position)
+      //   })
+    })
+  }
+
   if (savedPosition) {
     return new Promise((resolve, reject) => {
       // setTimeout(() => {
@@ -13,8 +32,6 @@ const scrollBehavior = (to, from, savedPosition) => {
       // }, 500)
     })
   }
-  return { x: 0, y: 0 }
-  // const position = {}
 
   // // scroll to anchor by returning the selector
   // if (to.hash) {
@@ -34,23 +51,6 @@ const scrollBehavior = (to, from, savedPosition) => {
   //   // will retain current scroll position.
   //   return false
   // }
-
-  // return new Promise(resolve => {
-  //   // check if any matched route config has meta that requires scrolling to top
-  //   if (to.matched.some(m => m.meta.scrollToTop)) {
-  //     // coords will be used if no selector is provided,
-  //     // or if the selector didn't match any element.
-  //     position.x = 0
-  //     position.y = 0
-  //   }
-
-  //   // wait for the out transition to complete (if necessary)
-  //   this.app.$root.$once('triggerScroll', () => {
-  //     // if the resolved position is falsy or an empty object,
-  //     // will retain current scroll position.
-  //     resolve(position)
-  //   })
-  // })
 }
 
 const routes = [
@@ -110,6 +110,30 @@ const routes = [
       scrollToTop: true
     }
   },
+  {
+    path: '/newalbums',
+    name: 'NewAlbums',
+    component: () => import('../views/NewAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/newsongs',
+    name: 'NewSongs',
+    component: () => import('../views/NewSongs.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/ranks',
+    name: 'Ranks',
+    component: () => import('../views/Ranks.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
   // todo delete
   {
     path: '/tst',
@@ -123,15 +147,5 @@ const router = new VueRouter({
   scrollBehavior
 })
 
-import { SET_NEED_ZOOM } from "utils/global.js";
-
-router.beforeEach((to, from, next) => {
-  if (to.name === 'Playlist') {
-    SET_NEED_ZOOM(true)
-  } else {
-    SET_NEED_ZOOM(false)
-  }
-  next()
-})
 
 export default router

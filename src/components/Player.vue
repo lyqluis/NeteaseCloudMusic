@@ -23,7 +23,9 @@
             className="player-header-title-name"
           >
           </rolling-bar>
-          <rolling-bar :text="spliceArtists(currentTrack.ar)"></rolling-bar>
+          <rolling-bar
+            :text="spliceArtists(currentTrack.ar || currentTrack.artists)"
+          ></rolling-bar>
         </div>
       </nav-header>
 
@@ -35,7 +37,7 @@
       ></lyric>
 
       <div class="player-img" :class="playerCD">
-        <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" />
+        <img :src="currentAlbum && currentAlbum.picUrl" alt="" />
       </div>
 
       <!-- // todo 偏移 -->
@@ -46,7 +48,11 @@
       ></progress-circle>
 
       <div class="player-mini-title" v-show="!fullScreen">
-        {{ `${currentTrack.name} - ${spliceArtists(currentTrack.ar)}` }}
+        {{
+          `${currentTrack.name} - ${spliceArtists(
+            currentTrack.ar || currentTrack.artists
+          )}`
+        }}
       </div>
 
       <div class="player-ops" v-show="fullScreen">
@@ -142,11 +148,13 @@ export default {
       "fullScreen",
       "showLyric",
       "mode",
-      "playlist",
       "currentIndex",
       "mode",
     ]),
-    ...mapGetters("player", ["currentTrack", "currentMode"]),
+    ...mapGetters("player", ["playlist", "currentTrack", "currentMode"]),
+    currentAlbum() {
+      return this.currentTrack.al ?? this.currentTrack.album;
+    },
     playIcon() {
       return this.playing ? "pause" : "play";
     },
@@ -167,7 +175,10 @@ export default {
         : "no_opacity";
     },
     durationTime() {
-      return this.currentTrack && this.currentTrack.dt / 1000;
+      return (
+        this.currentTrack &&
+        (this.currentTrack.dt ?? this.currentTrack.duration) / 1000
+      );
     },
     progressPercent() {
       return clamp(this.currentTime / this.durationTime, 0, 1);
@@ -229,6 +240,7 @@ export default {
       }
     },
     next() {
+      if (this.playlist.length < 2) return;
       const index =
         this.currentIndex === this.playlist.length - 1
           ? 0
@@ -236,6 +248,7 @@ export default {
       this.play({ index });
     },
     prev() {
+      if (this.playlist.length < 2) return;
       const index =
         this.currentIndex === 0
           ? this.playlist.length - 1

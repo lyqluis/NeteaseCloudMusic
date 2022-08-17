@@ -21,6 +21,7 @@ import axios from 'utils/axios'
  * 获取专辑内容
  * 说明 : 调用此接口 , 传入专辑 id, 可获得专辑内容
  * @param {number} id
+ * 返回的 songs 中包含歌曲 url 和 privilege
  */
 export function getAlbumDetail(id) {
   return axios({

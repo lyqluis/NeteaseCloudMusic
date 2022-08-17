@@ -4,9 +4,13 @@
       <!-- 歌曲在专辑中的序号 / 榜单中的排列 -->
       {{ type === "album" ? track.no : index + 1 }}
     </div>
-    <div class="list-item_img" v-if="listType.hasImg">
-      <img :src="album.picUrl" alt="" />
-    </div>
+
+    <cover
+      className="list-item_img"
+      v-if="listType.hasImg"
+      :imgSrc="album.picUrl"
+    ></cover>
+    
     <div class="list-item_detail" :class="`line-1px-${topOrBottomLine}`">
       <p class="list-item_detail-name">{{ track.name }}</p>
       <!-- // todo 重写一个artists组件, 用来显示多歌手 -->
@@ -19,10 +23,14 @@
 </template>
 
 <script>
+import Cover from "base/Cover";
 import { listTypes } from "utils/staticData";
 
 export default {
   name: "ListItem",
+  components: {
+    Cover,
+  },
   props: {
     track: {
       type: Object,
@@ -62,8 +70,8 @@ export default {
   display: flex;
 
   &_index {
+    width: var(--padding-col);
     flex: none;
-    // width: 25px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -73,14 +81,10 @@ export default {
 
   &_img {
     flex: none;
+    margin: 5px;
     width: 58px;
     height: 58px;
-    padding: 5px;
-    img {
-      width: 100%;
-      height: 100%;
-      border-radius: 3px;
-    }
+    border-radius: 3px;
   }
   .line-1px-top {
     @include line-1px(top);
