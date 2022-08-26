@@ -54,6 +54,27 @@ a {
 	}
 }
 
+// 取消 ios safari 点击造成的元素灰色背景
+html {
+	-webkit-tap-highlight-color: transparent;
+}
+
+input,
+button,
+textarea {
+	color: inherit;
+	font: inherit;
+}
+
+a,
+input,
+button,
+textarea {
+	&:focus {
+		outline: none;
+	}
+}
+
 .page_title {
 	font-size: var(--font-size-large-page);
 	font-weight: 900;

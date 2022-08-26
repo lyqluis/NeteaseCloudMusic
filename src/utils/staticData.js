@@ -42,6 +42,11 @@ export const listTypes = {
     hasImg: 1,
     circleImg: 0,
   },
+  'song': {
+    hasNum: 0,
+    hasImg: 1,
+    circleImg: 0,
+  },
   'album': {
     hasNum: 1,
     hasImg: 0,
@@ -58,6 +63,11 @@ export const listTypes = {
     circleImg: 0,
   },
   'songlist': {
+    hasNum: 0,
+    hasImg: 0,
+    circleImg: 0,
+  },
+  'suggestion': {
     hasNum: 0,
     hasImg: 0,
     circleImg: 0,

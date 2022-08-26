@@ -1,20 +1,36 @@
 <template>
-  <div :class="`list-item ${type}-list-item`">
+  <div :class="[`list-item ${type}-list-item`, { active: active }]">
     <div class="list-item_index" v-if="listType.hasNum">
       <!-- 歌曲在专辑中的序号 / 榜单中的排列 -->
       {{ type === "album" ? track.no : index + 1 }}
     </div>
 
     <cover
-      className="list-item_img"
+      :className="`list-item_img ${type}`"
       v-if="listType.hasImg"
-      :imgSrc="album.picUrl"
+      :type="type"
+      :imgSrc="picUrl"
     ></cover>
-    
-    <div class="list-item_detail" :class="`line-1px-${topOrBottomLine}`">
-      <p class="list-item_detail-name">{{ track.name }}</p>
+
+    <div
+      class="list-item_detail"
+      :class="[
+        `line-1px-${topOrBottomLine}`,
+        { 'item-insider': type === 'songlist' || type === 'suggestion' },
+      ]"
+    >
+      <icon
+        v-if="type === 'suggestion'"
+        icon="search"
+        className="item-insider-icon"
+      ></icon>
+
+      <p class="list-item_detail-name">{{ track.name || track.keyword }}</p>
       <!-- // todo 重写一个artists组件, 用来显示多歌手 -->
-      <p class="list-item_detail-artist" v-if="listType.hasImg">
+      <p
+        class="list-item_detail-artist"
+        v-if="listType.hasImg && !listType.circleImg"
+      >
         {{ artists[0].name }}
       </p>
     </div>
@@ -36,6 +52,7 @@ export default {
       type: Object,
     },
     index: Number,
+    active: Boolean,
     type: {
       type: String,
       default: "playlist",
@@ -50,10 +67,14 @@ export default {
       return listTypes[this.type];
     },
     album() {
-      return this.track.album || this.track.al;
+      return this.track.album ?? this.track.al;
+    },
+    picUrl() {
+      if (this.type === "artist") return this.track.picUrl;
+      return this.track.coverImgUrl ?? this.album.picUrl;
     },
     artists() {
-      return this.track.artists || this.track.ar;
+      return this.track.artists ?? this.track.ar;
     },
   },
 };
@@ -68,6 +89,10 @@ export default {
 // .songlist-list-item,
 .list-item {
   display: flex;
+
+  &:active {
+    background: #eee;
+  }
 
   &_index {
     width: var(--padding-col);
@@ -85,13 +110,18 @@ export default {
     width: 58px;
     height: 58px;
     border-radius: 3px;
+    &.artist {
+      border-radius: 50%;
+    }
   }
+
   .line-1px-top {
     @include line-1px(top);
   }
   .line-1px-bottom {
     @include line-1px(bottom);
   }
+
   &_detail {
     width: 100%;
     margin-left: 10px;
@@ -106,6 +136,16 @@ export default {
     &-artist {
       font-size: var(--font-size-medium);
       color: var(--color-text-detail);
+    }
+    &.item-insider {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      margin-left: 0;
+      height: 45px;
+      .item-insider-icon {
+        margin-right: 10px;
+      }
     }
   }
 }

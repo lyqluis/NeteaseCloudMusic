@@ -1,34 +1,46 @@
 <template>
   <div class="tst">
-    <cover :imgSrc="imgSrc"></cover>
+    <form action="/">
+      <base-search @input="onInput" @search="onSearch"></base-search>
+    </form>
+    <div class="content">
+      <div class="track">
+        <p v-for="i in 100" :key="i">{{ i }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Cover from "./Cover.vue";
-import Tab from "./Tab.vue";
-import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
+import BaseSearch from "./BaseSearch.vue";
+import { getDefaultSearchKeyword, search } from "api/search";
 
 export default {
   // name: " tst",
   mixins: [],
   components: {
-    Cover,
+    BaseSearch,
   },
   data() {
     return {
       imgSrc: "",
+      inputVal: "",
     };
   },
-  created() {
-    setTimeout(() => {
-      this.imgSrc =
-        "https://p1.music.126.net/99AYOCL3zLCQigljK2-B4A==/109951165145793107.jpg";
-    }, 5000);
-  },
+  created() {},
   methods: {
-    getData(item) {
+    onClick(e) {
       console.log("get data from tst.vue");
+    },
+    onTouch(e) {
+      console.log("touch event");
+    },
+    onInput(val) {
+      this.inputVal = val;
+    },
+    onSearch(val) {
+      console.log("search", val);
+      search().then((res) => console.log());
     },
   },
 };
@@ -36,5 +48,24 @@ export default {
 
 <style lang="scss" scoped>
 .tst {
+  height: 100vh;
+  position: relative;
+  form {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .content {
+    // position: absolute;
+    // top: 0;
+    // height: calc(100vh - 45px - 80px);
+    // padding-top: 45px;
+    font-size: 50px;
+    .track {
+      // position: absolute;
+      background: lightblue;
+    }
+    // overflow: overlay;
+  }
 }
 </style>

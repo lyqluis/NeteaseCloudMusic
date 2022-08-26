@@ -26,6 +26,7 @@ export default {
     errorText: { type: String, default: "error" },
     finishedText: { type: String, default: "This is end" },
     loadingText: { type: String, default: "loading" },
+    active: { type: Boolean, default: true },
   },
   data() {
     return {
@@ -47,13 +48,33 @@ export default {
   mounted() {
     this._initScroller(this.$el);
   },
+  // use in keep-alive
+  activated() {
+    if (!this.binded && this.active) {
+      bindEvent(this.scroller, "scroll", this.check);
+    }
+  },
+  deactivated() {
+    removeEvent(this.scroller, "scroll", this.check);
+    this.binded = null;
+  },
   destroyed() {
     removeEvent(this.scroller, "scroll", this.check);
+    this.binded = null;
   },
   watch: {
     loading() {
       this.innerLoading = this.loading;
       this.check();
+    },
+    // use in tabs when switch one tab from another
+    active(isActive) {
+      if (isActive) {
+        !this.binded && bindEvent(this.scroller, "scroll", this.check);
+      } else {
+        removeEvent(this.scroller, "scroll", this.check);
+        this.binded = null;
+      }
     },
     // finished: "check",
   },
@@ -69,6 +90,7 @@ export default {
         console.log("scroller: ", this.scroller);
       }
       bindEvent(this.scroller, "scroll", this.check);
+      this.binded = true;
     },
     check() {
       this.$nextTick(() => {

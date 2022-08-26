@@ -20,7 +20,7 @@
         <div class="tab-box" :style="titleStyle" />
       </div>
     </div>
-    <div class="tabs-content-wrapper">
+    <div class="tabs-content-wrapper" ref="contentWrapper">
       <div class="tabs-content-track" :style="contentStyle">
         <slot></slot>
       </div>
@@ -162,8 +162,8 @@ export default {
       display: flex;
       align-items: center;
       position: relative;
-      padding-top: 4px;
-      padding-bottom: 4px;
+      padding-top: 8px;
+      padding-bottom: 8px;
       .tab-title {
         flex-shrink: 0;
         padding: 10px 14px;
