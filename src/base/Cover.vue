@@ -30,6 +30,8 @@ export default {
 
 .cover {
   overflow: hidden;
+  display: flex;
+  justify-content: center;
   // // list
   // width: 58px;
   // height: 58px;

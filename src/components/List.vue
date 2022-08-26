@@ -3,12 +3,13 @@
     <list-item
       class="list-item"
       v-for="(track, i) in tracks"
-      :key="track.id"
+      :key="`${i}-${track.id}`"
       :index="i"
       :track="track"
       :type="type"
+      :active="activeIndex === i"
       :topOrBottomLine="topOrBottomLine"
-      @click.native="playTrack(track, i)"
+      @click.native="onClick(track, i)"
     >
     </list-item>
   </div>
@@ -25,6 +26,7 @@ export default {
   },
   data() {
     return {
+      activeIndex: null,
       // listTypes: listTypes,
     };
   },
@@ -36,7 +38,7 @@ export default {
     type: {
       type: String,
       default: "playlist",
-      // album | playlist | artist | rank | songlist (播放列表)
+      // album | playlist | artist | rank | songlist (播放列表) | suggestion
     },
     id: [String, Number], // ?
     topOrBottomLine: {
@@ -52,6 +54,14 @@ export default {
     ...mapMutations("player", ["setPlaylistSrc"]),
     ...mapActions("player", ["play"]),
     // todo diff from different list
+    onClick(item, i) {
+      this.activeIndex = i;
+      if (this.type === "suggestion") {
+        this.$emit("select", item);
+      } else {
+        this.playTrack(item, i);
+      }
+    },
     playTrack(track, i) {
       console.log("play song", track);
       if (track.id === this.currentTrack.id) return;

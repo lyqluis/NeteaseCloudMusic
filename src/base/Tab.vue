@@ -39,17 +39,19 @@ export default {
       if (val) {
         this.inited = true;
       }
+      this.$emit("activated", val);
     },
   },
   mounted() {
+    console.log("tab mounted");
     if (this.scrollRecording) {
       this.scrollTop = 0;
       this.scroller = getScroller(this.$el);
       bindEvent(this.scroller, "scroll", this.recordScroll);
-      console.log("bind scroll recording");
     }
   },
   destroyed() {
+    console.log("tab detroyed");
     if (this.scrollRecording) {
       removeEvent(this.scroller, "scroll", this.recordScroll);
       this.scroller = null;

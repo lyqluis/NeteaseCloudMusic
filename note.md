@@ -1093,6 +1093,251 @@ export default {
 }
 ```
 
+#### input
+
+```html
+<div class="base-search">
+  <div class="content" :class="[{ focus: focus }]">
+    <icon icon="search" className="search-icon"></icon>
+    <input
+           type="search"
+           :placeholder="placeholder"
+           v-model="value"
+           @focus="onFocus"
+           @blur="onBlur"
+           @input="onInput"
+           @keypress="onKeypress"
+           />
+    <icon
+          v-show="showClear"
+          icon="cancel"
+          className="search-icon"
+          @touchstart="onClear"
+          @click="onClick"
+          ></icon>
+  </div>
+
+  <div class="cancel" :class="[{ focus: focus }]" @click="onCancel">取消</div>
+</div>
+```
+
+- `<input type="search">`
+
+> [MDN - input (type = search)](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/Input/search)
+>
+> HTML 5 新增的属性，用于搜索字符串的单行文字区域。输入文本中的换行会被自动去除。在支持的浏览器中可能有一个删除按钮，用于清除整个区域。拥有动态键盘的设备上的回车图标会变成搜索图标。
+
+>在 `<search>` 外层增加 `<form>` 标签，且 `action` 不为空，即可在 iOS 输入法中显示搜索按钮
+
+```html
+<form action="/">
+  <base-input></base-input>
+</form>
+```
+
+##### 事件监听
+
+- onFocus，`<input>` 的聚焦事件
+
+  ```js
+  onFocus() {
+    this.focus = true;
+  }
+  ```
+
+- onBlur，`<input>` 失去聚焦
+
+  ```js
+  onBlur() {
+    this.focus = false;
+  }
+  ```
+
+- onInput，输入事件，向父组件提供一个 `@input` 事件
+
+  ```js
+  onInput() {
+    this.$emit("input", this.value);
+  }
+  ```
+
+- onClear，清空 input 的内容
+
+  > `<clear-icon>` 上的 `clear` 事件回调要绑定在 `ontouchstart` 上，因为如果绑定在 `onclick` 上会和 `onblur` 事件监听起冲突，`click` 事件比 `blur` 事件晚触发
+
+  ```js
+  onClear(e) {
+    preventDefault(e);
+    this.value = "";
+    this.$emit("input", this.value);	// 同时触发 @input
+  }
+  ```
+
+- onCancel，取消搜索
+
+  ```js
+  onCancel(e) {
+    this.onClear(e);
+    this.$emit("cancel", e);	// 触发 @cancel
+  }
+  ```
+
+- onKeypress，按键
+
+  ```js
+  onKeypress(e) {
+    // press enter
+    if (e.keyCode === 13) {
+      preventDefault(e);
+      this.$emit("search", this.value);	// 触发 @search
+  		this.$refs.input.blur();	// 取消聚焦
+    }
+    this.$emit("keypress", e);	// 触发 @keypress
+  }
+  ```
+
+##### style
+
+- 重置 `<input>` 的 style
+
+  ```scss
+  // 取消 ios safari 点击造成的元素灰色背景
+  html {
+  	-webkit-tap-highlight-color: transparent;
+  }
+  
+  input,
+  button,
+  textarea {
+  	color: inherit;
+  	font: inherit;
+  }
+  
+  a,
+  input,
+  button,
+  textarea {
+  	&:focus {
+  		outline: none;	// 取消聚焦后的默认框
+  	}
+  }
+  ```
+
+- 设定 `<input>` style
+
+  ```scss
+  .base-search {
+    position: relative;
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    color: var(--color-inactive);
+    font-size: var(--font-size-medium);
+    line-height: 1.2;
+    padding: 0 var(--padding-row);
+    overflow: hidden;
+  
+    .content {
+      flex: none;
+      width: 337px;
+      display: flex;
+      align-items: center;
+      border-radius: 10px;
+      height: 36px;
+      padding: 10px 8px;
+      background: #eeeeef;
+      transition: all 0.3s ease-in-out;
+      font-size: var(--font-size-medium-plus);
+      color: var(--color-inactive);
+      &.focus {
+        width: 297px;
+      }
+  
+      input {
+        flex-grow: 1;
+        margin: 0 8px;
+  
+        padding: 0;
+  			color: var(--color-text);
+        line-height: inherit;
+        text-align: left;
+        background-color: transparent;
+        border: 0;
+        resize: none;
+  
+        // 取消一些input的非标准样式
+        &::-webkit-search-decoration,
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-results-button,
+        &::-webkit-search-results-decoration {
+          display: none;
+        }
+  
+        // placeholder 的字体颜色
+        &::placeholder {
+          color: var(--color-inactive);
+        }
+      }
+  
+      .search-icon {
+        flex: none;
+      }
+    }
+    
+    .cancel {
+      flex: none;
+      transform: translateX(100%);
+      margin-left: 8px;
+      padding: 0 2px;
+      transition: all 0.3s ease-in-out;
+      font-size: var(--font-size-medium-plus);
+      color: var(--color-theme);
+      &.focus {
+        transform: translateX(0);
+      }
+    }
+  }
+  ```
+
+- 聚焦 / 失去聚焦动画
+
+需要 `<.cancel>` 从右边划入并且同时 `<.content>` 右侧变短
+
+如果 `<.cancel>` 使用 `v-show` 套用 `<transition>` 来执行，那么在触发动画的时候，在 `<base-input>` 中会从 2 个字元素变为 3 个子元素，css 此时无法计算出 `<.content>` 的动画
+
+所以这里使用了 Vue 动态 Class，固定 `<.content>` 的宽度后变化 `<.content>` 的宽度，并且 `<.cancel>` 在一开始右移出屏幕，触发时，再移动回来
+
+```html
+<.base-input>
+  <div class="content" :class="[{ focus: focus }]">
+    <!-- ... -->
+  </div>
+  <div class="cancel" :class="[{ focus: focus }]" @click="onCancel">取消</div>
+</.base-input>
+```
+
+```scss
+.content {
+  width: 337px;
+	// ...
+  &.focus {
+    width: 297px;
+  }
+}
+
+.cancel {
+  // ...
+  transform: translateX(100%);
+  transition: all 0.3s ease-in-out;
+  &.focus {
+    transform: translateX(0);
+  }
+}
+```
+
+
+
 #### ellipsis
 
 - CSS 实现

@@ -33,8 +33,12 @@ export default {
   },
   computed: {
     picSrc() {
-      if (this.type === "album" || this.type === "artist") {
-        return this.coverData.picUrl;
+      if (
+        this.type === "album" ||
+        this.type === "artist" ||
+        this.type === "playlist"
+      ) {
+        return this.coverData.picUrl ?? this.coverData.coverImgUrl;
       } else if (this.type === "rank") {
         return this.coverData.coverImgUrl;
       } else {
@@ -43,7 +47,11 @@ export default {
       }
     },
     computedName() {
-      if (this.type === "album" || this.type === "artist") {
+      if (
+        this.type === "album" ||
+        this.type === "artist" ||
+        this.type === "playlist"
+      ) {
         return this.coverData.name;
       } else if (this.type === "rank") {
         return this.coverData.name;
@@ -53,7 +61,7 @@ export default {
       }
     },
     computedArtist() {
-      if (this.type === "album") {
+      if (this.type === "album" || this.type === "playlist") {
         return this.coverData.artists;
       } else {
         // type === playlist
@@ -74,6 +82,7 @@ export default {
   flex-direction: column;
   width: 163.5px;
 
+  .playlist,
   .rank,
   .album {
     &-img {

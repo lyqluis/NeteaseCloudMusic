@@ -1,9 +1,13 @@
 $animation-duration: 0.3s;
 
-// slide-up
+// slide
+.slide-left-enter-active,	// from right to left
 .slide-up-enter-active {
+	// from bottom to top
 	transition: transform $animation-duration ease-out;
 }
+
+.slide-left-leave-active,
 .slide-up-leave-active {
 	transition: transform $animation-duration ease-in;
 }
@@ -13,6 +17,14 @@ $animation-duration: 0.3s;
 .slide-up-leave-active {
 	transform: translateY(100%);
 }
+
+.slide-left-enter,
+/* leave-to 也是可以的 */
+.slide-left-leave-active {
+	transform: translateX(100%);
+}
+
+
 
 // player-img cd rotate
 @keyframes rotate {
@@ -26,10 +38,12 @@ $animation-duration: 0.3s;
 
 // skeleton
 $skeleton-animation-duration: 1.2s;
-$skeleton-animation: skeleton-change $skeleton-animation-duration ease-in-out infinite;
+$skeleton-animation: skeleton-change $skeleton-animation-duration ease-in-out
+	infinite;
 
 @keyframes skeleton-change {
-  50% {
-    opacity: 0.6;
-  }
+	50% {
+		opacity: 0.6;
+	}
 }
+
