@@ -6,6 +6,7 @@ const PLAY_MODE = [
   'sequence',
   'loop',
   'shuffle',
+  // 'intelligence',  // todo 心动模式
 ]
 
 export default {
@@ -16,6 +17,7 @@ export default {
     changing: false,
     fullScreen: false,
     showLyric: false,
+    showSongList: false,
     mode: 0,
     // playlist: [],
     sequenceList: [],
@@ -55,14 +57,17 @@ export default {
     setShowLyric(state, flag) {
       state.showLyric = flag
     },
-    // setPlaylist(state, list) {
-    //   state.playlist = list
-    // },
+    setShowSongList(state, flag) {
+      state.showSongList = flag
+    },
     setSequenceList(state, list) {
       state.sequenceList = list
     },
     setShuffledList(state, list) {
       state.shuffledList = list
+    },
+    spliceSequenceList(state, i) {
+      state.sequenceList.splice(i, 1)
     },
     setMode(state, index) {
       const n = PLAY_MODE.length
@@ -78,7 +83,6 @@ export default {
     },
   },
   actions: {
-
     /**
      * @func: 
      * @param {*} track
@@ -134,12 +138,16 @@ export default {
       // need to set playing & loading in the @canplay
     },
 
-    async changeMode({ dispatch, commit, state, getters }) {
+    async changeMode({ dispatch, commit, state, getters }, modeName) {
       const track = getters.currentTrack
       let list = state.sequenceList
       let index = state.currentIndex
-      
-      commit('setMode', state.mode + 1)
+
+      const modeIndex = modeName ?
+        PLAY_MODE.findIndex(m => m === modeName) : state.mode + 1
+
+      commit('setMode', modeIndex)
+
       const mode = getters.currentMode
       if (mode === 'shuffle') {
         list = shuffle(list.slice())
@@ -152,5 +160,47 @@ export default {
       // update play list
       // commit('setPlaylist', list)
     },
+
+    deleteTrack({ state, getters, commit, dispatch }, track) {
+      // delete track in sequence list & shuffle list
+      const sequence = state.sequenceList.slice()
+      const shuffle = state.shuffledList.slice()
+      const sequenceIndex = sequence.findIndex(t => t.id === track.id)
+      const shuffleIndex = shuffle.findIndex(t => t.id === track.id)
+      sequence.splice(sequenceIndex, 1)
+      shuffle.splice(shuffleIndex, 1)
+
+      // 
+      const isSelf = track.id === getters.currentTrack.id
+
+      //
+      const currentMode = getters.currentMode
+      let currentIndex = state.currentIndex
+      if (currentMode === 'shuffle') {
+        if (currentIndex > shuffleIndex) currentIndex--
+      } else {
+        if (currentIndex > sequenceIndex) currentIndex--
+      }
+
+      commit('setSequenceList', sequence)
+      commit('setShuffledList', shuffle)
+      commit('setCurrentIndex', currentIndex)
+      commit('setPlaylistSrc', { id: null, type: 'songlist' })
+
+      const { playlist } = getters
+      if (playlist.length) {
+        if (isSelf) return dispatch('play', { index: currentIndex })
+      } else {
+        commit('setPlayingState', false)
+      }
+    },
+
+    clearAllTracks({ commit }) {
+      commit('setSequenceList', [])
+      commit('setShuffledList', [])
+      commit('setCurrentIndex', 0)
+      commit('setPlaylistSrc', { id: null, type: 'songlist' })
+      commit('setPlayingState', false)
+    }
   },
 }

@@ -36,7 +36,7 @@
                 @click="openPopup"
               ></icon>
             </ellipsis>
-            <popup v-model="show" class="description">
+            <popup v-model="show" class="description_more">
               {{ playlist.description }}
             </popup>
           </template>
@@ -72,7 +72,7 @@ import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
-import { mapActions } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Playlist",
@@ -99,17 +99,17 @@ export default {
   data() {
     return {
       show: false,
+      id: this.$route.params.id,
     };
   },
   methods: {
-    ...mapActions("player", ["play", "isSamePlaylist"]),
+    ...mapMutations("player", ["setPlaylistSrc"]),
+    ...mapActions("player", ["play"]),
     openPopup(e) {
       this.show = true;
     },
     playAllList(e) {
-      if (this.isSamePlaylist({ id: this.id, type: "album" })) {
-        this.setPlaylist();
-      }
+      this.setPlaylistSrc({ id: this.id, type: "playlist" });
       this.play({ list: this.tracksAll, index: 0 });
     },
   },
@@ -124,8 +124,10 @@ export default {
   .icon_vertical {
     vertical-align: top;
   }
-  .description {
+  .description_more {
     padding-top: 20px;
+    text-shadow: none;
+    color: var(--color-title);
   }
 }
 </style>

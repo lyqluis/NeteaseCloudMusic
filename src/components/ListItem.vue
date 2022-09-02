@@ -1,46 +1,59 @@
 <template>
   <div :class="[`list-item ${type}-list-item`, { active: active }]">
+    <!-- 歌曲在专辑中的序号 / 榜单中的排列 -->
+    <!-- <div class="list-item_index" v-if="listType.hasNum"> -->
     <div class="list-item_index" v-if="listType.hasNum">
-      <!-- 歌曲在专辑中的序号 / 榜单中的排列 -->
-      {{ type === "album" ? track.no : index + 1 }}
+      <!-- <span v-if="listType.hasNum && !active"> -->
+      <span>
+        {{ type === "album" ? track.no : index + 1 }}
+      </span>
+      <!-- <icon icon="sound" v-if="active" className="is_playing"></icon> -->
     </div>
+
+    <!-- isPlaying -->
+    <!-- <div class="list-item_index" v-if="active">
+      <icon icon="sound"></icon>
+    </div> -->
 
     <cover
       :className="`list-item_img ${type}`"
       v-if="listType.hasImg"
       :type="type"
       :imgSrc="picUrl"
+      :active="active"
     ></cover>
 
     <div
       class="list-item_detail"
       :class="[
         `line-1px-${topOrBottomLine}`,
-        { 'item-insider': type === 'songlist' || type === 'suggestion' },
+        { flexStart: type === 'suggestion' },
       ]"
     >
-      <icon
-        v-if="type === 'suggestion'"
-        icon="search"
-        className="item-insider-icon"
-      ></icon>
+      <div class="list-item_detail-left" v-if="type === 'suggestion'">
+        <icon icon="search" className="item-insider-icon"></icon>
+      </div>
 
-      <p class="list-item_detail-name">{{ track.name || track.keyword }}</p>
-      <!-- // todo 重写一个artists组件, 用来显示多歌手 -->
-      <p
-        class="list-item_detail-artist"
-        v-if="listType.hasImg && !listType.circleImg"
-      >
-        {{ artists[0].name }}
-      </p>
+      <div class="list-item_detail-center">
+        <p class="name">{{ track.name || track.keyword }}</p>
+        <!-- // todo 重写一个artists组件, 用来显示多歌手 -->
+        <p class="artist" v-if="listType.hasImg && !listType.circleImg">
+          {{ artists[0].name }}
+        </p>
+      </div>
+
+      <!-- right icon -->
+      <div class="list-item_detail-right" v-if="type === 'songlist'">
+        <icon icon="x" @click.stop="deleteTrack(track)"></icon>
+      </div>
     </div>
-    <!-- // todo right icon -->
   </div>
 </template>
 
 <script>
 import Cover from "base/Cover";
 import { listTypes } from "utils/staticData";
+import { mapActions } from "vuex";
 
 export default {
   name: "ListItem",
@@ -77,11 +90,15 @@ export default {
       return this.track.artists ?? this.track.ar;
     },
   },
+  methods: {
+    ...mapActions("player", ["deleteTrack"]),
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "assets/scss/mixin.scss";
+@import "assets/scss/mixin";
+@import "assets/scss/animation";
 // .playlist-list-item,
 // .album-list-item
 // .artist-list-item,
@@ -90,7 +107,7 @@ export default {
 .list-item {
   display: flex;
 
-  &:active {
+  &.click:active {
     background: #eee;
   }
 
@@ -110,6 +127,7 @@ export default {
     width: 58px;
     height: 58px;
     border-radius: 3px;
+
     &.artist {
       border-radius: 50%;
     }
@@ -124,31 +142,49 @@ export default {
 
   &_detail {
     width: 100%;
-    margin-left: 10px;
-    padding: 5px 0;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    &-name {
-      font-size: var(--font-size-medium-plus);
-      // margin: 10px 0 ;
-    }
-    &-artist {
-      font-size: var(--font-size-medium);
-      color: var(--color-text-detail);
-    }
-    &.item-insider {
-      flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    &.flexStart {
       justify-content: flex-start;
-      align-items: center;
-      margin-left: 0;
+    }
+
+    &-left {
       height: 45px;
-      .item-insider-icon {
-        margin-right: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    &-center {
+      height: 100%;
+      margin-left: 10px;
+      padding: 5px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      .name {
+        font-size: var(--font-size-medium-plus);
+      }
+
+      .artist {
+        font-size: var(--font-size-medium);
+        color: var(--color-text-detail);
+      }
+    }
+
+    &-right {
+      color: var(--color-text-detail);
+      display: flex;
+      align-items: center;
+
+      &:active{
+        background: #eee;
       }
     }
   }
 }
+
 .album-list-item {
   height: 48px;
 }

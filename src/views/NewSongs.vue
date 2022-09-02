@@ -32,7 +32,7 @@
           <list
             :key="`newSongs-${i}`"
             :tracks="tab.list"
-            topOrBottomLine="top"
+            topOrBottomLine="bottom"
           >
           </list>
         </scroller>

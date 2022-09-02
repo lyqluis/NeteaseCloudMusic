@@ -1,5 +1,8 @@
 <template>
   <div class="cover" :class="[className, `cover_${type}`]">
+    <div class="cover-active_layer" v-if="active">
+      <playing></playing>
+    </div>
     <img src="" alt="" v-lazy="imgSrc" />
   </div>
 </template>
@@ -7,6 +10,7 @@
 <script>
 import Vue from "vue";
 import VueLazyload from "vue-lazyload";
+import Playing from "base/Playing";
 
 Vue.use(VueLazyload, {
   preLoad: 1.3, // 预加载高度的比例
@@ -17,10 +21,17 @@ Vue.use(VueLazyload, {
 
 export default {
   name: "Cover",
+  components: {
+    Playing,
+  },
   props: {
     imgSrc: String,
     className: String,
     type: String, // album | artist | playlist
+    active: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -29,6 +40,7 @@ export default {
 @import "assets/scss/animation.scss";
 
 .cover {
+  position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -48,6 +60,16 @@ export default {
   // width: 347px;
   // height: 347px;
   // border-radius: 5px;
+  &-active_layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--color-player-background-blur);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   img {
     margin: auto;
     width: 100%;

@@ -1,25 +1,25 @@
 <template>
   <div class="tst">
-    <form action="/">
-      <base-search @input="onInput" @search="onSearch"></base-search>
-    </form>
-    <div class="content">
-      <div class="track">
-        <p v-for="i in 100" :key="i">{{ i }}</p>
-      </div>
+    <div class="playing">
+      <i
+        v-for="i in 4"
+        :key="`playing_${i}`"
+        class="playing_bar"
+        :style="{ animationDuration: `${407 + i * 30}ms` }"
+      ></i>
     </div>
+    <playing></playing>
   </div>
 </template>
 
 <script>
-import BaseSearch from "./BaseSearch.vue";
-import { getDefaultSearchKeyword, search } from "api/search";
+import Playing from 'base/Playing'
 
 export default {
   // name: " tst",
   mixins: [],
   components: {
-    BaseSearch,
+    Playing,
   },
   data() {
     return {
@@ -38,10 +38,6 @@ export default {
     onInput(val) {
       this.inputVal = val;
     },
-    onSearch(val) {
-      console.log("search", val);
-      search().then((res) => console.log());
-    },
   },
 };
 </script>
@@ -50,22 +46,33 @@ export default {
 .tst {
   height: 100vh;
   position: relative;
-  form {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  .content {
-    // position: absolute;
-    // top: 0;
-    // height: calc(100vh - 45px - 80px);
-    // padding-top: 45px;
-    font-size: 50px;
-    .track {
-      // position: absolute;
-      background: lightblue;
+
+  .playing {
+    position: relative;
+    height: 52px;
+    display: flex;
+    align-items: flex-end;
+
+    i {
+      background: #666;
+      width: 3.8px;
+      height: 3px;
+      margin-right: 1.3px;
+      animation: sound 0ms 0ms linear infinite alternate;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
-    // overflow: overlay;
+
+    @keyframes sound {
+      0% {
+        height: 3px;
+      }
+      100% {
+        height: 10px;
+      }
+    }
   }
 }
 </style>
