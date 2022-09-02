@@ -68,7 +68,7 @@ import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
 import Cover from "base/Cover";
-import { mapActions } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Album",
@@ -94,17 +94,17 @@ export default {
   data() {
     return {
       show: false,
+      id: this.$route.params.id,
     };
   },
   methods: {
-    ...mapActions("player", ["play", "isSamePlaylist"]),
+    ...mapMutations("player", ["setPlaylistSrc"]),
+    ...mapActions("player", ["play"]),
     openPopup(e) {
       this.show = true;
     },
     playAllList(e) {
-      if (this.isSamePlaylist({ id: this.id, type: "album" })) {
-        this.setPlaylist();
-      }
+      this.setPlaylistSrc({ id: this.id, type: "album" });
       this.play({ list: this.list, index: 0 });
     },
   },

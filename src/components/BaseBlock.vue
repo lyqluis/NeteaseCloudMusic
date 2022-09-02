@@ -1,6 +1,8 @@
 <template>
   <div class="block">
-    <div :class="{ 'block-title': true, 'top-line': topLine }">
+    <div
+      :class="[{ 'block-title': true, 'top-line': topLine }, titleClassName]"
+    >
       <slot name="title"></slot>
       <span class="block-title-right" @click="handleRight">{{
         rightTitle
@@ -26,6 +28,7 @@ export default {
       type: String,
       default: "更多",
     },
+    titleClassName: String,
   },
   methods: {
     handleRight(e, url) {

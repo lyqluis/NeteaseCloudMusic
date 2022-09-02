@@ -5,6 +5,7 @@
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive" />
     <player></player>
+    <song-list></song-list>
     <navigation></navigation>
   </div>
 </template>
@@ -12,12 +13,17 @@
 <script>
 import Navigation from "components/Navigation.vue";
 import Player from "components/Player.vue";
-import { mapGetters, mapState } from "vuex";
+import SongList from "components/SongList.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Navigation,
     Player,
+    SongList,
+  },
+  data() {
+    return {};
   },
   computed: {
     ...mapGetters("player", ["playlist"]),

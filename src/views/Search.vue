@@ -81,6 +81,7 @@
               topOrBottomLine="bottom"
               :type="tab.type"
               :list="tab.list"
+              :class="[{ padding: tab.type === 'song' }]"
             >
             </components>
           </scroller>

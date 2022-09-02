@@ -1,23 +1,32 @@
 <template>
-  <div class="list">
+  <transition-group
+    tag="div"
+    name="list"
+    :class="[{ list: type !== 'songlist' && type !== 'song' }]"
+  >
+    <!-- <div class="list" :class="[{ list: type !== 'songlist' }]"> -->
+    <!-- // !! transition-group 内子元素的 key 不能包涵 index, 否则 transition 会失效
+    // !! :key="`${i}-${track.id}`" 这样仅仅包含 index 也不行 -->
     <list-item
+      ref="listItems"
       class="list-item"
       v-for="(track, i) in tracks"
-      :key="`${i}-${track.id}`"
+      :key="track.id || track.keyword"
       :index="i"
       :track="track"
       :type="type"
-      :active="activeIndex === i"
+      :active="currentTrack.id === track.id"
       :topOrBottomLine="topOrBottomLine"
       @click.native="onClick(track, i)"
     >
     </list-item>
-  </div>
+  </transition-group>
 </template>
 
 <script>
 import ListItem from "components/ListItem";
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { getScroller, scrollTo } from "utils/dom";
 
 export default {
   name: "List",
@@ -26,11 +35,11 @@ export default {
   },
   data() {
     return {
-      activeIndex: null,
       // listTypes: listTypes,
     };
   },
   props: {
+    value: Boolean,
     tracks: {
       type: Array,
       default: () => [],
@@ -45,17 +54,47 @@ export default {
       type: String,
       default: "top",
     },
+    autoScrollOffsetTop: {
+      type: Number,
+      default: 0,
+    },
   },
   computed: {
-    ...mapState("player", ["playlistSrc"]),
+    ...mapState("player", ["playlistSrc", "currentIndex"]),
     ...mapGetters("player", ["currentTrack"]),
+  },
+  watch: {
+    // when songlist pops up
+    value(val) {
+      if (val) {
+        this.scrollToCertainItem();
+        this.$emit("input", false);
+      }
+    },
   },
   methods: {
     ...mapMutations("player", ["setPlaylistSrc"]),
     ...mapActions("player", ["play"]),
+    // scroll to a certain list item
+    scrollToCertainItem(i) {
+      this.$nextTick(() => {
+        if (this.type === "songlist") {
+          const scroller = getScroller(this.$el);
+          // get list item's offset top
+          let item = this.$refs.listItems[i || this.currentIndex];
+          if (!item.active) {
+            // ref's order may not be right
+            item = this.$refs.listItems.find((el) => el.active);
+          }
+          const el = item?.$el ?? item;
+          const targetTop = el.offsetTop;
+          // todo scroller scolls to item's offset top
+          scrollTo(scroller, targetTop - this.autoScrollOffsetTop);
+        }
+      });
+    },
     // todo diff from different list
     onClick(item, i) {
-      this.activeIndex = i;
       if (this.type === "suggestion") {
         this.$emit("select", item);
       } else {
@@ -67,7 +106,10 @@ export default {
       if (track.id === this.currentTrack.id) return;
       // handle play list
       let list;
-      if (this.id === undefined) {
+      if (this.type === "songlist") {
+        this.setPlaylistSrc({ id: this.id, type: this.type });
+        list = undefined;
+      } else if (this.id === undefined) {
         // newsong list
         this.setPlaylistSrc({ id: this.id, type: this.type });
         list = this.tracks;
@@ -92,5 +134,6 @@ export default {
 <style lang="scss" scoped>
 .list {
   padding: 0 var(--padding-row);
+  position: relative;
 }
 </style>

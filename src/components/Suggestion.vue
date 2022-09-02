@@ -1,7 +1,11 @@
 <template>
   <div class="suggestion">
-    <!-- // todo list bottom 1px line -->
-    <list :tracks="matches" type="suggestion" @select="onSelect"></list>
+    <list
+      :tracks="matches"
+      type="suggestion"
+      topOrBottomLine="bottom"
+      @select="onSelect"
+    ></list>
   </div>
 </template>
 

@@ -24,8 +24,6 @@ $animation-duration: 0.3s;
 	transform: translateX(100%);
 }
 
-
-
 // player-img cd rotate
 @keyframes rotate {
 	0% {
@@ -47,3 +45,20 @@ $skeleton-animation: skeleton-change $skeleton-animation-duration ease-in-out
 	}
 }
 
+// list
+// (delete list item in songlist)
+.songlist-list-item {
+	&.list-move,
+	&.list-leave-active {
+		transition: all $animation-duration ease-in-out;
+	}
+
+	&.list-leave-to {
+		opacity: 0;
+		transform: translatex(100%);
+	}
+
+	&.list-leave-active {
+		// position: absolute;
+	}
+}

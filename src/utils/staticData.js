@@ -64,7 +64,7 @@ export const listTypes = {
   },
   'songlist': {
     hasNum: 0,
-    hasImg: 0,
+    hasImg: 1,
     circleImg: 0,
   },
   'suggestion': {
@@ -79,3 +79,4 @@ export const playModeIcon = {
   'loop': 'repeat-1',
   'shuffle': 'shuffle'
 }
+

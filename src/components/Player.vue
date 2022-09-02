@@ -56,8 +56,8 @@
       </div>
 
       <div class="player-ops" v-show="fullScreen">
-        <icon icon="heart" class-name="player-ops-btn"></icon>
         <icon icon="talk" class-name="player-ops-btn"></icon>
+        <icon icon="heart" class-name="player-ops-btn"></icon>
         <icon icon="plus-square" class-name="player-ops-btn"></icon>
         <icon icon="more-vertical" class-name="player-ops-btn"></icon>
       </div>
@@ -78,7 +78,7 @@
           :icon="playModeIcon"
           className="player-control-btn"
           v-show="fullScreen"
-          @click.stop="changeMode"
+          @click.stop="changeMode()"
         ></icon>
         <icon
           icon="previous"
@@ -97,7 +97,11 @@
           v-show="fullScreen"
           @click.stop="next"
         ></icon>
-        <icon icon="list" className="player-control-btn"></icon>
+        <icon
+          icon="list"
+          className="player-control-btn"
+          @click.stop="toggleSongList"
+        ></icon>
       </div>
 
       <audio
@@ -113,28 +117,27 @@
 </template>
 
 <script>
-import BaseButton from "base/BaseButton";
 import NavHeader from "base/NavHeader";
 import RollingBar from "base/RollingBar";
 import Lyric from "components/Lyric";
 import ProgressBar from "base/ProgressBar";
 import ProgressCircle from "base/ProgressCircle";
+
+import playerMixin from "mixins/playerMixin";
 import { spliceArtists, formateProgressTime } from "utils/song";
 import { clamp } from "utils/global";
-import { playModeIcon } from "utils/staticData";
-
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Player",
   components: {
-    // BaseButton,
     NavHeader,
     Lyric,
     RollingBar,
     ProgressBar,
     ProgressCircle,
   },
+  mixins: [playerMixin],
   data() {
     return {
       currentTime: 0,
@@ -151,7 +154,7 @@ export default {
       "currentIndex",
       "mode",
     ]),
-    ...mapGetters("player", ["playlist", "currentTrack", "currentMode"]),
+    ...mapGetters("player", ["currentTrack", "currentMode"]),
     currentAlbum() {
       return this.currentTrack.al ?? this.currentTrack.album;
     },
@@ -183,17 +186,17 @@ export default {
     progressPercent() {
       return clamp(this.currentTime / this.durationTime, 0, 1);
     },
-    playModeIcon() {
-      return playModeIcon[this.currentMode];
-    },
   },
   watch: {
     // 相当于 audio.autoplay 属性
-    // playing(isPlaying) {
-    //   const { audio } = this.$refs;
-    //   this.$nextTick(() => {
-    //     isPlaying ? audio.play() : audio.pause();
-    //   });
+    playing(isPlaying) {
+      const { audio } = this.$refs;
+      this.$nextTick(() => {
+        isPlaying ? audio.play() : audio.pause();
+      });
+    },
+    // currentTrack(track) {
+    //   this.play({ track });
     // },
   },
   methods: {
@@ -207,7 +210,7 @@ export default {
       "setMode",
       "setShowLyric",
     ]),
-    ...mapActions("player", ["play", "changeMode"]),
+    ...mapActions("player", ["play"]),
     spliceArtists,
     formateProgressTime,
     handlePlayerPage(flag) {
@@ -274,6 +277,11 @@ export default {
       this.$refs.audio.currentTime = 0;
       this.$refs.audio.play();
     },
+    toggleSongList() {
+      const status = this.showSongList;
+      this.setShowSongList(!status);
+    },
+    setPlaylist() {},
   },
 };
 </script>
