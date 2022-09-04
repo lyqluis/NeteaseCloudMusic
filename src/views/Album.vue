@@ -22,6 +22,7 @@
             <!-- // todo go to artist page -->
             {{ album.artist.name }}
           </template>
+
           <template #btns>
             <base-button icon="play" size="big" @click="playAllList"
               >播放</base-button
@@ -30,6 +31,7 @@
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
           </template>
+
           <template #des v-if="album.description">
             <ellipsis :rawText="album.description">
               <icon
@@ -116,6 +118,7 @@ export default {
 
 .album {
   padding-bottom: 10px;
+  
   &-img {
     margin: 10px auto;
     margin-top: calc(45px + 10px);

@@ -2228,3 +2228,4 @@ export default {
 
 ### todo
 
+- artist 组件页面转跳其他 artist 页面，同一组件没有引发页面刷新

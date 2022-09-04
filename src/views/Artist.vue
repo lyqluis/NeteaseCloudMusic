@@ -1,25 +1,87 @@
 <template>
   <div class="artist">
-    <page-detail>
+    <page-detail
+      :imgClass="false"
+      :contentClass="false"
+      :desClass="false"
+      edgeName="top"
+      :headerOffset="8"
+    >
       <template #header>
-        this is artist detail page, id: {{ $route.params.id }}
+        <nav-header @click-left="$router.go(-1)" ref="navHeader">
+          this is artist detail page, id: {{ $route.params.id }}
+        </nav-header>
       </template>
+
       <template #img>
-        <div class="img">
-          <img
-            src="https://p1.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg"
-            alt=""
-          />
-        </div>
+        <cover class="artist-img" :imgSrc="imgSrc" type="artist"></cover>
       </template>
+
+      <template #description>
+        <description>
+          <template #name v-if="artist.name">
+            <div class="artist-artist_name">
+              <p>
+                {{ artist.name }}
+              </p>
+              <p class="artist-artist_name-identify">
+                {{ artist.identify.imageDesc }}
+              </p>
+            </div>
+          </template>
+
+          <template #btns>
+            <base-button icon="heart" size="big">关注</base-button>
+          </template>
+
+          <template #des v-if="artist.briefDesc">
+            <ellipsis :rawText="artist.briefDesc">
+              <icon
+                icon="arrow-right"
+                class="icon_vertical"
+                @click="openPopup"
+              ></icon>
+            </ellipsis>
+            <popup v-model="show" class="description">
+              {{ artist.briefDesc }}
+            </popup>
+          </template>
+        </description>
+      </template>
+
       <template #content>
-        <scroller
-          :loading="scrollLoading"
-          :finished="scrollFinished"
-          @load="getPlaylistDetailAll"
-        >
-          <list type="rank" :tracks="list" topOrBottomLine="bottom"></list>
-        </scroller>
+        <!-- //todo 
+        <p>简介</p>
+        <p>歌手热门单曲50</p>
+        <p>歌手全部歌曲</p>
+        <p>歌手单曲</p>
+        <p>歌手mv？？</p>
+        -->
+
+        <base-block @click-right="$router.push(`/morealbums/${id}`)">
+          <template #title>艺人专辑</template>
+          <slider type="album">
+            <one-cover
+              type="album"
+              v-for="album in hotAlbums"
+              :key="album.id"
+              :coverData="album"
+            ></one-cover>
+          </slider>
+        </base-block>
+
+        <base-block rightTitle="">
+          <!-- // todo @more -->
+          <template #title>相似艺人</template>
+          <slider type="artist">
+            <one-cover
+              type="artist"
+              v-for="artist in similarArtists"
+              :key="artist.id"
+              :coverData="artist"
+            ></one-cover>
+          </slider>
+        </base-block>
       </template>
     </page-detail>
   </div>
@@ -27,30 +89,127 @@
 
 <script>
 import PageDetail from "layouts/PageDetail";
+import Description from "components/Description";
+import Ellipsis from "base/Ellipsis";
+import BaseButton from "base/BaseButton";
+import Popup from "base/Popup";
+import Cover from "base/Cover";
+import BaseBlock from "components/BaseBlock";
+import Slider from "base/Slider";
+import OneCover from "components/OneCover";
+import NavHeader from "base/NavHeader";
+
 import Scroller from "base/Scroller";
 import List from "components/List";
 
 import playlistDetail from "mixins/playlistDetail";
+import { getArtistDetail, getArtistAlbums, getSimilarArtist } from "api/artist";
 
 export default {
   name: "Artist",
   components: {
+    NavHeader,
     PageDetail,
-    Scroller,
-    List
-  },
-  mixins: [playlistDetail],
+    Description,
+    Cover,
+    Ellipsis,
+    Popup,
+    BaseButton,
+    BaseBlock,
+    Slider,
+    OneCover,
 
-  created() {},
+    // Scroller,
+    // List,
+  },
+  // mixins: [playlistDetail],
+  data() {
+    return {
+      show: false,
+      artist: {},
+      id: this.$route.params.id,
+      hotAlbums: [],
+      similarArtists: [],
+    };
+  },
+  computed: {
+    imgSrc() {
+      return (
+        this.artist?.cover ??
+        "https://p1.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg"
+      );
+    },
+  },
+  created() {
+    getArtistDetail(this.$route.params.id).then((res) => {
+      console.log(res);
+      const { artist } = res.data;
+      artist.identify = res.data.identify;
+      artist.preferShow = res.data.preferShow;
+      artist.secondaryExpertIdentiy = res.data.secondaryExpertIdentiy;
+      artist.showPriMsg = res.data.showPriMsg;
+      artist.videoCount = res.data.videoCount;
+      this.artist = artist;
+    });
+    getSimilarArtist(this.$route.params.id).then((res) => {
+      this.similarArtists = res.artists;
+    });
+    getArtistAlbums({ limit: 10, id: this.$route.params.id }).then((res) => {
+      console.log(res);
+      this.hotAlbums = res.hotAlbums;
+    });
+  },
+  methods: {
+    openPopup(e) {
+      this.show = true;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .artist {
-  .img {
-    width: 100%;
-    img {
-      width: 100%;
+  padding-bottom: 10px;
+
+  &-img {
+    margin: 10px auto;
+    margin-top: calc(45px + 10px);
+    width: 231px;
+    height: 231px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 10px 50px 5px var(--color-player-background-blur);
+  }
+
+  &-artist_name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &-identify {
+      margin-top: 10px;
+      font-size: var(--font-size-medium);
+    }
+  }
+
+  .description {
+    padding-top: 20px;
+    text-shadow: none;
+    color: var(--color-title);
+  }
+}
+</style>
+
+<style lang="scss">
+@import "assets/scss/mixin.scss";
+
+.artist {
+  .page-detail {
+    .description {
+      // todo 1px bottom
+
+      .btns {
+        width: auto;
+      }
     }
   }
 }

@@ -6,9 +6,11 @@
     >
       <slot name="header"></slot>
     </div>
+
     <div :class="{ 'page-img': imgClass }" ref="pageImg">
       <slot name="img"> this is page img </slot>
     </div>
+
     <div :class="{ 'page-content': contentClass }" ref="pageContent">
       <div :class="{ 'page-des': desClass }">
         <slot name="description"> this is page slot description </slot>

@@ -111,6 +111,14 @@ const routes = [
     }
   },
   {
+    path: '/morealbums/:id',
+    name: 'MoreAlbums',
+    component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
     path: '/newalbums',
     name: 'NewAlbums',
     component: () => import('../views/NewAlbums.vue'),

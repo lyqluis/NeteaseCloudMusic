@@ -1,6 +1,6 @@
 <template>
-  <scroller :loading="loading" :finished="finished" @load="getAlbumData" record>
-    <div class="album-page">
+  <scroller :loading="loading" :finished="finished" @load="getAlbumData">
+    <div class="album-page" ref="albumpage">
       <one-cover
         :type="type"
         v-for="(item, i) in list"
@@ -22,12 +22,13 @@ export default {
     OneCover,
   },
   props: {
-    id: [String, Number],
-    getData: Function,
     type: {
       type: String,
       default: "album",
     },
+    id: [String, Number],
+    area: [Number, String],
+    getData: Function,
   },
   data() {
     return {
@@ -45,26 +46,52 @@ export default {
     },
   },
   watch: {
-    id: "getAlbumData",
-    getData: "getAlbumData",
+    // id: "getAlbumData",
+    // area: "getAlbumData",
+    // getData: "getAlbumData",
   },
   methods: {
     async getAlbumData() {
       this.loading = true;
       if (this.type === "album") {
+        // more albums from artist.vue
         if (this.id && this.getData) {
           this.getData({
             limit: this.limit,
             offset: this.offset,
-            area: this.id,
+            id: this.id,
+          }).then((res) => {
+            this.loading = false;
+            console.log(res);
+            const { more, hotAlbums } = res;
+            this.list.push(...hotAlbums);
+            if (more) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
+            }
+          });
+        }
+        // new albums from home.vue
+        else if (this.area && this.getData) {
+          this.getData({
+            limit: this.limit,
+            offset: this.offset,
+            area: this.area,
           }).then((res) => {
             this.loading = false;
             console.log(res);
             const { albums, total } = res;
             this.list.push(...albums);
             if (total) this.total = total;
-            // todo finished = true
-            this.page++;
+            const hasMore = total !== this.list.length;
+            if (hasMore) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
+            }
           });
         }
       } else {

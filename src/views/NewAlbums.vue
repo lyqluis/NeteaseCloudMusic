@@ -23,7 +23,7 @@
         :key="tab.id"
         :index="i"
       >
-        <album-page :id="tab.id" :getData="getNewAlbums"></album-page>
+        <album-page :area="tab.id" :getData="getNewAlbums"></album-page>
       </tab>
     </tabs>
   </div>

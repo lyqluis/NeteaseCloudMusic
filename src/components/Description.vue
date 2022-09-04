@@ -37,19 +37,23 @@ export default {
   align-items: center;
   color: var(--color-text-sub);
   text-shadow: 1px 1px 2px var(--color-text);
+
   .name {
     font-size: var(--font-size-large-plus);
     line-height: 1.2;
   }
+
   .creator {
     margin: 10px 0;
     font-size: var(--font-size-large);
   }
+
   .btns {
     width: 100%;
     display: flex;
     justify-content: space-between;
   }
+
   .des {
     margin-top: 10px;
     font-size: var(--font-size-medium);
@@ -58,6 +62,7 @@ export default {
     line-height: 1.2;
     align-self: flex-start;
     position: relative;
+
     .des-more {
       position: absolute;
       bottom: 0;
