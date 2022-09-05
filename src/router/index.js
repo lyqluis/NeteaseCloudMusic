@@ -119,6 +119,14 @@ const routes = [
     }
   },
   {
+    path: '/moresongs/:id',
+    name: 'MoreSongs',
+    component: () => import('../views/MoreSongs.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
     path: '/newalbums',
     name: 'NewAlbums',
     component: () => import('../views/NewAlbums.vue'),

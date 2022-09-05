@@ -57,6 +57,18 @@
         <p>歌手单曲</p>
         <p>歌手mv？？</p>
         -->
+        <base-block @click-right="$router.push(`/moresongs/${id}`)">
+          <template #title>热门单曲</template>
+          <swiper v-if="topSongs.length" :width="347" :offset="14">
+            <list
+              v-for="(list, i) in topSongs"
+              :key="`topSongs-${i}`"
+              :tracks="list"
+              topOrBottom="top"
+            >
+            </list>
+          </swiper>
+        </base-block>
 
         <base-block @click-right="$router.push(`/morealbums/${id}`)">
           <template #title>艺人专辑</template>
@@ -92,6 +104,7 @@ import PageDetail from "layouts/PageDetail";
 import Description from "components/Description";
 import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
+import Swiper from "base/Swiper";
 import Popup from "base/Popup";
 import Cover from "base/Cover";
 import BaseBlock from "components/BaseBlock";
@@ -103,7 +116,13 @@ import Scroller from "base/Scroller";
 import List from "components/List";
 
 import playlistDetail from "mixins/playlistDetail";
-import { getArtistDetail, getArtistAlbums, getSimilarArtist } from "api/artist";
+import { chunk } from "utils/global";
+import {
+  getArtistDetail,
+  getArtistTopSongs,
+  getArtistAlbums,
+  getSimilarArtist,
+} from "api/artist";
 
 export default {
   name: "Artist",
@@ -118,9 +137,9 @@ export default {
     BaseBlock,
     Slider,
     OneCover,
-
+    Swiper,
     // Scroller,
-    // List,
+    List,
   },
   // mixins: [playlistDetail],
   data() {
@@ -128,6 +147,7 @@ export default {
       show: false,
       artist: {},
       id: this.$route.params.id,
+      topSongs: [],
       hotAlbums: [],
       similarArtists: [],
     };
@@ -151,12 +171,18 @@ export default {
       artist.videoCount = res.data.videoCount;
       this.artist = artist;
     });
-    getSimilarArtist(this.$route.params.id).then((res) => {
-      this.similarArtists = res.artists;
+    // todo
+    getArtistTopSongs(this.id).then((res) => {
+      console.log("top artist songs", res);
+      const n = 5;
+      this.topSongs = chunk(res.songs, n);
     });
     getArtistAlbums({ limit: 10, id: this.$route.params.id }).then((res) => {
       console.log(res);
       this.hotAlbums = res.hotAlbums;
+    });
+    getSimilarArtist(this.$route.params.id).then((res) => {
+      this.similarArtists = res.artists;
     });
   },
   methods: {

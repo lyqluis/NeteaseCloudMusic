@@ -19,12 +19,13 @@
         <description>
           <template #name v-if="album.name">{{ album.name }}</template>
           <template #creator v-if="album.artist">
-            <!-- // todo go to artist page -->
-            {{ album.artist.name }}
+            <span @click="$router.push(`/artist/${album.artist.id}`)">
+              {{ album.artist.name }}
+            </span>
           </template>
 
           <template #btns>
-            <base-button icon="play" size="big" @click="playAllList"
+            <base-button icon="play" size="big" @click="playAllList(0)"
               >播放</base-button
             >
             <base-button icon="heart"></base-button>
@@ -93,11 +94,24 @@ export default {
     next();
   },
   created() {},
+  mounted() {
+    // todo auto play certain track from more songs page
+    console.log(this.$route.query.song);
+    // this.playAllList(this.$route.query.song);
+  },
   data() {
     return {
       show: false,
       id: this.$route.params.id,
     };
+  },
+  watch: {
+    albumScrollFinished(val) {
+      const shouldAutoPlay = this.$route.query.song;
+      if (shouldAutoPlay && val) {
+        this.playAllList(this.$route.query.song - 1);
+      }
+    },
   },
   methods: {
     ...mapMutations("player", ["setPlaylistSrc"]),
@@ -105,9 +119,9 @@ export default {
     openPopup(e) {
       this.show = true;
     },
-    playAllList(e) {
+    playAllList(n) {
       this.setPlaylistSrc({ id: this.id, type: "album" });
-      this.play({ list: this.list, index: 0 });
+      this.play({ list: this.list, index: n });
     },
   },
 };
@@ -118,7 +132,7 @@ export default {
 
 .album {
   padding-bottom: 10px;
-  
+
   &-img {
     margin: 10px auto;
     margin-top: calc(45px + 10px);

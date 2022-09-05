@@ -38,9 +38,7 @@ export default {
     className: String,
     sticky: Boolean,
   },
-  computed:{
-
-  },
+  computed: {},
   methods: {
     onClickLeft(e) {
       this.$emit("click-left", e);
@@ -80,10 +78,12 @@ export default {
     bottom: 0;
     display: flex;
     align-items: center;
+
     &-icon {
       width: var(--font-size-large-plus);
       height: var(--font-size-large-plus);
     }
+
     &:active {
       color: var(--color-theme);
     }

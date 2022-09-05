@@ -4,10 +4,11 @@
     <!-- <div class="list-item_index" v-if="listType.hasNum"> -->
     <div class="list-item_index" v-if="listType.hasNum">
       <!-- <span v-if="listType.hasNum && !active"> -->
-      <span>
-        {{ type === "album" ? track.no : index + 1 }}
+      <span v-if="!active">
+        <!-- {{ type === "album" ? track.no : index + 1 }} -->
+        {{ type === "album" ? index + 1 : track.no }}
       </span>
-      <!-- <icon icon="sound" v-if="active" className="is_playing"></icon> -->
+      <icon icon="sound" v-if="active" className="is_playing"></icon>
     </div>
 
     <!-- isPlaying -->
@@ -119,6 +120,13 @@ export default {
     justify-content: flex-end;
     font-size: var(--font-size-medium-plus);
     color: var(--color-text-detail);
+
+    .is_playing {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      color: var(--color-theme);
+    }
   }
 
   &_img {
@@ -178,7 +186,7 @@ export default {
       display: flex;
       align-items: center;
 
-      &:active{
+      &:active {
         background: #eee;
       }
     }

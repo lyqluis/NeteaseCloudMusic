@@ -11,7 +11,13 @@
       ref="listItems"
       class="list-item"
       v-for="(track, i) in tracks"
-      :key="track.id || track.keyword"
+      :key="
+        type === 'songlist'
+          ? track.id
+          : type === 'suggestion'
+          ? track.keyword
+          : `${i}-${track.id}`
+      "
       :index="i"
       :track="track"
       :type="type"
@@ -95,8 +101,20 @@ export default {
     },
     // todo diff from different list
     onClick(item, i) {
+      if (this.$route.name === "MoreSongs") {
+        // 因为 api 没给图片，点击歌曲，转跳对应的专辑页面
+        this.$router.push({
+          path: `/album/${item.al.id}`,
+          query: { song: item.no },
+        });
+        // todo 播放对应的歌曲
+        return;
+      }
+
       if (this.type === "suggestion") {
         this.$emit("select", item);
+      } else if (this.type === "artist") {
+        this.$router.push(`/artist/${item.id}`);
       } else {
         this.playTrack(item, i);
       }

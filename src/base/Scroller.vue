@@ -64,9 +64,10 @@ export default {
   },
   watch: {
     loading() {
-      this.innerLoading = this.loading;
+      // this.innerLoading = this.loading;
       this.check();
     },
+    finished: "check",
     // use in tabs when switch one tab from another
     active(isActive) {
       if (isActive) {
@@ -76,7 +77,6 @@ export default {
         this.binded = null;
       }
     },
-    // finished: "check",
   },
   methods: {
     _initScroller(el) {
