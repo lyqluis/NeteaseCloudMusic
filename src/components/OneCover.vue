@@ -20,6 +20,7 @@
 
 <script>
 import Cover from "base/Cover.vue";
+import { COVER_SQUARE_TYPE } from "utils/staticData";
 
 export default {
   name: "OneCover",
@@ -28,30 +29,21 @@ export default {
     coverData: Object,
     type: {
       type: String,
-      default: "album", // album | artist | rank
+      default: "album", // album | artist | rank | podcast
     },
   },
   computed: {
     picSrc() {
-      if (
-        this.type === "album" ||
-        this.type === "artist" ||
-        this.type === "playlist"
-      ) {
+      if (COVER_SQUARE_TYPE.includes(this.type)) {
         return this.coverData.picUrl ?? this.coverData.coverImgUrl;
       } else if (this.type === "rank") {
         return this.coverData.coverImgUrl;
       } else {
-        // type === playlist
         return "";
       }
     },
     computedName() {
-      if (
-        this.type === "album" ||
-        this.type === "artist" ||
-        this.type === "playlist"
-      ) {
+      if (COVER_SQUARE_TYPE.includes(this.type)) {
         return this.coverData.name;
       } else if (this.type === "rank") {
         return this.coverData.name;
@@ -82,6 +74,7 @@ export default {
   flex-direction: column;
   width: 163.5px;
 
+  .podcast,
   .playlist,
   .rank,
   .album {
@@ -106,6 +99,7 @@ export default {
       }
     }
   }
+
   .artist {
     &-img {
       width: 105px;

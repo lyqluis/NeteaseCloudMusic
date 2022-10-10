@@ -2226,6 +2226,28 @@ export default {
 >
 > https://www.yisu.com/zixun/235409.html
 
+#### 鉴权
+
+##### 登陆
+
+- 登陆后自动添加了 cookie
+- 调用 api@getLoginStatus 获取用户信息
+- localStorage 中写入用户信息
+- store 中写入用户信息
+
+##### 全局路由鉴权
+
+- 检查 store / localStorage 中是否有用户信息，没有则调用 api@getLoginStatus 方法获取服务器中的登陆信息
+- 
+
 ### todo
 
-- artist 组件页面转跳其他 artist 页面，同一组件没有引发页面刷新
+- [ ] 邮箱登录
+- [ ] 手机号登录
+
+- [ ] artist 组件页面转跳其他 artist 页面，同一组件没有引发页面刷新
+- [ ] 电台页面
+  - [x] 电台详情页
+  - [ ] ~~电台节目详情~~
+  - [ ] 电台 dj 详情页（用户页？）
+  - [x] 电台节目播放

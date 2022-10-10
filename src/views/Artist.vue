@@ -8,9 +8,7 @@
       :headerOffset="8"
     >
       <template #header>
-        <nav-header @click-left="$router.go(-1)" ref="navHeader">
-          this is artist detail page, id: {{ $route.params.id }}
-        </nav-header>
+        <nav-header @click-left="$router.go(-1)" ref="navHeader"></nav-header>
       </template>
 
       <template #img>
@@ -112,10 +110,8 @@ import Slider from "base/Slider";
 import OneCover from "components/OneCover";
 import NavHeader from "base/NavHeader";
 
-import Scroller from "base/Scroller";
 import List from "components/List";
 
-import playlistDetail from "mixins/playlistDetail";
 import { chunk } from "utils/global";
 import {
   getArtistDetail,
@@ -160,34 +156,49 @@ export default {
       );
     },
   },
+  beforeRouteUpdate(to, from, next) {
+    this.getArtistPageAllData(to.params.id);
+    this.$nextTick(next);
+  },
   created() {
-    getArtistDetail(this.$route.params.id).then((res) => {
-      console.log(res);
-      const { artist } = res.data;
-      artist.identify = res.data.identify;
-      artist.preferShow = res.data.preferShow;
-      artist.secondaryExpertIdentiy = res.data.secondaryExpertIdentiy;
-      artist.showPriMsg = res.data.showPriMsg;
-      artist.videoCount = res.data.videoCount;
-      this.artist = artist;
-    });
-    // todo
-    getArtistTopSongs(this.id).then((res) => {
-      console.log("top artist songs", res);
-      const n = 5;
-      this.topSongs = chunk(res.songs, n);
-    });
-    getArtistAlbums({ limit: 10, id: this.$route.params.id }).then((res) => {
-      console.log(res);
-      this.hotAlbums = res.hotAlbums;
-    });
-    getSimilarArtist(this.$route.params.id).then((res) => {
-      this.similarArtists = res.artists;
-    });
+    this.getArtistPageAllData(this.$route.params.id);
   },
   methods: {
     openPopup(e) {
       this.show = true;
+    },
+    resetData() {
+      this.id = this.$route.params.id;
+      this.artist = {};
+      // this.topSongs = [];
+      // this.hotAlbums = [];
+      // this.similarArtists = [];
+    },
+    getArtistPageAllData(id) {
+      this.resetData();
+      getArtistDetail(id).then((res) => {
+        console.log(res);
+        const { artist } = res.data;
+        artist.identify = res.data.identify;
+        artist.preferShow = res.data.preferShow;
+        artist.secondaryExpertIdentiy = res.data.secondaryExpertIdentiy;
+        artist.showPriMsg = res.data.showPriMsg;
+        artist.videoCount = res.data.videoCount;
+        this.artist = artist;
+      });
+      // todo
+      getArtistTopSongs(id).then((res) => {
+        console.log("top artist songs", res);
+        const n = 5;
+        this.topSongs = chunk(res.songs, n);
+      });
+      getArtistAlbums({ limit: 10, id: id }).then((res) => {
+        console.log(res);
+        this.hotAlbums = res.hotAlbums;
+      });
+      getSimilarArtist(id).then((res) => {
+        this.similarArtists = res.artists;
+      });
     },
   },
 };

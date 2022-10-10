@@ -21,9 +21,9 @@ export const menus = [
   //   routes: []
   // },
   {
-    name: "Podcast",
-    title: "电台",
-    path: "/podcast",
+    name: "Radio",
+    title: "播客",
+    path: "/radio",
     icon: "podcast",
     routes: []
   },
@@ -72,6 +72,11 @@ export const listTypes = {
     hasImg: 0,
     circleImg: 0,
   },
+  'podcast': {
+    hasNum: 0,
+    hasImg: 1,
+    circleImg: 0,
+  },
 }
 
 export const playModeIcon = {
@@ -80,3 +85,9 @@ export const playModeIcon = {
   'shuffle': 'shuffle'
 }
 
+export const COVER_SQUARE_TYPE = [
+  "album",
+  "artist",
+  "podcast",
+  "playlist",
+]

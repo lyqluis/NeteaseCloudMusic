@@ -53,7 +53,7 @@ export default {
     type: {
       type: String,
       default: "playlist",
-      // album | playlist | artist | rank | songlist (播放列表) | suggestion
+      // album | playlist | artist | rank | songlist (播放列表) | suggestion | podcast
     },
     id: [String, Number], // ?
     topOrBottomLine: {

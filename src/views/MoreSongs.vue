@@ -13,7 +13,12 @@
       </template>
     </nav-header>
 
-    <scroller :loading="loading" :finished="finished" @load="getArtistSongs">
+    <scroller
+      :loading="loading"
+      :finished="finished"
+      @load="getArtistSongs"
+      ref="scroller"
+    >
       <list
         type="album"
         :tracks="list"
@@ -72,14 +77,13 @@ export default {
   watch: {
     currentSort() {
       this.list = [];
+      this.loading = false;
+      this.finished = false;
+      this.page = 0;
+      this.total = null;
       // ensure list related dom is updated
       setTimeout(() => {
-        setTimeout(() => {
-          this.loading = true;
-          this.finished = false;
-          this.page = 0;
-          this.total = null;
-        });
+        this.$refs.scroller.check();
       });
     },
   },

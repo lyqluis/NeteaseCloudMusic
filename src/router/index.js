@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-
 Vue.use(VueRouter)
 
 const scrollBehavior = (to, from, savedPosition) => {
@@ -19,7 +18,9 @@ const scrollBehavior = (to, from, savedPosition) => {
       //   this.app.$root.$once('triggerScroll', () => {
       //     // if the resolved position is falsy or an empty object,
       //     // will retain current scroll position.
-      resolve(position)
+      setTimeout(() => {
+        resolve(position)
+      }, 500);
       //   })
     })
   }
@@ -64,9 +65,9 @@ const routes = [
     },
   },
   {
-    path: '/podcast',
-    name: 'Podcast',
-    component: () => import('../views/Podcast.vue'),
+    path: '/radio',
+    name: 'Radio',
+    component: () => import('../views/Radio.vue'),
     meta: {
       keepAlive: true
     },
@@ -96,6 +97,11 @@ const routes = [
     path: '/album/:id',
     name: 'Album',
     component: () => import('../views/Album.vue'),
+  },
+  {
+    path: '/podcast/:id',
+    name: 'Podcast',
+    component: () => import('../views/Podcast.vue'),
   },
   {
     path: '/Rank/:id',
@@ -146,6 +152,14 @@ const routes = [
     path: '/ranks',
     name: 'Ranks',
     component: () => import('../views/Ranks.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login.vue'),
     meta: {
       scrollToTop: true
     }

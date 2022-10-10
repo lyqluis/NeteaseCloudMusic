@@ -11,8 +11,8 @@ import axios from 'utils/axios'
  */
  export function getNewAlbums(params) {
   return axios({
-    url: '/album/new',
     method: 'get',
+    url: '/album/new',
     params
   })
 }

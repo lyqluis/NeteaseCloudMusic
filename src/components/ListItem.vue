@@ -85,10 +85,10 @@ export default {
     },
     picUrl() {
       if (this.type === "artist") return this.track.picUrl;
-      return this.track.coverImgUrl ?? this.album.picUrl;
+      return this.track.coverImgUrl ?? this.track.coverUrl ?? this.album.picUrl;
     },
     artists() {
-      return this.track.artists ?? this.track.ar;
+      return this.track.artists ?? this.track.ar ?? [this.track.dj];
     },
   },
   methods: {
@@ -172,6 +172,7 @@ export default {
       flex-direction: column;
       justify-content: space-around;
       .name {
+        line-height: 1.25;
         font-size: var(--font-size-medium-plus);
       }
 

@@ -54,3 +54,9 @@ export function debounce(fn, delay) {
 // export const SET_NEED_ZOOM = flag => {
 //   globalVariable.NEED_ZOOM = flag
 // }
+
+export function isEmptyObject(obj) {
+  // return Reflect.ownKeys(obj).length === 0 // vue 中的data空对象数据有__ob__ 对象，无法用此判断
+  return Object.keys(obj).length === 0
+}
+

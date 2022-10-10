@@ -1,33 +1,34 @@
 <template>
   <div class="tst">
-    <div class="playing">
-      <i
-        v-for="i in 4"
-        :key="`playing_${i}`"
-        class="playing_bar"
-        :style="{ animationDuration: `${407 + i * 30}ms` }"
-      ></i>
-    </div>
-    <playing></playing>
+    <p>this is tst page: {{ $route.params.id }}</p>
   </div>
 </template>
 
 <script>
-import Playing from 'base/Playing'
+import Playing from "base/Playing";
 
 export default {
   // name: " tst",
   mixins: [],
   components: {
-    Playing,
+    // Playing,
   },
+
   data() {
     return {
+      id: this.$route.params.id,
       imgSrc: "",
       inputVal: "",
     };
   },
-  created() {},
+
+  beforeRouteUpdate(to, from, next) {
+    console.log("before route update /id", to.params.id);
+    next();
+  },
+  created() {
+    console.log("created", this.id);
+  },
   methods: {
     onClick(e) {
       console.log("get data from tst.vue");

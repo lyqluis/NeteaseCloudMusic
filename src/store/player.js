@@ -126,7 +126,7 @@ export default {
       const { id, mp3, lyric } = getters.currentTrack
       if (!lyric) {
         getLyric(id).then(parsedLyric => {
-          console.log(parsedLyric);
+          console.log(parsedLyric)
           commit('setTrackLyric', parsedLyric)
         })
       }

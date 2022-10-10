@@ -48,6 +48,9 @@ export default {
   mounted() {
     this._initScroller(this.$el);
   },
+  updated() {
+    this.innerLoading = this.loading;
+  },
   // use in keep-alive
   activated() {
     if (!this.binded && this.active) {
@@ -58,15 +61,12 @@ export default {
     removeEvent(this.scroller, "scroll", this.check);
     this.binded = null;
   },
-  destroyed() {
+  beforeDestroy() {
     removeEvent(this.scroller, "scroll", this.check);
     this.binded = null;
   },
   watch: {
-    loading() {
-      // this.innerLoading = this.loading;
-      this.check();
-    },
+    loading: "check",
     finished: "check",
     // use in tabs when switch one tab from another
     active(isActive) {
@@ -87,15 +87,15 @@ export default {
     _initScroll(el = this.$el) {
       if (!this.scroller) {
         this.scroller = getScroller(el);
-        console.log("scroller: ", this.scroller);
+        console.log("infinity scroller: ", this.scroller);
       }
       bindEvent(this.scroller, "scroll", this.check);
       this.binded = true;
     },
     check() {
+      console.log("infinity scroll check");
       this.$nextTick(() => {
         if (this.innerLoading || this.finished || this.error) return;
-
         const { scroller, offset } = this;
         // get rect of scroller
         const rect = getDOMRect(scroller);
@@ -108,6 +108,7 @@ export default {
         console.log("scroller check", isReachEdge);
         // emit update
         if (isReachEdge) {
+          this.innerLoading = true;
           this.$emit("load");
         }
       });

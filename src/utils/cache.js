@@ -27,3 +27,24 @@ export function deleteHistory() {
   store.remove(SEARCH_KEY)
   return []
 }
+
+
+const USER_KEY = '__user__'
+/**
+ * @param {Object} userInfo.account
+ * @param {Object} userInfo.profile
+ */
+export function saveUserInfo(userInfo) {
+  store.set(USER_KEY, userInfo)
+  return userInfo
+}
+
+export function getUserInfo() {
+  return store.get(USER_KEY, {})
+}
+
+export function removeUserInfo() {
+  const userInfo = {}
+  store.set(USER_KEY, userInfo)
+  return userInfo
+}

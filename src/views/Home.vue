@@ -127,8 +127,7 @@ export default {
     getNewSongs(length = 9, n = 3) {
       let songs = [];
       getNewSongs().then((res) => {
-        console.log("get new songs");
-        console.log(res);
+        console.log("get new songs", res);
         songs = res.data.slice(0, length);
         songs = chunk(songs, n);
         this.newSongs.push(...songs);

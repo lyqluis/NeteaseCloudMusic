@@ -5,7 +5,7 @@
     v-bind="data.attrs"
     v-on="listeners"
   >
-    <icon :icon="props.icon" class="base-button-icon"></icon>
+    <icon :icon="props.icon" class="base-button-icon" v-if="props.icon"></icon>
     <div class="base-button-name">
       <slot></slot>
     </div>
