@@ -1,5 +1,10 @@
 <template>
-  <scroller :loading="loading" :finished="finished" @load="getAlbumData">
+  <scroller
+    :loading="loading"
+    :finished="finished"
+    @load="getAlbumData"
+    :active="active"
+  >
     <div class="album-page" ref="albumpage">
       <one-cover
         :type="type"
@@ -28,6 +33,10 @@ export default {
     },
     id: [String, Number],
     area: [Number, String],
+    active: {
+      type: Boolean,
+      default: true,
+    },
     getData: Function,
   },
   data() {
@@ -94,7 +103,7 @@ export default {
             }
           });
         }
-      } else {
+      } else if (this.type === "rank") {
         // this.type === 'rank'
         this.getData().then((res) => {
           this.loading = false;
@@ -102,6 +111,26 @@ export default {
           const { top, list } = res;
           this.list.push(...list);
           this.finished = true;
+        });
+      } else if (this.type === "podcast") {
+        // allpodcasts page
+        this.getData({
+          cateId: this.id,
+          limit: this.limit,
+          offset: this.offset,
+        }).then((res) => {
+          this.loading = false;
+          console.log(res);
+          const { djRadios, count } = res;
+          this.list.push(...djRadios);
+          if (count) this.total = count;
+          const hasMore = this.total > this.list.length;
+          if (hasMore) {
+            this.page++;
+          } else {
+            if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+            this.finished = true;
+          }
         });
       }
     },

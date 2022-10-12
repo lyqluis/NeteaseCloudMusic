@@ -1,6 +1,7 @@
 import { getPodcastDetail, getPodcastPrograms } from "api/podcast";
 import { isEmptyObject } from 'utils/global'
 import { mapMutations } from "vuex"
+import { handleProgramsData } from "../utils/podcast";
 
 export default {
   data() {
@@ -52,8 +53,7 @@ export default {
       }).then(res => {
         console.log('get podacst programs page', this.page, res)
         const { more, count, programs } = res
-        // adjust programs.mainSong
-        this.list.push(...programs.map(track => track.mainSong))
+        this.list.push(...handleProgramsData(programs))
         this.tracksLength = count
         this.scrollLoading = false;
         this.page++

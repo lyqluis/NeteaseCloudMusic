@@ -1,12 +1,11 @@
 <template>
   <div class="new-albums">
-    <!-- // todo tab变多时，加载的图片变多会卡 -->
     <nav-header
       ref="header"
       @click-left="$router.go(-1)"
       :className="`header header-sticky ${showHeaderClass}`"
     >
-      <span class="header-title">新碟速递</span>
+      <span class="header-title">广播分类</span>
     </nav-header>
     <tabs
       v-model="currentTab"
@@ -25,9 +24,10 @@
         @activated="activateTab(tab, $event)"
       >
         <album-page
+          type="podcast"
           :active="tab.active"
-          :area="tab.id"
-          :getData="getNewAlbums"
+          :id="tab.id"
+          :getData="getHotPodcastsByCategory"
         ></album-page>
       </tab>
     </tabs>
@@ -39,11 +39,15 @@ import NavHeader from "base/NavHeader";
 import Tabs from "base/Tabs";
 import Tab from "base/Tab";
 import AlbumPage from "components/AlbumPage";
-import { getNewAlbums } from "api/album";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
+import {
+  getRecommendPodcastsByCategories,
+  // getPodcastCategories2,
+  getHotPodcastsByCategory,
+} from "api/podcast";
 
 export default {
-  name: "NewAlbum",
+  name: "AllPodcasts",
   mixins: [
     showHeaderScrollerMixin({
       topEls: ["titlesWrapper"],
@@ -62,19 +66,39 @@ export default {
   data() {
     return {
       currentTab: 0,
-      tabs: [
-        { name: "全部", id: "All", active: false },
-        { name: "华语", id: "ZH", active: false },
-        { name: "欧美", id: "EA", active: false },
-        { name: "日本", id: "JP", active: false },
-        { name: "韩国", id: "KR", active: false },
-      ],
+      tabs: [],
     };
   },
+  created() {
+    getRecommendPodcastsByCategories().then((res) => {
+      console.log("🏷️", res);
+      this.tabs = res.data.map((cat) => ({
+        id: cat.categoryId,
+        name: cat.categoryName,
+        active: false,
+      }));
+      if (this.$route.query.cat) {
+        this.setCurrentTab(this.$route.query.cat, this.tabs);
+      }
+      this.canInitShowHeaderScroller = true;
+    });
+    // getPodcastCategories2().then((res) => {
+    //   console.log("🏷️2", res);
+    //   this.tabs = res.categories;
+    //   this.canInitShowHeaderScroller = true;
+    // });
+  },
   methods: {
-    getNewAlbums,
+    getHotPodcastsByCategory,
+    setCurrentTab(id, tabs) {
+      this.currentTab = tabs.findIndex((tab) => tab.id == id);
+    },
     activateTab(tab, isActive) {
       tab.active = isActive;
+      // change route.query
+      if (isActive) {
+        this.$router.push({ query: { cat: tab.id } });
+      }
     },
   },
 };

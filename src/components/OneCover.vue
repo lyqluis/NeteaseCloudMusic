@@ -13,6 +13,8 @@
           {{ artist.name }}
           <span v-if="i !== computedArtist.length - 1">/</span>
         </span>
+
+        <span v-if="type === 'podcast'"> {{ rcmdText }} </span>
       </div>
     </div>
   </div>
@@ -57,6 +59,13 @@ export default {
         return this.coverData.artists;
       } else {
         // type === playlist
+        return "";
+      }
+    },
+    rcmdText() {
+      if (this.type === "podcast") {
+        return this.coverData.rcmdtext || this.coverData.rcmdText;
+      } else {
         return "";
       }
     },

@@ -35,7 +35,7 @@ import { scrollTo } from "utils/dom";
 export default {
   name: "Tabs",
   model: {
-    props: "active",
+    prop: "active",
   },
   props: {
     active: {
@@ -89,18 +89,25 @@ export default {
     },
   },
   watch: {
+    titles() {
+      this.$nextTick(this.init);
+    },
     currentIndex() {
-      this.srcollTitle(); // 滑动 title
-      this.setTitleStyle(); // 设置 title 动画
+      this.$nextTick(() => {
+        this.srcollTitle(); // 滑动 title
+        this.setTitleStyle(); // 设置 title 动画
+      });
     },
   },
   mounted() {
     console.log(this.$children);
-    this.init();
+    if (this.$children.length) {
+      this.init();
+    }
   },
   methods: {
     init() {
-      this.setCurrentIndex(0);
+      this.setCurrentIndex(this.active);
     },
     setCurrentIndex(index) {
       this.currentIndex = index;

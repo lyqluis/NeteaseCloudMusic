@@ -2246,8 +2246,31 @@ export default {
 - [ ] 手机号登录
 
 - [ ] artist 组件页面转跳其他 artist 页面，同一组件没有引发页面刷新
+
 - [ ] 电台页面
+
+  - [x] allpodcast 页面
+    - [x] showHeaderScoller 初始化
+    - [x] 切换标签，$route.query 变化
+  - [x] radio 页面分类分栏跳转对应 allpodcasts 页面
   - [x] 电台详情页
+    - [x] 详情描述组件内容
   - [ ] ~~电台节目详情~~
   - [ ] 电台 dj 详情页（用户页？）
   - [x] 电台节目播放
+  - [ ] 调整电台的节目数据
+
+- [ ] rank 排行榜
+
+  - [ ] bug: ranks 页面最后没有左对齐
+  - [ ] bug: 排行榜详情页序号
+
+- [ ] showheaderscroll doesn’t work
+
+- [ ] 使用 showHeaderScroller.js 的组件上添加 `this.inited` 属性设置，代表完成了当前页面的初步渲染，可以执行 showHeaderScroller 代码了
+
+- [ ] player
+
+  - [ ] player 展开时的背景模糊图片替换成数据给到的模糊图片
+
+    

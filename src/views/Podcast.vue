@@ -43,7 +43,7 @@
               ></icon>
             </ellipsis>
             <popup v-model="show" class="description">
-              {{ podcast.description }}
+              {{ podcast.desc }}
             </popup>
           </template>
         </description>
@@ -105,7 +105,6 @@ export default {
   },
   created() {},
   mounted() {
-    // todo auto play certain track from more songs page
     console.log(this.$route.query.song);
     // this.playAllList(this.$route.query.song);
   },
@@ -114,14 +113,6 @@ export default {
       show: false,
       id: this.$route.params.id,
     };
-  },
-  watch: {
-    // albumScrollFinished(val) {
-    //   const shouldAutoPlay = this.$route.query.song;
-    //   if (shouldAutoPlay && val) {
-    //     this.playAllList(this.$route.query.song - 1);
-    //   }
-    // },
   },
   methods: {
     ...mapMutations("player", ["setPlaylistSrc"]),

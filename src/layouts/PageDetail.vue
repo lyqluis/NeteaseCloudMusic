@@ -54,6 +54,10 @@ export default {
       default: true,
     },
   },
+  // mounted(){
+  //   // to trigger the showHeaderScroller
+  //   this.inited = true
+  // }
 };
 </script>
 

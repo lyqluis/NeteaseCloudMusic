@@ -33,8 +33,19 @@
       </base-block>
     </swiper>
 
-    <!-- // todo push more -->
-    <base-block @click-right="$router.push('/newsongs')">
+    <base-block right-title="">
+      <template #title>今日推荐</template>
+      <slider type="album">
+        <one-cover
+          v-for="podcast in todayPreferedPodcasts"
+          type="podcast"
+          :key="podcast.id"
+          :coverData="podcast"
+        ></one-cover>
+      </slider>
+    </base-block>
+
+    <base-block right-title="">
       <template #title>推荐节目</template>
       <swiper v-if="recommendPrograms.length" :width="347" :offset="14">
         <list
@@ -59,6 +70,42 @@
         ></one-cover>
       </slider>
     </base-block>
+
+    <!-- // todo push more -->
+    <base-block @click-right="$router.push('/newalbums')">
+      <template #title>热门节目</template>
+      <swiper v-if="topPrograms.length" :width="347" :offset="14">
+        <list
+          v-for="(list, i) in topPrograms"
+          :key="`newSongs-${i}`"
+          :tracks="list"
+          topOrBottom="top"
+        >
+        </list>
+      </swiper>
+    </base-block>
+
+    <!-- // todo push certain category allpodcasts page -->
+    <base-block
+      @click-right="
+        $router.push({ path: '/allpodcasts', query: { cat: cat.categoryId } })
+      "
+      v-for="cat in recommendPodcastsByCategories"
+      :key="cat.categoryId"
+    >
+      <template #title>{{ cat.categoryName }}</template>
+      <slider type="album">
+        <one-cover
+          v-for="podcast in cat.radios"
+          type="podcast"
+          :key="podcast.id"
+          :coverData="podcast"
+        ></one-cover>
+      </slider>
+    </base-block>
+
+    <!-- // todo 热门分类 -->
+    <!-- // todo 主播榜 -->
   </div>
 </template>
 
@@ -71,10 +118,13 @@ import OneCover from "components/OneCover";
 import Cover from "base/Cover";
 
 import { chunk } from "utils/global";
+import { handleProgramsData } from "utils/podcast";
+import { getRecommendPodcasts, getTodayPreferedPodcasts } from "api/recommend";
 import {
-  getRecommendPrograms,
   getRecommendPrograms2,
   getHotPodcasts,
+  getProgramRanks,
+  getRecommendPodcastsByCategories,
 } from "api/podcast";
 
 export default {
@@ -91,29 +141,53 @@ export default {
     return {
       recommendPodcasts: [],
       recommendPrograms: [],
+      todayPreferedPodcasts: [],
       hotPodcasts: [],
+      topPrograms: [],
+      recommendPodcastsByCategories: [],
     };
   },
   created() {
+    this.getRecommendPodcasts();
     this.getRecommendPrograms();
-    // getRecommendPrograms().then((res) => {
-    //   console.log("📢", res);
-    // });
-    getHotPodcasts({ limit: 16 }).then((res) => {
-      console.log(res);
-      this.recommendPodcasts = res.djRadios.slice(0, 6);
-      this.hotPodcasts = res.djRadios.slice(6);
+    getProgramRanks().then((res) => {
+      console.log("🔥📃", res);
+      let programs = handleProgramsData(
+        res.toplist.slice(0, 12).map((p) => p.program)
+      );
+      programs = chunk(programs, 3);
+      this.topPrograms.push(...programs);
     });
+    this.getPodcastCategories();
   },
   methods: {
+    getRecommendPodcasts() {
+      getHotPodcasts({ limit: 16 }).then((res) => {
+        console.log(res);
+        this.hotPodcasts = res.djRadios;
+      });
+      getRecommendPodcasts().then((res) => {
+        console.log("📢1", res);
+        this.recommendPodcasts = res.djRadios;
+      });
+      getTodayPreferedPodcasts().then((res) => {
+        console.log("📰", res);
+        this.todayPreferedPodcasts = res.data;
+      });
+    },
     getRecommendPrograms(n = 3) {
       let programs = [];
       getRecommendPrograms2().then((res) => {
         console.log("📢2", res);
-        // todo adjust res.programs[].coverUrl
-        programs = res.programs.map((track) => track.mainSong);
+        programs = handleProgramsData(res.programs);
         programs = chunk(programs, n);
         this.recommendPrograms.push(...programs);
+      });
+    },
+    getPodcastCategories() {
+      getRecommendPodcastsByCategories().then((res) => {
+        console.log("🏷️", res);
+        this.recommendPodcastsByCategories = res.data;
       });
     },
   },

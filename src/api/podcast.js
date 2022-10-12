@@ -1,7 +1,9 @@
 import axios from 'utils/axios'
 
+
+
 /**
- * 推荐节目
+ * 推荐节目 // ?? deprecated
  * 说明 : 调用此接口, 可获取推荐电台
  * 接口地址 : /personalized/djprogram
  * 调用例子 : /personalized/djprogram
@@ -12,6 +14,7 @@ export function getRecommendPrograms() {
     url: '/personalized/djprogram',
   });
 }
+
 /**
  * 推荐节目
  * 说明 : 调用此接口 , 可获取推荐电台
@@ -43,6 +46,101 @@ export function getHotPodcasts(params) {
   });
 }
 
+/**
+ * 电台 - 节目榜
+ * 说明 : 登录后调用此接口 , 可获得电台节目榜
+ * 接口地址 : /dj/program/toplist
+ * 调用例子 : /dj/program/toplist?limit=1
+ * 可选参数 :
+ * @param {Number} params.limit, 返回数量, 默认为 100
+ * @param {Number} params.offset, 偏移数量, 用于分页, 如 :( 页数 -1)*100, 其中 100 为 limit 的值 , 默认为 0
+ * @return {*} 
+ */
+export function getProgramRanks(params) {
+  return axios({
+    method: 'get',
+    url: '/dj/program/toplist',
+    params,
+  });
+}
+
+// ## 电台分类
+/**
+ * 电台 - 推荐类型
+ * 说明 : 登录后调用此接口, 可获得电台推荐类型
+ * 接口地址 : /dj/category/recommend
+ * 调用例子 : /dj/category/recommend
+ * @return {Array} data:[] 返回类型数组，每个类型里面包含3个热门电台
+ */
+export function getRecommendPodcastsByCategories() {
+  return axios({
+    method: 'get',
+    url: '/dj/category/recommend',
+  });
+}
+
+/**
+ * 电台 - 非热门类型
+ * 说明 : 登录后调用此接口, 可获得电台非热门类型
+ * 接口地址 : /dj/category/excludehot
+ * 调用例子 : /dj/category/excludehot
+ */
+export function getPodcastUnpopularCategories() {
+  return axios({
+    method: 'get',
+    url: '/dj/category/excludehot',
+  });
+}
+
+/**
+ * 
+ * 电台 - 分类 所有标签分类
+ * 说明 : 登录后调用此接口 , 可获得电台类型
+ * 接口地址 : /dj/catelist
+ * 调用例子 : /dj/catelist
+ */
+export function getPodcastCategories2() {
+  return axios({
+    method: 'get',
+    url: '/dj/catelist',
+  });
+}
+
+/**
+ * 电台 - 类别热门电台
+ * 可选参数 :
+ * @param {Number} params.limit : 返回数量 , 默认为 30
+ * @param {Number} params.offset : 偏移数量，用于分页 , 如 :( 页数 -1)*30, 其中 30 为 limit 的值 , 默认为 0
+ * @param {Number} params.cateId: 类别 id,可通过 /dj/category/recommend 接口获取
+ * 接口地址 : /dj/radio/hot
+ * 调用例子 : /dj/radio/hot?cateId=2001(创作|翻唱) /dj/radio/hot?cateId=10002 (3D|电子)
+ */
+export function getHotPodcastsByCategory(params) {
+  return axios({
+    methods: 'get',
+    url: '/dj/radio/hot',
+    params
+  })
+}
+
+/**
+ * 电台 - 分类推荐 无分页
+ * 说明 : 登录后调用此接口, 传入分类, 可获得对应类型电台列表
+ * 必选参数 : 
+ * @param {Number} type: 电台类型 , 数字 , 可通过/dj/catelist获取 , 对应关系为 id 对应 此接口的 type, name 对应类型
+ * 接口地址 : /dj/recommend/type
+ * 调用例子 : /dj/recommend/type?type=1(明星做主播) /dj/recommend/type?type=2001 (创作|翻唱)
+ * 只返回10个
+ */
+export function getHotPodcastsByCategory2(type) {
+  return axios({
+    methods: 'get',
+    url: '/dj/recommend/type',
+    params: { type },
+  })
+}
+
+// ## 电台详情页
 /**
  * 电台 - 详情
  * 说明 : 登录后调用此接口, 传入rid, 可获得对应电台的详情介绍

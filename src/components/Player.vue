@@ -7,7 +7,8 @@
       @click.stop="handlePlayerPage"
     >
       <div class="player-page-background" v-show="fullScreen">
-        <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" />
+        <!-- <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" /> -->
+        <img :src="currentAlbum && currentAlbum.picUrl" alt="" />
       </div>
 
       <nav-header

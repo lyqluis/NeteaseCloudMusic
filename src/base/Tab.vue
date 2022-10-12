@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      inited: false,
+      inited: false,  // to control the display of <.tab-content_default>
     };
   },
   computed: {

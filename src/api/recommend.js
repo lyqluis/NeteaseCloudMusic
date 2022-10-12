@@ -1,10 +1,38 @@
 import axios from 'utils/axios'
 
+// ## podacast
+/**
+ * 电台 - 推荐
+ * 说明 : 登录后调用此接口 , 可获得推荐电台
+ * 接口地址 : /dj/recommend
+ * 调用例子 : /dj/recommend
+ */
+export function getRecommendPodcasts() {
+  return axios({
+    method: 'get',
+    url: '/dj/recommend',
+  });
+}
+
+/**
+ * 电台 - 今日优选
+ * 说明 : 登录后调用此接口, 可获得电台今日优选
+ * 接口地址 : /dj/today/perfered
+ * 调用例子 : /dj/today/perfered
+ */
+export function getTodayPreferedPodcasts() {
+  return axios({
+    method: 'get',
+    url: '/dj/today/perfered',
+  });
+}
+
+// ## home
 /**
  * @func: 每日推荐歌单
  * - limit: 取出数量 , 默认 30 (不支持 offset)
  */
- export function getRecommendList(num) {
+export function getRecommendList(num) {
   return axios({
     url: '/personalized',
     method: 'get',

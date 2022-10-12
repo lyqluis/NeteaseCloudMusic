@@ -20,7 +20,7 @@ export function showHeaderScrollerMixin(options) {
   return {
     props: {
       edgeName: String,
-      headerOffset: Number
+      headerOffset: Number,
     },
 
     data() {
@@ -29,7 +29,8 @@ export function showHeaderScrollerMixin(options) {
         topElBottomEdge: 0,
         bottomEl: null,
         scroller: null,
-        showHeader: false
+        showHeader: false,
+        canInitShowHeaderScroller: null, // 手动传递初始化
       }
     },
 
@@ -39,10 +40,18 @@ export function showHeaderScrollerMixin(options) {
       }
     },
 
+    watch: {
+      canInitShowHeaderScroller(val) {
+        if (val) this.$nextTick(this._initScroller)
+      }
+    },
+
     mounted() {
       console.log('show header scroller mounted')
       // 确保vue-router的scroll-behavior完成页面的初始化滚动
-      this.$nextTick(this._initScroller)
+      if (this.canInitShowHeaderScroller === null) {
+        this.$nextTick(this._initScroller)
+      }
     },
 
     activated() {
@@ -63,19 +72,28 @@ export function showHeaderScrollerMixin(options) {
 
     methods: {
       _initScroller() {
+        if (this.scrollerInited) return
         // bind scroll event handler
         const root = this
         const scroller = (this.scroller = getScroller(this.$el));
         bindEvent(scroller, "scroll", this._check);
         const realTopEls = topEls.map(el => getRefsEl(el, root));
 
-        if (!realTopEls[lastTopElIndex]) return // 可能目标元素（v-if）并未mounted
+        // 可能目标元素（v-if）并未mounted
+        if (!realTopEls[lastTopElIndex]) {
+          // this.$nextTick(this._initScroller)
+          return
+        }
 
         const topEl = this.topEl = realTopEls[lastTopElIndex].$el ?? realTopEls[lastTopElIndex]
         const { bottom } = getDOMRect(topEl);
         this.topElBottomEdge = bottom;
         this.bottomEl = getRefsEl(bottomEl, this)
-        this.bottomEl = this.bottomEl.$el ?? this.bottomEl
+        this.bottomEl = this.bottomEl?.$el ?? this.bottomEl
+        if (!this.bottomEl) { // 可能目标元素（v-if）并未mounted
+          // this.$nextTick(this._initScroller)
+          return
+        }
         this.scrollerInited = true  // 可能目标元素（v-if）并未mounted
       },
 
