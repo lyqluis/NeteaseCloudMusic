@@ -8,6 +8,9 @@ export function handleProgramsData(programs) {
     const track = program.mainSong
     track.album.picUrl = program.coverUrl
     track.album.blurPicUrl = program.blurCoverUrl
+    if (program.rank !== undefined) {
+      track.rank = program.rank
+    }
     return track
   })
 }

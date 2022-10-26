@@ -41,7 +41,6 @@
         <img :src="currentAlbum && currentAlbum.picUrl" alt="" />
       </div>
 
-      <!-- // todo 偏移 -->
       <progress-circle
         :width="48"
         :percent="progressPercent"
@@ -155,7 +154,11 @@ export default {
       "currentIndex",
       "mode",
     ]),
-    ...mapGetters("player", ["currentTrack", "currentMode"]),
+    ...mapGetters("player", [
+      "currentTrack",
+      "currentMode",
+      "currentTrackType",
+    ]),
     currentAlbum() {
       return this.currentTrack.al ?? this.currentTrack.album;
     },
@@ -216,9 +219,11 @@ export default {
     formateProgressTime,
     handlePlayerPage(flag) {
       if (this.fullScreen) {
-        // todo open lyric
-        console.log("handle lyric");
-        this.setShowLyric(!this.showLyric);
+        // open or close lyric
+        if (this.currentTrackType !== "podcast") {
+          console.log("trigger lyric");
+          this.setShowLyric(!this.showLyric);
+        }
       } else {
         // todo set fullscreen to false, close the lyric
         this.setFullScreen(true);

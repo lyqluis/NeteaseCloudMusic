@@ -5,13 +5,14 @@
       @click-left="$router.go(-1)"
       :className="`header header-sticky ${showHeaderClass}`"
     >
-      <span class="header-title"> 所有专辑 </span>
+      <span class="header-title"> {{ title }} </span>
     </nav-header>
 
     <album-page
-      type="album"
+      :type="type"
+      :subType="subType"
       :id="$route.params.id"
-      :getData="getArtistAlbums"
+      :getData="getPageData"
     ></album-page>
   </div>
 </template>
@@ -20,6 +21,7 @@
 import NavHeader from "base/NavHeader";
 import AlbumPage from "components/AlbumPage";
 import { getArtistAlbums } from "api/artist";
+import { getHotPodcasts } from "api/podcast";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 
 export default {
@@ -33,12 +35,46 @@ export default {
       className: "page-header-show",
     }),
   ],
+  data() {
+    return {
+      title: "所有专辑",
+      type: "album",
+      subType: "",
+    };
+  },
   components: {
     NavHeader,
     AlbumPage,
   },
+  // switch the title
+  beforeRouteEnter(to, from, next) {
+    const data = {};
+    if (to.path === "/hotpodcasts") {
+      data.title = "热门电台";
+      data.type = "podcast";
+      data.subType = 'hotpodcast'
+    } else {
+      // to.path == '/morealbums/:id'
+      data.title = "所有专辑";
+      data.type = "album";
+    }
+    next((vm) => {
+      for (const key in data) {
+        vm[key] = data[key];
+      }
+    });
+  },
+  computed: {
+    getPageData() {
+      if (this.type === "podcast") {
+        return getHotPodcasts;
+      }
+      return getArtistAlbums;
+    },
+  },
   methods: {
-    getArtistAlbums,
+    // getArtistAlbums,
+    // getHotPodcasts,
   },
 };
 </script>
@@ -51,7 +87,7 @@ export default {
       top: 0;
       z-index: 1;
     }
-    
+
     &-title {
       font-size: var(--font-size-medium-plus);
       color: var(--color-title);

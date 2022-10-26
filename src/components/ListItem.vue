@@ -6,7 +6,8 @@
       <!-- <span v-if="listType.hasNum && !active"> -->
       <span v-if="!active">
         <!-- {{ type === "album" ? track.no : index + 1 }} -->
-        {{ type === "album" ? index + 1 : track.no }}
+        {{ index + 1 }}
+        <!-- {{ type === "album" ? index + 1 : track.no }} -->
       </span>
       <icon icon="sound" v-if="active" className="is_playing"></icon>
     </div>

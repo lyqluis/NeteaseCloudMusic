@@ -159,6 +159,7 @@ export default {
   beforeRouteUpdate(to, from, next) {
     this.getArtistPageAllData(to.params.id);
     this.$nextTick(next);
+    // next()
   },
   created() {
     this.getArtistPageAllData(this.$route.params.id);
@@ -170,9 +171,9 @@ export default {
     resetData() {
       this.id = this.$route.params.id;
       this.artist = {};
-      // this.topSongs = [];
-      // this.hotAlbums = [];
-      // this.similarArtists = [];
+      this.topSongs = [];
+      this.hotAlbums = [];
+      this.similarArtists = [];
     },
     getArtistPageAllData(id) {
       this.resetData();

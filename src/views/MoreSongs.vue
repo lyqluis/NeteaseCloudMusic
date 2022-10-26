@@ -6,21 +6,27 @@
       @click-right="toggleSort"
       :className="`header header-sticky ${showHeaderClass}`"
     >
-      <span class="header-title">所有歌曲</span>
+      <span class="header-title">{{ title }}</span>
       <template #right>
-        <span> {{ currentSort === "hot" ? "热度" : "时间" }} </span>
-        <icon icon="sort" className="header-right_icon"></icon>
+        <span v-if="type === 'album'">
+          {{ currentSort === "hot" ? "热度" : "时间" }}
+        </span>
+        <icon
+          v-if="type === 'album'"
+          icon="sort"
+          className="header-right_icon"
+        ></icon>
       </template>
     </nav-header>
 
     <scroller
       :loading="loading"
       :finished="finished"
-      @load="getArtistSongs"
+      @load="getPageData"
       ref="scroller"
     >
       <list
-        type="album"
+        :type="styleType"
         :tracks="list"
         topOrBottomLine="bottom"
         ref="content"
@@ -39,6 +45,8 @@ import List from "components/List";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 import { getArtistSongs } from "api/artist";
 const SORT_TYPES = ["hot", "time"];
+import { getProgramRanks } from "api/podcast";
+import { handleProgramsData } from "utils/podcast";
 
 export default {
   name: "MoreSongs",
@@ -65,13 +73,25 @@ export default {
       limit: 30,
       page: 0,
       total: null,
-      // sortIndex: this.$route.query.sort ?? 0,
       sortIndex: 0,
+      title: "所有歌曲",
+      type: "album",
+      styleType: "",
+      topList: [],
     };
   },
   computed: {
+    offset() {
+      return this.limit * this.page;
+    },
     currentSort() {
       return SORT_TYPES[this.sortIndex];
+    },
+    computedGetPageData() {
+      if (this.type === "podcast") {
+        return "";
+      }
+      return "";
     },
   },
   watch: {
@@ -86,6 +106,24 @@ export default {
         this.$refs.scroller.check();
       });
     },
+  },
+  beforeRouteEnter(to, from, next) {
+    const data = {};
+    if (to.path === "/hotpodcastprograms") {
+      data.title = "热门节目";
+      data.type = "podcast";
+      data.styleType = "rank";
+    } else {
+      // to.path == '/moresongs/:id'
+      data.title = "所有歌曲";
+      data.type = "album";
+      data.styleType = "album";
+    }
+    next((vm) => {
+      for (const key in data) {
+        vm[key] = data[key];
+      }
+    });
   },
   methods: {
     log(e) {
@@ -102,9 +140,9 @@ export default {
       this.loading = true;
       getArtistSongs({
         id: this.id,
-        limit: 30,
+        limit: this.limit,
         order: this.currentSort,
-        offset: this.page * this.limit,
+        offset: this.offset,
       }).then((res) => {
         this.loading = false;
         console.log(res);
@@ -118,6 +156,36 @@ export default {
           this.finished = true;
         }
       });
+    },
+    async getProgramRanks() {
+      this.loading = true;
+      if (!this.topList.length) {
+        const res = await getProgramRanks();
+        const topList = handleProgramsData(
+          res.toplist.map((p) => {
+            p.program.rank = p.rank;
+            return p.program;
+          })
+        );
+        this.topList = topList;
+        this.total = this.topList.length;
+      }
+      const list = this.topList.slice(this.offset, this.offset + this.limit);
+      this.list.push(...list);
+      const hasMore = this.total > this.list.length;
+      this.loading = false;
+      if (hasMore) {
+        this.page++;
+      } else {
+        this.finished = true;
+      }
+    },
+    getPageData() {
+      if (this.type === "podcast") {
+        this.getProgramRanks();
+      } else {
+        this.getArtistSongs();
+      }
     },
   },
 };

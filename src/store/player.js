@@ -31,7 +31,8 @@ export default {
   getters: {
     playlist: (state, getters) => getters.currentMode === 'shuffle' ? state.shuffledList : state.sequenceList,
     currentTrack: (state, getters) => getters.playlist[state.currentIndex] || {},
-    currentMode: state => PLAY_MODE[state.mode]
+    currentMode: state => PLAY_MODE[state.mode],
+    currentTrackType: state => state.playlistSrc.type
   },
   mutations: {
     setChangingState(state, flag) {

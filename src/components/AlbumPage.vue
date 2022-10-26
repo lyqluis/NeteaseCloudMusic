@@ -31,6 +31,7 @@ export default {
       type: String,
       default: "album",
     },
+    subType: String,
     id: [String, Number],
     area: [Number, String],
     active: {
@@ -110,28 +111,49 @@ export default {
           console.log(res);
           const { top, list } = res;
           this.list.push(...list);
+          if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
           this.finished = true;
         });
       } else if (this.type === "podcast") {
-        // allpodcasts page
-        this.getData({
-          cateId: this.id,
-          limit: this.limit,
-          offset: this.offset,
-        }).then((res) => {
-          this.loading = false;
-          console.log(res);
-          const { djRadios, count } = res;
-          this.list.push(...djRadios);
-          if (count) this.total = count;
-          const hasMore = this.total > this.list.length;
-          if (hasMore) {
-            this.page++;
-          } else {
-            if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
-            this.finished = true;
-          }
-        });
+        if (this.subType === "hotpodcast") {
+          this.getData({
+            limit: this.limit,
+            offset: this.offset,
+          }).then((res) => {
+            this.loading = false;
+            console.log(res);
+            const { djRadios, count, hasMore } = res;
+            this.list.push(...djRadios);
+            if (hasMore !== null) {
+              if (hasMore) {
+                this.page++;
+              } else {
+                if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+                this.finished = true;
+              }
+            }
+          });
+        } else {
+          // allpodcasts page
+          this.getData({
+            cateId: this.id,
+            limit: this.limit,
+            offset: this.offset,
+          }).then((res) => {
+            this.loading = false;
+            console.log(res);
+            const { djRadios, count } = res;
+            this.list.push(...djRadios);
+            if (count) this.total = count;
+            const hasMore = this.total > this.list.length;
+            if (hasMore) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
+            }
+          });
+        }
       }
     },
   },

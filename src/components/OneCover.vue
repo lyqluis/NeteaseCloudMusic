@@ -1,5 +1,5 @@
 <template>
-  <div class="one-cover" @click="$router.push(`/${type}/${coverData.id}`)">
+  <div class="one-cover" @click="routerGo">
     <cover :imgSrc="picSrc" :type="type" :className="`${type}-img`"></cover>
 
     <div :class="`${type}-des`">
@@ -67,6 +67,13 @@ export default {
         return this.coverData.rcmdtext || this.coverData.rcmdText;
       } else {
         return "";
+      }
+    },
+  },
+  methods: {
+    routerGo() {
+      if (this.coverData.id) {
+        this.$router.push(`/${this.type}/${this.coverData.id}`);
       }
     },
   },

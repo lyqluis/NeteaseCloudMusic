@@ -29,6 +29,12 @@ export default {
       commit('setLoginStatus', false)
       commit('setUserInfo', removeUserInfo())
     },
+    // todo when cookie is outdated
+    checkLogInfo(){
+      if(!isLoggedIn()){
+        return
+      }
+    }
     // todo when isLoggedIn (has cookie), no local storage
   }
 }

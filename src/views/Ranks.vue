@@ -14,8 +14,6 @@
 
 <script>
 import NavHeader from "base/NavHeader";
-import Tabs from "base/Tabs";
-import Tab from "base/Tab";
 import AlbumPage from "components/AlbumPage";
 import { getRanks } from "api/rank";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
@@ -37,7 +35,6 @@ export default {
   },
   methods: {
     getRanks,
-    getNewAlbums() {},
   },
 };
 </script>

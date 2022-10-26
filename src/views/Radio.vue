@@ -58,8 +58,7 @@
       </swiper>
     </base-block>
 
-    <!-- // todo push more -->
-    <base-block @click-right="$router.push('/newalbums')">
+    <base-block @click-right="$router.push('/hotpodcasts')">
       <template #title>热门电台</template>
       <slider type="album">
         <one-cover
@@ -72,7 +71,7 @@
     </base-block>
 
     <!-- // todo push more -->
-    <base-block @click-right="$router.push('/newalbums')">
+    <base-block @click-right="$router.push('/hotpodcastprograms')">
       <template #title>热门节目</template>
       <swiper v-if="topPrograms.length" :width="347" :offset="14">
         <list
@@ -104,7 +103,6 @@
       </slider>
     </base-block>
 
-    <!-- // todo 热门分类 -->
     <!-- // todo 主播榜 -->
   </div>
 </template>
@@ -150,14 +148,7 @@ export default {
   created() {
     this.getRecommendPodcasts();
     this.getRecommendPrograms();
-    getProgramRanks().then((res) => {
-      console.log("🔥📃", res);
-      let programs = handleProgramsData(
-        res.toplist.slice(0, 12).map((p) => p.program)
-      );
-      programs = chunk(programs, 3);
-      this.topPrograms.push(...programs);
-    });
+    this.getProgramRanks();
     this.getPodcastCategories();
   },
   methods: {
@@ -182,6 +173,14 @@ export default {
         programs = handleProgramsData(res.programs);
         programs = chunk(programs, n);
         this.recommendPrograms.push(...programs);
+      });
+    },
+    getProgramRanks(n = 12) {
+      getProgramRanks({ limit: n }).then((res) => {
+        console.log("🔥📃", res);
+        let programs = handleProgramsData(res.toplist.map((p) => p.program));
+        programs = chunk(programs, 3);
+        this.topPrograms.push(...programs);
       });
     },
     getPodcastCategories() {

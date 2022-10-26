@@ -52,8 +52,7 @@ export function getHotPodcasts(params) {
  * 接口地址 : /dj/program/toplist
  * 调用例子 : /dj/program/toplist?limit=1
  * 可选参数 :
- * @param {Number} params.limit, 返回数量, 默认为 100
- * @param {Number} params.offset, 偏移数量, 用于分页, 如 :( 页数 -1)*100, 其中 100 为 limit 的值 , 默认为 0
+ * @param {Number} params.limit, 返回数量, 默认为 100, 最多返回 100
  * @return {*} 
  */
 export function getProgramRanks(params) {

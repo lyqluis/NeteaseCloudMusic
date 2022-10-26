@@ -2226,6 +2226,63 @@ export default {
 >
 > https://www.yisu.com/zixun/235409.html
 
+##### vue-router重复路由报错
+
+>[vue-router重复跳转的错误，看这一篇就够啦！！！](https://juejin.cn/post/7038813171187974175)
+>
+>[vue-router重复路由跳转报错](http://events.jianshu.io/p/1f0fff118414)
+
+不更改路由路径，但是更改 query 数据，vue-router 会报错
+
+```bash
+NavigationDuplicated: Avoided redundant navigation to current location
+```
+
+- 重写 vue-router 的 replace 和 push 方法
+
+```js
+// router/index.js
+
+// 缓存原本的push方法
+const originalPush = VueRouter.prototype.push
+const originalReplace = VueRouter.prototype.replace
+
+// 指定新的push方法
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  // 如果指定了成功或者失败的回调
+  if (onResolve || onReject) {
+    // 直接调用原本的push方法
+    // * 不能直接调用，因为打包成为严格模式下this不是router而是undefined
+    // originalPush(location, onResolve, onReject)
+    return originalPush.call(this, location, onResolve, onReject)
+  }
+  // 没有指定成功或者失败的回调，要用catch处理
+  return originalPush.call(this, location).catch((err) => {
+    // 如果是重复导航产生的错误，不再向外传递错误
+    if (VueRouter.isNavigationFailure(err)) {
+      // 产生的是成功的promise，成功的promise的value是err
+      // 产生失败的promise：抛出错误或者return一个失败的promise
+      return err
+    }
+
+    // 如果不是重复导航的错误，将错误向下传递
+    return Promise.reject(err)
+  })
+}
+
+VueRouter.prototype.replace = function (location, onResolve, onReject) {
+  if (onResolve || onReject) {
+    return originalReplace.call(this, location, onResolve, onReject)
+  }
+  return originalReplace.call(this, location).catch((err) => {
+    if (VueRouter.isNavigationFailure(err)) {
+      return err
+    }
+    return Promise.reject(err)
+  })
+}
+```
+
 #### 鉴权
 
 ##### 登陆
@@ -2242,35 +2299,48 @@ export default {
 
 ### todo
 
-- [ ] 邮箱登录
-- [ ] 手机号登录
+- [ ] 登录页面
+  - [x] 二维码登陆
+  - [ ] 邮箱登录
+  - [ ] 手机号登录
 
-- [ ] artist 组件页面转跳其他 artist 页面，同一组件没有引发页面刷新
-
-- [ ] 电台页面
+- [ ] 电台
 
   - [x] allpodcast 页面
     - [x] showHeaderScoller 初始化
     - [x] 切换标签，$route.query 变化
-  - [x] radio 页面分类分栏跳转对应 allpodcasts 页面
+  - [x] radio 页面
+    - [x] 分类分栏跳转对应 allpodcasts 页面
+    - [x] 分栏【热门电台】更多
+    - [x] 分栏【热门节目】更多
   - [x] 电台详情页
     - [x] 详情描述组件内容
-  - [ ] ~~电台节目详情~~
-  - [ ] 电台 dj 详情页（用户页？）
   - [x] 电台节目播放
-  - [ ] 调整电台的节目数据
+
+- [ ] 用户页面
+
+- [ ] 歌手页面
+
+  - [x] /artist/1 转跳 /artist/2，复用同一组件没有引发页面刷新
+
+    - 在组件内使用 beforeRouteUpdate 路由钩子
+
+    - [ ] 还是有点 bug
+
+  - [ ] 更多单曲页面
+
+    - [ ] 单曲排序，偶尔失灵，使用 router.query ？
 
 - [ ] rank 排行榜
 
-  - [ ] bug: ranks 页面最后没有左对齐
-  - [ ] bug: 排行榜详情页序号
-
-- [ ] showheaderscroll doesn’t work
+  - [x] bug: ranks 页面最后没有左对齐
+  - [x] bug: 排行榜详情页序号
 
 - [ ] 使用 showHeaderScroller.js 的组件上添加 `this.inited` 属性设置，代表完成了当前页面的初步渲染，可以执行 showHeaderScroller 代码了
 
 - [ ] player
 
-  - [ ] player 展开时的背景模糊图片替换成数据给到的模糊图片
+  - [x] 播放 podcast，歌词不需要显示，固定 disk 图片展示
+  - [x] player 展开时的背景模糊图片替换成数据给到的模糊图片
 
-    
+- [ ] 全剧导航守卫，检测登陆状态

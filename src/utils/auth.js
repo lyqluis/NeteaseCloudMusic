@@ -17,11 +17,23 @@
 // }
 
 import { isEmptyObject } from './global'
-import { getUserInfo } from './cache'
+import { getUserInfo, removeUserInfo } from './cache'
+import { getLoginStatus } from 'api/auth'
 
 export function isLoggedIn() {
   const userInfo = getUserInfo()
   return !isEmptyObject(userInfo)
 }
 
+// todo use in router guard
 // 调用 api@getLoginStatus 来看是否登陆
+// when cookie is outdated
+export async function checkLog() {
+  const { data } = await getLoginStatus()
+  // if logged in, data.account is not null
+  const isLoggedIn = data.account === null
+
+  if (!isLoggedIn) {
+    removeUserInfo()
+  }
+}

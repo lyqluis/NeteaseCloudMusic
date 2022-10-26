@@ -197,6 +197,22 @@ const routes = [
     }
   },
   {
+    path: '/hotpodcasts',  // 电台 - 热门电台 => 更多
+    name: 'HotPodcasts',
+    component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/hotpodcastprograms',  // 电台 - 热门节目 => 更多
+    name: 'HotPodcastsPrograms',
+    component: () => import('../views/MoreSongs.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
     path: '/ranks',
     name: 'Ranks',
     component: () => import('../views/Ranks.vue'),
@@ -208,6 +224,14 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: () => import('../views/User.vue'),
     meta: {
       scrollToTop: true
     }

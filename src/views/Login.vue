@@ -62,6 +62,7 @@ import {
   loginWithVisitor,
   logout,
 } from "api/auth";
+import { checkLog } from "utils/auth";
 
 export default {
   name: "Login",
@@ -100,9 +101,7 @@ export default {
   },
   created() {
     this.getQrCode();
-    getLoginStatus().then((res) => {
-      console.log("created, get login status:", res);
-    });
+    checkLog()
   },
   destroyed() {
     this.removeCheckQrCode();
