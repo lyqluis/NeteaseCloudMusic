@@ -41,6 +41,29 @@ export function getRecommendList(num) {
 }
 
 /**
+ * 获取每日推荐歌单
+ * 说明 : 调用此接口 , 可获得每日推荐歌单 ( 需要登录 )
+ */
+export function getDailyRecommendPlaylists() {
+  return axios({
+    url: '/recommend/resource',
+    method: 'get',
+  })
+}
+
+/**
+ * 获取每日推荐歌曲
+ * 说明 : 调用此接口 , 可获得每日推荐歌曲 ( 需要登录 )
+ * 调用例子 : /recommend/songs
+ */
+export function getDailyRecommendSongs() {
+  return axios({
+    url: '/recommend/songs',
+    method: 'get',
+  })
+}
+
+/**
  * 新歌速递
  * 必选参数 :
  * type: 地区类型 id,对应以下:

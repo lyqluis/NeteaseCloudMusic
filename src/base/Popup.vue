@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import popupMixin from "mixins/popupMixin";
+import { popupMixin } from "mixins/popupMixin";
 
 export default {
   name: "Popup",

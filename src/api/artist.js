@@ -131,9 +131,6 @@ export function getArtistAlbums(params) {
   })
 }
 
-
-
-
 /**
  * 获取相似歌手
  * 说明 : 调用此接口 , 传入歌手 id, 可获得相似歌手
@@ -148,5 +145,22 @@ export function getSimilarArtist(id) {
     method: 'get',
     url: '/simi/artist',
     params: { id }
+  })
+}
+
+/**
+ * 收藏/取消收藏歌手
+ * 说明 : 调用此接口,可收藏歌手
+ * 必选参数 :
+ * @param {Number} params.id 歌手 id
+ * @param {Number} params.t 操作, 1为收藏, 其他为取消收藏
+ * 调用例子 : /artist/sub?id=6452&t=1
+ * @return {*}
+ */
+export function subscribeArtist(params) {
+  return axios({
+    method: 'get',
+    url: '/artist/sub',
+    params,
   })
 }

@@ -3,13 +3,13 @@
     <div class="name">
       <slot name="name"></slot>
     </div>
-    <div class="creator">
+    <div class="creator" v-if="hasCreator">
       <slot name="creator"></slot>
     </div>
     <div class="btns">
       <slot name="btns"></slot>
     </div>
-    <div class="des">
+    <div class="des" v-if="hasDes">
       <slot name="des"></slot>
       <!-- <icon icon="arrow-right" class="des-more"></icon> -->
     </div>
@@ -21,9 +21,16 @@ import Ellipsis from "base/Ellipsis";
 
 export default {
   name: "Description",
-  // components: {
-  //   Ellipsis,
-  // },
+  props: {
+    hasCreator: {
+      type: Boolean,
+      default: true,
+    },
+    hasDes: {
+      type: Boolean,
+      default: true,
+    },
+  },
 };
 </script>
 

@@ -56,7 +56,7 @@ export function debounce(fn, delay) {
 // }
 
 export function isEmptyObject(obj) {
-  // return Reflect.ownKeys(obj).length === 0 // vue 中的data空对象数据有__ob__ 对象，无法用此判断
+  // return Reflect.ownKeys(obj).length === 0 // vue 中的 data 空对象数据有 __ob__ 对象，无法用此判断
   return Object.keys(obj).length === 0
 }
 

@@ -81,9 +81,11 @@ import Cover from "base/Cover";
 import Scroller from "base/Scroller";
 
 import { mapMutations, mapActions } from "vuex";
+import { handlePopup } from "mixins/popupMixin";
 
 export default {
   name: "Podcast",
+  mixins: [podcastDetail, handlePopup],
   components: {
     PageDetail,
     List,
@@ -95,7 +97,6 @@ export default {
     Cover,
     Scroller,
   },
-  mixins: [podcastDetail],
   // todo
   beforeRouteUpdate(to, from, next) {
     this.show = false;
@@ -117,9 +118,6 @@ export default {
   methods: {
     ...mapMutations("player", ["setPlaylistSrc"]),
     ...mapActions("player", ["play"]),
-    openPopup(e) {
-      this.show = true;
-    },
     playAllList(n) {
       this.setPlaylistSrc({ id: this.id, type: "album" });
       this.play({ list: this.list, index: n });

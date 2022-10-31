@@ -2,7 +2,7 @@
   <div class="new-albums">
     <nav-header
       ref="header"
-      @click-left="$router.go(-1)"
+      @click-left="$router.push('/radio')"
       :className="`header header-sticky ${showHeaderClass}`"
     >
       <span class="header-title">广播分类</span>

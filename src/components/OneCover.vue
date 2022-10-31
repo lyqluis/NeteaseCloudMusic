@@ -104,6 +104,7 @@ export default {
       font-size: var(--font-size-medium-plus);
       color: var(--color-text);
       padding: 5px 0;
+      line-height: 1.25;
       &_title {
         @include inline-text-ellipsis(1);
       }

@@ -81,7 +81,10 @@ const overlayControl = new OverlayControl()
 import { onTouchStart, onTouchMove } from "utils/touch"
 import { addClass, removeClass, bindEvent, removeEvent, getScroller, preventDefault } from "utils/dom"
 
-export default {
+/**
+ * use in Popup component
+ */
+export const popupMixin = {
   data() {
     return {
       opened: false,  // todo 不是响应式数据
@@ -151,5 +154,21 @@ export default {
     //   resetTouch()
     // }
 
+  }
+}
+
+/**
+ * use in thhe components used Popup
+ */
+export const handlePopup = {
+  data() {
+    return {
+      show: false
+    }
+  },
+  methods: {
+    openPopup(e) {
+      this.show = true;
+    },
   }
 }

@@ -2294,8 +2294,9 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
 ##### 全局路由鉴权
 
-- 检查 store / localStorage 中是否有用户信息，没有则调用 api@getLoginStatus 方法获取服务器中的登陆信息
-- 
+- 检查本地 store / localStorage 中是否有用户信息，没有则调用 api@getLoginStatus 方法获取服务器中的登陆信息
+  - 已登陆，添加本地 store / localStorage 信息
+  - 未登陆，全局变量设为未登陆
 
 ### todo
 
@@ -2342,5 +2343,19 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
   - [x] 播放 podcast，歌词不需要显示，固定 disk 图片展示
   - [x] player 展开时的背景模糊图片替换成数据给到的模糊图片
+  - [ ] 私人 fm
+  - [ ] 心动播放模式
 
 - [ ] 全剧导航守卫，检测登陆状态
+
+- [ ] 关闭 popup 报错
+
+  ```bash
+  Uncaught TypeError: Cannot read properties of undefined (reading 'img')
+  	at VueComponent.handleTouchEnd (zoomScroller.js?3fa9:63:1)
+  	at HTMLDivElement.eval (touch.js?0733:16:1)
+  ```
+
+- [ ] Library 页面
+
+- [ ] 现在就听 页面

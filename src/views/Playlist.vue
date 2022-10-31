@@ -18,7 +18,9 @@
         <description>
           <template #name v-if="playlist.name">{{ playlist.name }}</template>
           <template #creator v-if="playlist.creator">
-            {{ playlist.creator.nickname }}
+            <span @click="$router.push(`/user/${playlist.creator.userId}`)">
+              {{ playlist.creator.nickname }}
+            </span>
           </template>
           <template #btns>
             <base-button icon="play" size="big" @click="playAllList"
@@ -73,6 +75,7 @@ import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
 import { mapMutations, mapActions } from "vuex";
+import { handlePopup } from "mixins/popupMixin";
 
 export default {
   name: "Playlist",
@@ -86,7 +89,7 @@ export default {
     Popup,
     NavHeader,
   },
-  mixins: [playlistDetail],
+  mixins: [playlistDetail, handlePopup],
   // todo
   // 重复调用组件激活
   beforeRouteUpdate(to, from, next) {
@@ -105,9 +108,6 @@ export default {
   methods: {
     ...mapMutations("player", ["setPlaylistSrc"]),
     ...mapActions("player", ["play"]),
-    openPopup(e) {
-      this.show = true;
-    },
     playAllList(e) {
       this.setPlaylistSrc({ id: this.id, type: "playlist" });
       this.play({ list: this.tracksAll, index: 0 });

@@ -22,6 +22,7 @@ import NavHeader from "base/NavHeader";
 import AlbumPage from "components/AlbumPage";
 import { getArtistAlbums } from "api/artist";
 import { getHotPodcasts } from "api/podcast";
+import { getUserPlaylists } from "api/user";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 
 export default {
@@ -48,15 +49,18 @@ export default {
   },
   // switch the title
   beforeRouteEnter(to, from, next) {
+    console.log("path: ", to.path);
     const data = {};
     if (to.path === "/hotpodcasts") {
       data.title = "热门电台";
       data.type = "podcast";
-      data.subType = 'hotpodcast'
-    } else {
-      // to.path == '/morealbums/:id'
+      data.subType = "hotpodcast";
+    } else if (to.path.includes("/morealbums")) {
       data.title = "所有专辑";
       data.type = "album";
+    } else if (to.path.includes("/moreplaylists")) {
+      data.title = to.query.type === "created" ? "所有创建" : "所有收藏";
+      data.type = "playlist";
     }
     next((vm) => {
       for (const key in data) {
@@ -68,8 +72,10 @@ export default {
     getPageData() {
       if (this.type === "podcast") {
         return getHotPodcasts;
+      } else if (this.type === "album") {
+        return getArtistAlbums;
       }
-      return getArtistAlbums;
+      return getUserPlaylists;
     },
   },
   methods: {

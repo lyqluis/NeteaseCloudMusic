@@ -29,7 +29,9 @@
           </template>
 
           <template #btns>
-            <base-button icon="heart" size="big">关注</base-button>
+            <base-button icon="heart" size="big" @click="handleSubsribe(id)"
+              >关注</base-button
+            >
           </template>
 
           <template #des v-if="artist.briefDesc">
@@ -109,19 +111,21 @@ import BaseBlock from "components/BaseBlock";
 import Slider from "base/Slider";
 import OneCover from "components/OneCover";
 import NavHeader from "base/NavHeader";
-
 import List from "components/List";
 
 import { chunk } from "utils/global";
+import { handlePopup } from "mixins/popupMixin";
 import {
   getArtistDetail,
   getArtistTopSongs,
   getArtistAlbums,
   getSimilarArtist,
+  subscribeArtist,
 } from "api/artist";
 
 export default {
   name: "Artist",
+  mixins: [handlePopup],
   components: {
     NavHeader,
     PageDetail,
@@ -137,7 +141,6 @@ export default {
     // Scroller,
     List,
   },
-  // mixins: [playlistDetail],
   data() {
     return {
       show: false,
@@ -165,9 +168,6 @@ export default {
     this.getArtistPageAllData(this.$route.params.id);
   },
   methods: {
-    openPopup(e) {
-      this.show = true;
-    },
     resetData() {
       this.id = this.$route.params.id;
       this.artist = {};
@@ -200,6 +200,9 @@ export default {
       getSimilarArtist(id).then((res) => {
         this.similarArtists = res.artists;
       });
+    },
+    handleSubsribe(id) {
+      subscribeArtist();
     },
   },
 };

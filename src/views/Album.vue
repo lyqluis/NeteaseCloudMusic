@@ -72,9 +72,11 @@ import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
 import Cover from "base/Cover";
 import { mapMutations, mapActions } from "vuex";
+import { handlePopup } from "mixins/popupMixin";
 
 export default {
   name: "Album",
+  mixin: [handlePopup],
   components: {
     PageDetail,
     List,
@@ -116,9 +118,6 @@ export default {
   methods: {
     ...mapMutations("player", ["setPlaylistSrc"]),
     ...mapActions("player", ["play"]),
-    openPopup(e) {
-      this.show = true;
-    },
     playAllList(n) {
       this.setPlaylistSrc({ id: this.id, type: "album" });
       this.play({ list: this.list, index: n });

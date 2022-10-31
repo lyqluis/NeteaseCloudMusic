@@ -115,16 +115,16 @@ export const qrCodeStatusMsg = {
 
 /**
  * --游客登录 // ? 不可用
- * 说明: 直接调用此接口, 可获取游客cookie,
- * 如果遇到其他接口未登录状态报 400 状态码需要验证的错误, 
- * 可使用此接口获取游客cookie避免报错
+ * --说明: 直接调用此接口, 可获取游客cookie,
+ * --如果遇到其他接口未登录状态报 400 状态码需要验证的错误, 
+ * --可使用此接口获取游客cookie避免报错
  */
-export function loginWithVisitor() {
-  return axios({
-    method: 'post',
-    url: '/register/anonimous',
-  })
-}
+// -- export function loginWithVisitor() {
+// --   return axios({
+// --     method: 'post',
+// --     url: '/register/anonimous',
+// --   })
+// -- }
 
 /**
  * 刷新登录
@@ -150,9 +150,23 @@ export function getLoginStatus() {
   return axios({
     method: 'post',
     url: '/login/status',
-    params: { 
+    params: {
       timestamp: Date.now() // non essential
     }
+  });
+}
+
+/**
+ * ?? 和checkloginstatus接口返回的一样
+ * 获取账号信息
+ * 说明 : 登录后调用此接口 ,可获取用户账号信息
+ * 接口地址 : /user/account
+ * 调用例子 : /user/account
+ */
+export function getUserAccount() {
+  return axios({
+    url: '/user/account',
+    method: 'get',
   });
 }
 

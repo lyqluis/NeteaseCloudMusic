@@ -24,6 +24,34 @@
       </base-block>
     </swiper>
 
+    <!-- // todo push more -->
+    <!-- // todo add daily recommend playlist dailysongs-->
+    <base-block @click-right="$router.push('/newalbums')" v-if="isLoggedIn">
+      <template #title>推荐歌单</template>
+      <slider type="album">
+        <one-cover
+          type="playlist"
+          v-for="playlist in dailyPlaylists"
+          :key="playlist.id"
+          :coverData="playlist"
+        ></one-cover>
+      </slider>
+    </base-block>
+
+    <!-- // todo push more -->
+    <base-block @click-right="$router.push('/newsongs')" v-if="isLoggedIn">
+      <template #title>每日推荐</template>
+      <swiper v-if="newSongs.length" :width="347" :offset="14">
+        <list
+          v-for="(list, i) in dailySongs"
+          :key="`newSongs-${i}`"
+          :tracks="list"
+          topOrBottom="top"
+        >
+        </list>
+      </swiper>
+    </base-block>
+
     <base-block @click-right="$router.push('/newalbums')">
       <template #title>新专辑</template>
       <slider type="album">
@@ -83,11 +111,17 @@ import OneCover from "components/OneCover";
 import Cover from "base/Cover";
 
 import { chunk } from "utils/global";
-import { getNewSongs, getRecommendList } from "api/recommend";
+import {
+  getNewSongs,
+  getRecommendList,
+  getDailyRecommendPlaylists,
+  getDailyRecommendSongs,
+} from "api/recommend";
 import { getNewAlbums } from "api/album";
 import { getTopArtists } from "api/artist";
 import { getRanks } from "api/rank";
 import { getBanner, getFind, getTopAlbums } from "api/tst";
+import { mapState } from "vuex";
 
 export default {
   name: "Home",
@@ -101,6 +135,8 @@ export default {
   },
   data() {
     return {
+      dailyPlaylists: [],
+      dailySongs: [],
       banners: [],
       recommends: [],
       newSongs: [],
@@ -114,18 +150,30 @@ export default {
   },
   created() {
     getRecommendList(6).then((res) => {
-      console.log("recommends");
-      console.log(res);
+      console.log("👂", res);
       this.recommends = res.result;
     });
+    if (this.isLoggedIn) {
+      getDailyRecommendPlaylists().then((res) => {
+        console.log("👂1", res);
+        this.dailyPlaylists = res.recommend;
+      });
+      getDailyRecommendSongs().then((res) => {
+        console.log("👂2", res);
+        this.dailySongs = chunk(res.data.dailySongs, 3);
+      });
+    }
     this.getNewSongs();
     this.getNewAlbums();
     this.getTopArtists();
     this.getRanks();
   },
+  computed: {
+    ...mapState("user", ["isLoggedIn"]),
+  },
   methods: {
     getNewSongs(length = 9, n = 3) {
-      let songs = [];
+      let songs;
       getNewSongs().then((res) => {
         console.log("get new songs", res);
         songs = res.data.slice(0, length);

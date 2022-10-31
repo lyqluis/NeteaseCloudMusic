@@ -7,7 +7,6 @@
       @click.stop="handlePlayerPage"
     >
       <div class="player-page-background" v-show="fullScreen">
-        <!-- <img :src="currentTrack.al && currentTrack.al.picUrl" alt="" /> -->
         <img :src="currentAlbum && currentAlbum.picUrl" alt="" />
       </div>
 
@@ -305,11 +304,11 @@ export default {
   display: flex;
   align-items: center;
 
-  // todo delete
-  .btns {
-    position: absolute;
-    bottom: 0;
-  }
+  // // todo delete
+  // .btns {
+  //   position: absolute;
+  //   bottom: 0;
+  // }
 
   .player-img {
     &-play {

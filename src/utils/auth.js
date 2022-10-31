@@ -13,27 +13,32 @@
 
 // __csrf ?
 // MUSIC_U 只有在账户登录的情况下才有
-// export function setCookie(string) {
-// }
 
 import { isEmptyObject } from './global'
-import { getUserInfo, removeUserInfo } from './cache'
+import { getUserInfo } from './cache'
 import { getLoginStatus } from 'api/auth'
+import store from 'store/index'
 
+// check local login status
 export function isLoggedIn() {
   const userInfo = getUserInfo()
   return !isEmptyObject(userInfo)
 }
 
-// todo use in router guard
-// 调用 api@getLoginStatus 来看是否登陆
-// when cookie is outdated
-export async function checkLog() {
+export function checkLocalLoginStatus() {
+  if (isLoggedIn()) return
+  checkServerLoginStatus()
+}
+
+export async function checkServerLoginStatus() {
   const { data } = await getLoginStatus()
   // if logged in, data.account is not null
-  const isLoggedIn = data.account === null
+  return data
+}
 
-  if (!isLoggedIn) {
-    removeUserInfo()
-  }
+export async function globalCheck(to, from, next) {
+  console.log('global 🧭')
+  await store.dispatch('user/checkLoginStatus')
+  console.log('global 🧭 ends')
+  next()
 }

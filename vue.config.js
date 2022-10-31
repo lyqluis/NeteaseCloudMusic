@@ -17,6 +17,7 @@ module.exports = {
         'base': resolve('src/base'),
         'mixins': resolve('src/mixins'),
         'layouts': resolve('src/layouts'),
+        'store': resolve('src/store'),
         // 'assets': path.join(__dirname, 'src/assets')
       }
     },

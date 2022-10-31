@@ -229,9 +229,17 @@ const routes = [
     }
   },
   {
-    path: '/user',
+    path: '/user/:id',
     name: 'User',
     component: () => import('../views/User.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/moreplaylists/:uid',  // user - 创建/收藏歌单 => 更多
+    name: 'UserMorePlaylists',
+    component: () => import('../views/MoreAlbums.vue'),
     meta: {
       scrollToTop: true
     }
@@ -249,5 +257,7 @@ const router = new VueRouter({
   scrollBehavior
 })
 
+import { globalCheck } from 'utils/auth'
+router.beforeEach(globalCheck)
 
 export default router

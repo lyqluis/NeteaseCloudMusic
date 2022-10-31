@@ -62,7 +62,7 @@ import {
   loginWithVisitor,
   logout,
 } from "api/auth";
-import { checkLog } from "utils/auth";
+// import { checkLog } from "utils/auth";
 
 export default {
   name: "Login",
@@ -101,7 +101,7 @@ export default {
   },
   created() {
     this.getQrCode();
-    checkLog()
+    // checkLog()
   },
   destroyed() {
     this.removeCheckQrCode();
