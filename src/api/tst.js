@@ -1,12 +1,21 @@
 import axios from 'utils/axios.js'
 
-// 首页发现全部内容
-export function getFind() {
+/**
+ * 首页-发现
+ * 说明 : 调用此接口 , 可获取 APP 首页信息
+ * 接口地址 : /homepage/block/page
+ * 可选参数 : 
+ * @param {Boolean} params.refresh: 是否刷新数据,默认为 false
+ * @param {String} params.cursor: 上一条数据返回的 cursor
+ */
+export function getFind(params) {
   return axios({
     url: '/homepage/block/page',
     method: 'get',
+    params,
   })
 }
+
 
 // 轮播图
 export function getBanner() {

@@ -29,7 +29,9 @@
             <base-button icon="play" size="big" @click="playAllList(0)"
               >播放</base-button
             >
-            <base-button icon="heart"></base-button>
+            <base-button
+              :icon="`heart${podcast.subed ? '-solid' : ''}`"
+            ></base-button>
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
           </template>

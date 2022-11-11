@@ -22,7 +22,7 @@
             icon="refresh"
             class="login-qr-img-refresh"
             v-if="needRefreshQrCode"
-            @click="getQrCode"
+            @click="resetQrCode"
           ></icon>
         </div>
       </div>
@@ -37,10 +37,8 @@
     </div>
 
     <div class="tst-button">
-      <!-- <button @click="getQrCode">create qr code</button> -->
-      <button @click="changLoginMode">logout</button>
       <button @click="logout">logout</button>
-      <div class="tst-button">logged in: {{ isLoggedIn }}</div>
+      <div class="tst-button">log status: {{ isLoggedIn }}</div>
       account:
       {{ account }}
       profile:
@@ -101,7 +99,6 @@ export default {
   },
   created() {
     this.getQrCode();
-    // checkLog()
   },
   destroyed() {
     this.removeCheckQrCode();
@@ -122,6 +119,14 @@ export default {
       } else {
         this.getQrCode();
       }
+    },
+
+    async resetQrCode() {
+      this.qrimg = "";
+      this.qrCode = null;
+      this.unikey = null;
+      this.removeCheckQrCode();
+      await this.getQrCode();
     },
 
     async getQrCode() {

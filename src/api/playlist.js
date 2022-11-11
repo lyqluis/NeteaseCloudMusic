@@ -1,6 +1,56 @@
 import axios from 'utils/axios.js'
 
 /**
+ * 歌单分类
+ * 说明 : 调用此接口,可获取歌单分类,包含 category 信息
+ * @return {*}
+ */
+export function getPlaylistCategories() {
+  return axios({
+    method: 'get',
+    url: '/playlist/catlist',
+    // url:'/playlist/hot',  // 热门歌单分类
+  })
+}
+
+export function getPlaylistCategories1() {
+  return axios({
+    method: 'get',
+    // url:'/playlist/catlist',
+    url: '/playlist/hot',  // 热门歌单分类
+  })
+}
+
+// 精品歌单标签列表
+// 说明 : 调用此接口 , 可获取精品歌单标签列表
+export function getHightQualityPlaylistCategories() {
+  return axios({
+    method: 'get',
+    // url:'/playlist/catlist',
+    // url:'/playlist/hot',  // 热门歌单分类
+    url: '/playlist/highquality/tags',  // 热门歌单分类
+  })
+}
+
+/**
+ * 获取精品歌单
+ * 说明 : 调用此接口 , 可获取精品歌单
+ * 可选参数 : cat: tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从精品歌单标签列表接口获取(/playlist/highquality/tags)
+ * @param {Number} params.limit: 取出歌单数量 , 默认为 50
+ * @param {Number} params.before: 分页参数,取上一页最后一个歌单的 updateTime 获取下一页数据
+ * 接口地址 : /top/playlist/highquality
+ * 调用例子 : /top/playlist/highquality?before=1503639064232&limit=3
+ */
+export function getHighQualityPlaylistByCategory(params) {
+  return axios({
+    method: 'get',
+    url: '/top/playlist/highquality',
+    params
+  })
+}
+
+
+/**
  * 获取歌单详情
  * 说明 : 歌单能看到歌单名字, 但看不到具体歌单内容, 调用此接口, 传入歌单 id, 可以获取对应歌单内的所有的音乐(未登录状态只能获取不完整的歌单,登录后是完整的)，但是返回的 trackIds 是完整的，tracks 则是不完整的，可拿全部 trackIds 请求一次 song/detail 接口获取所有歌曲的详情 (https://github.com/Binaryify/NeteaseCloudMusicApi/issues/452)
  * 必选参数 : id : 歌单 id

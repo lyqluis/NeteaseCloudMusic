@@ -44,9 +44,11 @@ import List from "components/List";
 
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 import { getArtistSongs } from "api/artist";
-const SORT_TYPES = ["hot", "time"];
+import { getDailyRecommendSongs } from "api/recommend";
 import { getProgramRanks } from "api/podcast";
+import { getRecentSongs } from "api/history";
 import { handleProgramsData } from "utils/podcast";
+const SORT_TYPES = ["hot", "time"];
 
 export default {
   name: "MoreSongs",
@@ -108,11 +110,27 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
+    console.log(to.path);
     const data = {};
     if (to.path === "/hotpodcastprograms") {
       data.title = "热门节目";
       data.type = "podcast";
       data.styleType = "rank";
+    } else if (to.path === "/dailysongs") {
+      data.title = "每日推荐";
+      data.type = "playlist";
+      data.subType = "dailySongs";
+      data.styleType = "playlist";
+    } else if (to.path === "/similarrecommendsongs") {
+      data.title = "根据你听的相似推荐";
+      data.type = "playlist";
+      data.subType = "similarRecommendSongs";
+      data.styleType = "playlist";
+    } else if (to.path === "/recentsongs") {
+      data.title = "最近播放";
+      data.type = "playlist";
+      data.subType = "recentSongs";
+      data.styleType = "playlist";
     } else {
       // to.path == '/moresongs/:id'
       data.title = "所有歌曲";
@@ -180,9 +198,30 @@ export default {
         this.finished = true;
       }
     },
+    getDailySongs() {
+      this.loading = true;
+      getDailyRecommendSongs().then((res) => {
+        this.list = res.data.dailySongs;
+        this.loading = false;
+        this.finished = true;
+      });
+    },
+    getRecentSongs() {
+      this.loading = true;
+      getRecentSongs().then((res) => {
+        console.log("📝 songs:", res);
+        this.list = res.data.list.map((p) => p.data);
+        this.loading = false;
+        this.finished = true;
+      });
+    },
     getPageData() {
       if (this.type === "podcast") {
         this.getProgramRanks();
+      } else if (this.subType === "dailySongs") {
+        this.getDailySongs();
+      } else if (this.subType === "recentSongs") {
+        this.getRecentSongs();
       } else {
         this.getArtistSongs();
       }

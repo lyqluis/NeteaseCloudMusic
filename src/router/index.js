@@ -104,6 +104,15 @@ const routes = [
     },
   },
   {
+    path: '/now',
+    name: 'Now',
+    component: () => import('../views/Now.vue'),
+    meta: {
+      keepAlive: true,
+      requiresAuth: true
+    },
+  },
+  {
     path: '/radio',
     name: 'Radio',
     component: () => import('../views/Radio.vue'),
@@ -116,7 +125,8 @@ const routes = [
     name: 'Library',
     component: () => import('../views/Library.vue'),
     meta: {
-      keepAlive: true
+      keepAlive: true,
+      requiresAuth: true
     },
   },
   {
@@ -240,6 +250,38 @@ const routes = [
     path: '/moreplaylists/:uid',  // user - 创建/收藏歌单 => 更多
     name: 'UserMorePlaylists',
     component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/dailyrecommendplaylists',  // now => 推荐歌单
+    name: 'DailyRecommendPlaylists',
+    component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/dailysongs',  // now => 每日推荐
+    name: 'DailySongs',
+    component: () => import('../views/MoreSongs.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/recentplaylists',  // now => 最近播放歌单
+    name: 'RecentPlaylists',
+    component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/recentsongs',  // now => 最近播放
+    name: 'RecentSongs',
+    component: () => import('../views/MoreSongs.vue'),
     meta: {
       scrollToTop: true
     }

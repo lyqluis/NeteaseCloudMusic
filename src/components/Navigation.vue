@@ -2,11 +2,12 @@
   <transition name="slide-up">
     <div class="navigation" v-show="!fullScreen">
       <router-link
-        :to="nav.path"
-        :class="{ active: $route.name === nav.name }"
-        class="nav"
         v-for="(nav, i) in menus"
         :key="i"
+        :to="nav.path"
+        :class="{ active: active === i }"
+        class="nav"
+        @click.native="active = i"
       >
         <icon :icon="nav.icon" class="nav-icon"></icon>
         <p>
@@ -25,11 +26,28 @@ export default {
   name: "Navigation",
   data() {
     return {
+      routeName: this.$route.name,
       menus: menus,
+      active: null,
     };
   },
   computed: {
     ...mapState("player", ["fullScreen"]),
+  },
+  created() {
+    this.active = this.findActiveNav(this.$route.name);
+  },
+  watch: {
+    $route() {
+      console.log("route changes", this.$route.name);
+      this.active = this.findActiveNav(this.$route.name);
+    },
+  },
+  methods: {
+    findActiveNav(name) {
+      const target = menus.findIndex((nav) => nav.name === name);
+      return target < 0 ? this.active : target;
+    },
   },
 };
 </script>
@@ -48,7 +66,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  z-index: 21;  // > player-page's z-index
+  z-index: 21; // > player-page's z-index
   @include background-blur(--color-background-blur, --filter-blur);
   color: var(--color-inactive);
   .nav {

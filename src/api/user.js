@@ -106,6 +106,41 @@ export function getUserPlaylists(params) {
 }
 
 /**
+ * 获取用户电台
+ * 说明 : 登录后调用此接口 , 传入用户 id, 可以获取用户电台
+ * 必选参数 : 
+ * @param {Object} params.uid 用户 id
+ * 接口地址 : /user/dj
+ * 调用例子 : /user/dj?uid=32953014
+ */
+export function getUserPodcasts(uid) {
+  return axios({
+    url: '/user/dj',
+    method: 'get',
+    params: { uid }
+  });
+}
+
+/**
+ * 获取用户关注列表
+ * 说明 : 登录后调用此接口 , 传入用户 id, 可以获取用户关注列表
+ * 必选参数 : 
+ * @param {Object} params.uid : 用户 id
+ * 可选参数 :
+ * @param {Object} params.limit : 返回数量 , 默认为 30
+ * @param {Object} params.offset : 偏移数量，用于分页 ,如 :( 页数 -1)*30, 其中 30 为 limit 的值 , 默认为 0
+ * 接口地址 : /user/follows
+ * 调用例子 : /user/follows?uid=32953014
+ */
+export function getSubscribedUsers(params) {
+  return axios({
+    url: '/user/follows',
+    method: 'post',
+    params
+  })
+}
+
+/**
  * 关注/取消关注用户
  * 说明 : 登录后调用此接口 , 传入用户 id, 和操作 t,可关注/取消关注用户
  * 必选参数 :

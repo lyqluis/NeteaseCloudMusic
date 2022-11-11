@@ -2304,6 +2304,7 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [x] 二维码登陆
   - [ ] 邮箱登录
   - [ ] 手机号登录
+  - [ ] 登录完成后跳转原来的目标页面
 
 - [ ] 电台
 
@@ -2316,9 +2317,12 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
     - [x] 分栏【热门节目】更多
   - [x] 电台详情页
     - [x] 详情描述组件内容
+    - [ ] 订阅按钮
+      - [ ] 样式
+      - [ ] @click
   - [x] 电台节目播放
 
-- [ ] 用户页面
+- [x] user 用户页面
 
 - [ ] 歌手页面
 
@@ -2331,6 +2335,8 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [ ] 更多单曲页面
 
     - [ ] 单曲排序，偶尔失灵，使用 router.query ？
+
+  - [ ] 从搜索 郭德纲 进入歌手页面 【歌手描述】报错
 
 - [ ] rank 排行榜
 
@@ -2346,7 +2352,7 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [ ] 私人 fm
   - [ ] 心动播放模式
 
-- [ ] 全剧导航守卫，检测登陆状态
+- [x] 全剧导航守卫，检测登陆状态
 
 - [ ] 关闭 popup 报错
 
@@ -2356,6 +2362,31 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   	at HTMLDivElement.eval (touch.js?0733:16:1)
   ```
 
-- [ ] Library 页面
+- [x] Library 页面
 
-- [ ] 现在就听 页面
+  - [x] 收藏歌单
+  - [x] 收藏专辑
+    - [ ] 更多
+  - [x] 收藏电台
+    - [ ] 更多
+  - [x] 关注艺人
+    - [ ] 更多
+  - [x] 关注用户
+    - [ ] 更多
+
+- [x] 现在就听 页面
+
+  - [x] 最近播放 歌曲
+  - [x] 最近播放 歌单
+  - [ ] 最近播放 专辑
+  - [x] 最近播放 播客
+  - [x] 每日推荐
+  - [x] 个人推荐
+
+- [ ] playlist 详情页
+
+  - [ ] img 高度升高？
+
+- [ ] 歌单广场 页面
+
+- [x] navigation 组件

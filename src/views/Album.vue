@@ -76,7 +76,6 @@ import { handlePopup } from "mixins/popupMixin";
 
 export default {
   name: "Album",
-  mixin: [handlePopup],
   components: {
     PageDetail,
     List,
@@ -87,7 +86,7 @@ export default {
     NavHeader,
     Cover,
   },
-  mixins: [albumDetail],
+  mixins: [albumDetail, handlePopup],
   // todo
   beforeRouteUpdate(to, from, next) {
     this.show = false;

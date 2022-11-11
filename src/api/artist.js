@@ -164,3 +164,16 @@ export function subscribeArtist(params) {
     params,
   })
 }
+
+/**
+ * 收藏的歌手列表
+ * 说明 : 调用此接口,可获取收藏的歌手列表
+ * 接口地址 : /artist/sublist
+ * 调用例子 : /artist/sublist
+ */
+export function getSubscribedArtists() {
+  return axios({
+    method: 'get',
+    url: '/artist/sublist',
+  })
+}

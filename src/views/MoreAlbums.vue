@@ -23,6 +23,8 @@ import AlbumPage from "components/AlbumPage";
 import { getArtistAlbums } from "api/artist";
 import { getHotPodcasts } from "api/podcast";
 import { getUserPlaylists } from "api/user";
+import { getDailyRecommendPlaylists } from "api/recommend";
+import { getRecentPlaylists, getRecentAlbum } from "api/history";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 
 export default {
@@ -61,6 +63,14 @@ export default {
     } else if (to.path.includes("/moreplaylists")) {
       data.title = to.query.type === "created" ? "所有创建" : "所有收藏";
       data.type = "playlist";
+    } else if (to.path === "/dailyrecommendplaylists") {
+      data.title = "推荐歌单";
+      data.type = "playlist";
+      data.subType = "dailyPlaylist";
+    } else if (to.path === "/recentplaylists") {
+      data.title = "最近播放的歌单";
+      data.type = "playlist";
+      data.subType = "recentPlaylist";
     }
     next((vm) => {
       for (const key in data) {
@@ -74,8 +84,13 @@ export default {
         return getHotPodcasts;
       } else if (this.type === "album") {
         return getArtistAlbums;
+      } else if (this.subType === "dailyPlaylist") {
+        return getDailyRecommendPlaylists;
+      } else if (this.subType === "recentPlaylist") {
+        return getRecentPlaylists;
+      } else {
+        return getUserPlaylists;
       }
-      return getUserPlaylists;
     },
   },
   methods: {

@@ -9,7 +9,7 @@ import axios from 'utils/axios'
  * - area : ALL:全部,ZH:华语,EA:欧美,KR:韩国,JP:日本
  * 调用例子 : /album/new?area=KR&limit=10
  */
- export function getNewAlbums(params) {
+export function getNewAlbums(params) {
   return axios({
     method: 'get',
     url: '/album/new',
@@ -147,3 +147,18 @@ export function getAlbumDetail(id) {
 //   }
 // }
 
+/**
+ * 获取已收藏专辑列表
+ * 说明 : 调用此接口 , 可获得已收藏专辑列表
+ * 可选参数 :
+ * @param {number} limit: 取出数量 , 默认为 25
+ * @param {number} offset: 偏移数量 , 用于分页 , 如 :( 页数 -1)*25, 其中 25 为 limit 的值 , 默认 为 0
+ * 接口地址 : /album/sublist
+ * 调用例子 : /album/sublist ( 周杰伦 )
+ */
+export function getSubscribeAlbums() {
+  return axios({
+    method: 'get',
+    url: '/album/sublist',
+  })
+}

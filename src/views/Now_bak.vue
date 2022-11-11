@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="page_title">浏览</div>
+    <div class="page_title">发现</div>
 
     <swiper v-if="recommends.length" :width="347" :offset="14">
       <base-block
@@ -23,6 +23,34 @@
         <cover className="swiper-item_img" :imgSrc="item.picUrl"></cover>
       </base-block>
     </swiper>
+
+    <!-- // todo push more -->
+    <!-- // todo add daily recommend playlist dailysongs-->
+    <base-block @click-right="$router.push('/newalbums')" v-if="isLoggedIn">
+      <template #title>推荐歌单</template>
+      <slider type="album">
+        <one-cover
+          type="playlist"
+          v-for="playlist in dailyPlaylists"
+          :key="playlist.id"
+          :coverData="playlist"
+        ></one-cover>
+      </slider>
+    </base-block>
+
+    <!-- // todo push more -->
+    <base-block @click-right="$router.push('/newsongs')" v-if="isLoggedIn">
+      <template #title>每日推荐</template>
+      <swiper v-if="newSongs.length" :width="347" :offset="14">
+        <list
+          v-for="(list, i) in dailySongs"
+          :key="`newSongs-${i}`"
+          :tracks="list"
+          topOrBottom="top"
+        >
+        </list>
+      </swiper>
+    </base-block>
 
     <base-block @click-right="$router.push('/newalbums')">
       <template #title>新专辑</template>
@@ -48,19 +76,6 @@
       </swiper>
     </base-block>
 
-        <!-- // todo push more to all playlists -->
-    <base-block @click-right="$router.push('')" right-title="">
-      <template #title>心情氛围</template>
-      <slider type="album">
-        <one-cover
-          type="mood"
-          v-for="cat in moods"
-          :key="cat.id"
-          :coverData="cat"
-        ></one-cover>
-      </slider>
-    </base-block>
-
     <base-block>
       <template #title>推荐艺人</template>
       <slider type="artist">
@@ -84,20 +99,6 @@
         ></one-cover>
       </slider>
     </base-block>
-
-    <!-- // todo push more -->
-    <base-block @click-right="$router.push('')">
-      <template #title>精品歌单</template>
-      <slider type="album">
-        <one-cover
-          type="playlist"
-          v-for="playlist in hightQualityPlaylists"
-          :key="playlist.id"
-          :coverData="playlist"
-        ></one-cover>
-      </slider>
-    </base-block>
-
   </div>
 </template>
 
@@ -119,10 +120,6 @@ import {
 import { getNewAlbums } from "api/album";
 import { getTopArtists } from "api/artist";
 import { getRanks } from "api/rank";
-import {
-  getHightQualityPlaylistCategories,
-  getHighQualityPlaylistByCategory,
-} from "api/playlist";
 import { getBanner, getFind, getTopAlbums } from "api/tst";
 import { mapState } from "vuex";
 
@@ -138,6 +135,8 @@ export default {
   },
   data() {
     return {
+      dailyPlaylists: [],
+      dailySongs: [],
       banners: [],
       recommends: [],
       newSongs: [],
@@ -145,8 +144,6 @@ export default {
       list: [],
       topArtists: [],
       ranks: [],
-      hightQualityPlaylists: [],
-      moods: [],
       index: 0,
       scrollLoading: false,
     };
@@ -156,14 +153,27 @@ export default {
       console.log("👂", res);
       this.recommends = res.result;
     });
+    if (this.isLoggedIn) {
+      getDailyRecommendPlaylists().then((res) => {
+        console.log("👂1", res);
+        this.dailyPlaylists = res.recommend;
+      });
+      getDailyRecommendSongs().then((res) => {
+        console.log("👂2", res);
+        this.dailySongs = chunk(res.data.dailySongs, 3);
+      });
+    }
     this.getNewSongs();
     this.getNewAlbums();
     this.getTopArtists();
     this.getRanks();
-    this.getHighQualityPlaylists();
-    this.getMoods();
+    getFind().then((res) => {
+      console.log("🔍", res);
+    });
   },
-  computed: {},
+  computed: {
+    ...mapState("user", ["isLoggedIn"]),
+  },
   methods: {
     getNewSongs(length = 9, n = 3) {
       let songs;
@@ -192,23 +202,6 @@ export default {
     getRanks(n = 10) {
       getRanks().then((res) => {
         this.ranks.push(...res.list.slice(0, n));
-      });
-    },
-    getHighQualityPlaylists(n = 10) {
-      getHighQualityPlaylistByCategory({ limit: n }).then((res) => {
-        console.log("hight quality playlist", res);
-        this.hightQualityPlaylists = res.playlists;
-      });
-    },
-    getMoods() {
-      getHightQualityPlaylistCategories().then((res) => {
-        console.log("tags: ", res);
-        this.moods = res.tags
-          .filter((tag) => tag.category == 2 || tag.category == 3)
-          .map((tag, i) => {
-            tag.index = i;
-            return tag;
-          });
       });
     },
     routerGo(e) {

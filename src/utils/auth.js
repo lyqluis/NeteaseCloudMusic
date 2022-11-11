@@ -38,7 +38,15 @@ export async function checkServerLoginStatus() {
 
 export async function globalCheck(to, from, next) {
   console.log('global 🧭')
-  await store.dispatch('user/checkLoginStatus')
-  console.log('global 🧭 ends')
-  next()
+  const isLoggedIn = await store.dispatch('user/checkLoginStatus')
+  console.log('global 🧭 ends', isLoggedIn, to)
+  if (to.meta.requiresAuth) {
+    if (isLoggedIn) {
+      next()
+    } else {
+      next('/login')
+    }
+  } else {
+    next()
+  }
 }

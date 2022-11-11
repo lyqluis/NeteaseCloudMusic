@@ -155,27 +155,43 @@ export default {
           });
         }
       } else if (this.type === "playlist") {
-        // user's all created / subscribed playlists page
-        this.getData({
-          uid: this.$route.params.uid,
-          limit: this.limit,
-          offset: this.offset,
-        }).then((res) => {
-          const uid = this.$route.params.uid;
-          const playlistType = this.$route.query.type;
-          if (playlistType === "created") {
-            this.list.push(...res.playlist.filter((p) => p.userId == uid));
-          } else {
-            this.list.push(...res.playlist.filter((p) => p.userId != uid));
-          }
-          this.loading = false;
-          if (res.more) {
-            this.page++;
-          } else {
+        if (this.subType === "dailyPlaylist") {
+          this.getData().then((res) => {
+            this.list = res.recommend;
+            this.loading = false;
             if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
             this.finished = true;
-          }
-        });
+          });
+        } else if (this.subType === "recentPlaylist") {
+          this.getData().then((res) => {
+            this.list = res.data.list.map((p) => p.data);
+            this.loading = false;
+            if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+            this.finished = true;
+          });
+        } else {
+          // user's all created / subscribed playlists page
+          this.getData({
+            uid: this.$route.params.uid,
+            limit: this.limit,
+            offset: this.offset,
+          }).then((res) => {
+            const uid = this.$route.params.uid;
+            const playlistType = this.$route.query.type;
+            if (playlistType === "created") {
+              this.list.push(...res.playlist.filter((p) => p.userId == uid));
+            } else {
+              this.list.push(...res.playlist.filter((p) => p.userId != uid));
+            }
+            this.loading = false;
+            if (res.more) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
+            }
+          });
+        }
       }
     },
   },

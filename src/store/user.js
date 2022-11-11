@@ -10,7 +10,8 @@ export default {
   }),
   getters: {
     account: state => state.userInfo.account,
-    profile: state => state.userInfo.profile
+    profile: state => state.userInfo.profile,
+    id: (state, getters) => getters.account.id,
   },
   mutations: {
     setInitCheck(state, flag) {
@@ -32,9 +33,11 @@ export default {
       if (isServerLoggedIn) {
         console.log('🔒 checked server logged in')
         await dispatch('handleLogin', userInfo)
+        return true
       } else {
         console.log('🔒 checked server logged out')
         await dispatch('handleLogout')
+        return false
       }
     },
 
@@ -51,8 +54,7 @@ export default {
     // just check local login status
     async checkLoginStatus({ state, dispatch }) {
       if (!state.initChecked) {
-        await dispatch('initCheckLoginStatus')
-        return
+        return await dispatch('initCheckLoginStatus')
       }
       console.log('🔒 checked local login status')
       return isLoggedIn()

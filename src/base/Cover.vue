@@ -27,7 +27,7 @@ export default {
   props: {
     imgSrc: String,
     className: String,
-    type: String, // album | artist | playlist | podcast | user
+    type: String, // album | artist | playlist | podcast | user | banner
     active: {
       type: Boolean,
       default: false,

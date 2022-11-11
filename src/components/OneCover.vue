@@ -22,7 +22,7 @@
 
 <script>
 import Cover from "base/Cover.vue";
-import { COVER_SQUARE_TYPE } from "utils/staticData";
+import { COVER_TYPE, APPLE_MOODS_PICS } from "utils/staticData";
 
 export default {
   name: "OneCover",
@@ -31,27 +31,30 @@ export default {
     coverData: Object,
     type: {
       type: String,
-      default: "album", // album | artist | rank | podcast
+      default: "album", // album | artist | rank | podcast | user
     },
   },
   computed: {
     picSrc() {
-      if (COVER_SQUARE_TYPE.includes(this.type)) {
+      if (COVER_TYPE.includes(this.type)) {
         return this.coverData.picUrl ?? this.coverData.coverImgUrl;
       } else if (this.type === "rank") {
         return this.coverData.coverImgUrl;
+      } else if (this.type === "user") {
+        return this.coverData.avatarUrl;
       } else {
-        return "";
+        // type === mood
+        return APPLE_MOODS_PICS[this.coverData.index];
       }
     },
     computedName() {
-      if (COVER_SQUARE_TYPE.includes(this.type)) {
-        return this.coverData.name;
-      } else if (this.type === "rank") {
-        return this.coverData.name;
+      if (COVER_TYPE.includes(this.type)) {
+        return this.coverData.name || this.coverData.title;
+      } else if (this.type === "user") {
+        return this.coverData.nickname;
       } else {
-        // type === playlist
-        return "";
+        // type === rank || type === mood
+        return this.coverData.name;
       }
     },
     computedArtist() {
@@ -90,6 +93,7 @@ export default {
   flex-direction: column;
   width: 163.5px;
 
+  .mood,
   .podcast,
   .playlist,
   .rank,
@@ -117,6 +121,13 @@ export default {
     }
   }
 
+  .mood {
+    &-img {
+      height: 92px;
+    }
+  }
+
+  .user,
   .artist {
     &-img {
       width: 105px;

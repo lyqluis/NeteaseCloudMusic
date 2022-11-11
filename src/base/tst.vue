@@ -1,10 +1,17 @@
 <template>
   <div class="tst">
     <p>this is tst page: {{ $route.params.id }}</p>
+    <h2>心情氛围</h2>
+    <p v-for="cat in moodCats" :key="cat.name">{{cat.name}}</p>
   </div>
 </template>
 
 <script>
+import {
+  getPlaylistCategories,
+  getPlaylistCategories1,
+  getHightQualityPlaylistCategories,
+} from "api/playlist";
 import Playing from "base/Playing";
 
 export default {
@@ -19,15 +26,31 @@ export default {
       id: this.$route.params.id,
       imgSrc: "",
       inputVal: "",
+      cats: [],
     };
   },
 
+  computed: {
+    moodCats() {
+      return this.cats.filter((c) => c.category == 3);
+    },
+  },
   beforeRouteUpdate(to, from, next) {
     console.log("before route update /id", to.params.id);
     next();
   },
   created() {
     console.log("created", this.id);
+    getPlaylistCategories().then((res) => {
+      console.log("🏷️ playlist", res);
+      this.cats = res.sub;
+    });
+    getPlaylistCategories1().then((res) => {
+      console.log("🏷️ hot playlist", res);
+    });
+    getHightQualityPlaylistCategories().then((res) => {
+      console.log("🏷️ quality playlist", res);
+    });
   },
   methods: {
     onClick(e) {

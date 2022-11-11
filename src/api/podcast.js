@@ -179,20 +179,33 @@ export function getPodcastPrograms(params) {
   });
 }
 
-// ?? 不需要
 /**
- * 电台 - 节目详情
- * 说明: 调用此接口传入电台节目 id, 可获得电台节目详情
- * 必选参数: id: 电台节目 的 id
- * 接口地址: /dj/program/detail
- * 调用例子: /dj/program/detail?id=1367665101
- * @param {String, Number} params.id
- * @return {*}
+ //--  ?? 不需要
+ * -- 电台 - 节目详情
+ * -- 说明: 调用此接口传入电台节目 id, 可获得电台节目详情
+ * -- 必选参数: id: 电台节目 的 id
+ * -- 接口地址: /dj/program/detail
+ * -- 调用例子: /dj/program/detail?id=1367665101
+ * -- @param {String, Number} params.id
+ * -- @return {*}
  */
-export function getProgramDetail(id) {
+// export function getProgramDetail(id) {
+//   return axios({
+//     method: 'get',
+//     url: '/dj/program/detail',
+//     params: { id },
+//   });
+// }
+
+/**
+ * 电台的订阅列表
+ * 说明 : 登录后调用此接口 , 可获取订阅的电台列表
+ * 接口地址 : /dj/sublist
+ * 调用例子 : /dj/sublist
+ */
+export function getSubscribedPodcasts() {
   return axios({
     method: 'get',
-    url: '/dj/program/detail',
-    params: { id },
+    url: '/dj/sublist',
   });
 }

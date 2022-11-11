@@ -61,12 +61,13 @@ export default {
     this.$nextTick(() => {
       this._initSwiper();
     });
-    console.log("swiper.vue end");
+    console.log("swiper.vue mounted end");
   },
   watch: {
-    children() {
-      console.log("see the children");
-    },
+    // 响应式数组的变化
+    // children() {
+    //   console.log("see the children");
+    // },
   },
   methods: {
     _initSwiper() {
