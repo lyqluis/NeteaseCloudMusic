@@ -201,7 +201,15 @@ const routes = [
   {
     path: '/allpodcasts',
     name: 'AllPodcasts',
-    component: () => import('../views/AllPodcasts.vue'),
+    component: () => import('../views/AllPlaylists.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/allplaylists',
+    name: 'AllPlaylists',
+    component: () => import('../views/AllPlaylists.vue'),
     meta: {
       scrollToTop: true
     }

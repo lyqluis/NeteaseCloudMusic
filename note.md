@@ -2387,6 +2387,6 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
   - [ ] img 高度升高？
 
-- [ ] 歌单广场 页面
+- [x] 歌单广场 页面
 
 - [x] navigation 组件

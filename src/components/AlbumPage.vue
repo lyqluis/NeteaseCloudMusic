@@ -47,6 +47,7 @@ export default {
       finished: false,
       limit: 30,
       page: 1,
+      lastUpdateTime: null, // allplaylists 分页参数
       total: null,
     };
   },
@@ -168,6 +169,39 @@ export default {
             this.loading = false;
             if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
             this.finished = true;
+          });
+        } else if (this.subType === "allPlaylists") {
+          // high quality playlists
+          // this.getData({
+          //   cat: this.id,
+          //   limit: this.limit,
+          //   before: this.lastUpdateTime,
+          // }).then((res) => {
+          //   console.log(res);
+          //   this.list.push(...res.playlists);
+          //   this.loading = false;
+          //   if (res.more) {
+          //     this.lastUpdateTime = res.lasttime;
+          //   } else {
+          //     if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+          //     this.finished = true;
+          //   }
+          // });
+          this.getData({
+            cat: this.id,
+            limit: this.limit,
+            offset: this.offset,
+          }).then((res) => {
+            console.log(res);
+            this.list.push(...res.playlists);
+            this.total = res.total;
+            this.loading = false;
+            if (res.more || this.list.length < this.total) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
+            }
           });
         } else {
           // user's all created / subscribed playlists page

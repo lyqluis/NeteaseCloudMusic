@@ -75,7 +75,9 @@ export default {
   },
   methods: {
     routerGo() {
-      if (this.coverData.id) {
+      if (this.type === "mood") {
+        this.$router.push(`/allplaylists?cat=${this.coverData.name}`);
+      } else if (this.coverData.id) {
         this.$router.push(`/${this.type}/${this.coverData.id}`);
       }
     },

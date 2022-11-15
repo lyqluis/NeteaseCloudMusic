@@ -13,11 +13,30 @@ export function getPlaylistCategories() {
   })
 }
 
-export function getPlaylistCategories1() {
+export function getPlaylistHotCategories() {
   return axios({
     method: 'get',
     // url:'/playlist/catlist',
     url: '/playlist/hot',  // 热门歌单分类
+  })
+}
+
+/**
+ * 歌单 ( 网友精选碟 )
+ * 说明 : 调用此接口 , 可获取网友精选碟歌单
+ * 可选参数 : 
+ * @param {String} params.order: 可选值为 'new' 和 'hot', 分别对应最新和最热 , 默认为 'hot'
+ * @param {String} params.cat: tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从歌单分类接口获取(/playlist/catlist)
+ * @param {String} params.limit: 取出歌单数量 , 默认为 50
+ * @param {String} params.offset: 偏移数量 , 用于分页 , 如 :( 评论页数 -1)*50, 其中 50 为 limit 的值
+ * 接口地址 : /top/playlist
+ * 调用例子 : /top/playlist?cat=华语&limit=10&order=new
+ */
+export function getPlaylistsByCategory(params) {
+  return axios({
+    method: 'get',
+    url: '/top/playlist',
+    params
   })
 }
 
@@ -35,20 +54,20 @@ export function getHightQualityPlaylistCategories() {
 /**
  * 获取精品歌单
  * 说明 : 调用此接口 , 可获取精品歌单
- * 可选参数 : cat: tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从精品歌单标签列表接口获取(/playlist/highquality/tags)
+ * 可选参数 : 
+ * @param {String} params.cat: tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从精品歌单标签列表接口获取(/playlist/highquality/tags)
  * @param {Number} params.limit: 取出歌单数量 , 默认为 50
  * @param {Number} params.before: 分页参数,取上一页最后一个歌单的 updateTime 获取下一页数据
  * 接口地址 : /top/playlist/highquality
  * 调用例子 : /top/playlist/highquality?before=1503639064232&limit=3
  */
-export function getHighQualityPlaylistByCategory(params) {
+export function getHighQualityPlaylistsByCategory(params) {
   return axios({
     method: 'get',
     url: '/top/playlist/highquality',
     params
   })
 }
-
 
 /**
  * 获取歌单详情

@@ -121,7 +121,7 @@ import { getTopArtists } from "api/artist";
 import { getRanks } from "api/rank";
 import {
   getHightQualityPlaylistCategories,
-  getHighQualityPlaylistByCategory,
+  getHighQualityPlaylistsByCategory,
 } from "api/playlist";
 import { getBanner, getFind, getTopAlbums } from "api/tst";
 import { mapState } from "vuex";
@@ -195,7 +195,7 @@ export default {
       });
     },
     getHighQualityPlaylists(n = 10) {
-      getHighQualityPlaylistByCategory({ limit: n }).then((res) => {
+      getHighQualityPlaylistsByCategory({ limit: n }).then((res) => {
         console.log("hight quality playlist", res);
         this.hightQualityPlaylists = res.playlists;
       });

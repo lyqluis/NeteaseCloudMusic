@@ -3,13 +3,18 @@
     <p>this is tst page: {{ $route.params.id }}</p>
     <h2>心情氛围</h2>
     <p v-for="cat in moodCats" :key="cat.name">{{cat.name}}</p>
+    <div class="wrapper">
+      <div class="track">
+        <p v-for="i in 20" :key="i">{{i}}</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import {
   getPlaylistCategories,
-  getPlaylistCategories1,
+  getPlaylistHotCategories,
   getHightQualityPlaylistCategories,
 } from "api/playlist";
 import Playing from "base/Playing";
@@ -45,7 +50,7 @@ export default {
       console.log("🏷️ playlist", res);
       this.cats = res.sub;
     });
-    getPlaylistCategories1().then((res) => {
+    getPlaylistHotCategories().then((res) => {
       console.log("🏷️ hot playlist", res);
     });
     getHightQualityPlaylistCategories().then((res) => {
@@ -95,6 +100,27 @@ export default {
       }
       100% {
         height: 10px;
+      }
+    }
+  }
+
+  .wrapper{
+    width: 100%;
+    height: 50px;
+    // height: 200px;
+    overflow: auto;
+    padding: 10px;
+    display: flex;
+
+    .track{
+      display: flex;
+
+      p{
+        flex-shrink: 0;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        background: lightblue;
       }
     }
   }
