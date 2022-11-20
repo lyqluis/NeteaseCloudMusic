@@ -76,7 +76,7 @@ export default {
   methods: {
     routerGo() {
       if (this.type === "mood") {
-        this.$router.push(`/allplaylists?cat=${this.coverData.name}`);
+        this.$router.push(`/moodplaylists/${this.coverData.name}`);
       } else if (this.coverData.id) {
         this.$router.push(`/${this.type}/${this.coverData.id}`);
       }

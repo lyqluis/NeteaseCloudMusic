@@ -2390,3 +2390,12 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 - [x] 歌单广场 页面
 
 - [x] navigation 组件
+
+- [ ] list 组件
+
+  - [ ] 间隔 style
+
+- [ ] 浏览页面
+
+  - [x] 心情氛围 => 更多
+  - [x] 精品歌单

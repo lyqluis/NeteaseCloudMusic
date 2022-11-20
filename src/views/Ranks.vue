@@ -42,6 +42,7 @@ export default {
 <style lang="scss" scoped>
 .ranks {
   background: var(--color-background);
+  
   .header {
     &-sticky {
       position: sticky;

@@ -294,6 +294,31 @@ const routes = [
       scrollToTop: true
     }
   },
+  {
+    path: '/moodplaylists/:id',  // now => 最近播放歌单
+    name: 'MoodPlaylists',
+    component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/allqualityplaylists',  // home => 精选歌单
+    name: 'AllQualityPlaylists',
+    component: () => import('../views/AllButtons.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/allqualityplaylists/:id',  // 精选歌单 => 分类更多
+    name: 'MoreQualityPlaylists',
+    component: () => import('../views/MoreAlbums.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+
   // todo delete
   {
     path: '/tst',

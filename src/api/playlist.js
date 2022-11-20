@@ -9,14 +9,12 @@ export function getPlaylistCategories() {
   return axios({
     method: 'get',
     url: '/playlist/catlist',
-    // url:'/playlist/hot',  // 热门歌单分类
   })
 }
 
 export function getPlaylistHotCategories() {
   return axios({
     method: 'get',
-    // url:'/playlist/catlist',
     url: '/playlist/hot',  // 热门歌单分类
   })
 }
@@ -45,8 +43,6 @@ export function getPlaylistsByCategory(params) {
 export function getHightQualityPlaylistCategories() {
   return axios({
     method: 'get',
-    // url:'/playlist/catlist',
-    // url:'/playlist/hot',  // 热门歌单分类
     url: '/playlist/highquality/tags',  // 热门歌单分类
   })
 }

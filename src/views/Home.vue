@@ -48,7 +48,6 @@
       </swiper>
     </base-block>
 
-        <!-- // todo push more to all playlists -->
     <base-block @click-right="$router.push('')" right-title="">
       <template #title>心情氛围</template>
       <slider type="album">
@@ -85,9 +84,8 @@
       </slider>
     </base-block>
 
-    <!-- // todo push more -->
-    <base-block @click-right="$router.push('')">
-      <template #title>精品歌单</template>
+    <base-block @click-right="$router.push('/allqualityplaylists')">
+      <template #title>精选歌单</template>
       <slider type="album">
         <one-cover
           type="playlist"
@@ -98,6 +96,17 @@
       </slider>
     </base-block>
 
+    <base-block @click-right="$router.push('/allplaylists')" right-title="查看全部">
+      <template #title>热门歌单</template>
+      <slider type="album">
+        <one-cover
+          type="playlist"
+          v-for="playlist in hotPlaylists"
+          :key="playlist.id"
+          :coverData="playlist"
+        ></one-cover>
+      </slider>
+    </base-block>
   </div>
 </template>
 
@@ -110,18 +119,14 @@ import OneCover from "components/OneCover";
 import Cover from "base/Cover";
 
 import { chunk } from "utils/global";
-import {
-  getNewSongs,
-  getRecommendList,
-  getDailyRecommendPlaylists,
-  getDailyRecommendSongs,
-} from "api/recommend";
+import { getNewSongs, getRecommendList } from "api/recommend";
 import { getNewAlbums } from "api/album";
 import { getTopArtists } from "api/artist";
 import { getRanks } from "api/rank";
 import {
   getHightQualityPlaylistCategories,
   getHighQualityPlaylistsByCategory,
+  getPlaylistsByCategory,
 } from "api/playlist";
 import { getBanner, getFind, getTopAlbums } from "api/tst";
 import { mapState } from "vuex";
@@ -146,6 +151,7 @@ export default {
       topArtists: [],
       ranks: [],
       hightQualityPlaylists: [],
+      hotPlaylists: [],
       moods: [],
       index: 0,
       scrollLoading: false,
@@ -162,6 +168,7 @@ export default {
     this.getRanks();
     this.getHighQualityPlaylists();
     this.getMoods();
+    this.getHotPlaylists();
   },
   computed: {},
   methods: {
@@ -209,6 +216,12 @@ export default {
             tag.index = i;
             return tag;
           });
+      });
+    },
+    getHotPlaylists() {
+      getPlaylistsByCategory({ limit: 10 }).then((res) => {
+        console.log("💽", res);
+        this.hotPlaylists = res.playlists;
       });
     },
     routerGo(e) {

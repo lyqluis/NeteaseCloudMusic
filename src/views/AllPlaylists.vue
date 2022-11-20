@@ -145,12 +145,6 @@ export default {
     titleWrapperWidthClass() {
       return this.type === "playlist" ? "more-tabs-title-wrapper-width" : "";
     },
-    languageTags() {
-      return this.tabs.filter((tag) => tag.category === 0);
-    },
-    styleTags() {
-      return this.tabs.filter((tag) => tag.category === 1);
-    },
   },
   beforeRouteEnter(to, from, next) {
     console.log("path: ", to.path);
@@ -163,6 +157,10 @@ export default {
       data.title = "歌单分类";
       data.type = "playlist";
       data.subType = "allPlaylists";
+    } else if (to.path === "/qualityplaylists") {
+      data.title = "精选歌单";
+      data.type = "playlist";
+      data.subType = "qualityPlaylists";
     }
     next((vm) => {
       for (const key in data) {
@@ -238,9 +236,9 @@ export default {
     },
     onSelect(tag, needRemove) {
       if (needRemove || tag.selected) {
+        tag.selected = false;
         const i = this.tabs.findIndex((tab) => tab.name == tag.name);
         this.tabs.splice(i, 1);
-        tag.selected = false;
       } else {
         tag.selected = true;
         this.tabs.push(tag);

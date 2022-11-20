@@ -25,6 +25,10 @@ import { getHotPodcasts } from "api/podcast";
 import { getUserPlaylists } from "api/user";
 import { getDailyRecommendPlaylists } from "api/recommend";
 import { getRecentPlaylists, getRecentAlbum } from "api/history";
+import {
+  getHighQualityPlaylistsByCategory,
+  getPlaylistsByCategory,
+} from "api/playlist";
 import { showHeaderScrollerMixin } from "mixins/showHeaderScroller";
 
 export default {
@@ -71,6 +75,14 @@ export default {
       data.title = "最近播放的歌单";
       data.type = "playlist";
       data.subType = "recentPlaylist";
+    } else if (to.path.includes("/moodplaylists")) {
+      data.title = to.params.id;
+      data.type = "playlist";
+      data.subType = "moodPlaylist";
+    } else if (to.path.includes("/allqualityplaylists")) {
+      data.title = to.params.id;
+      data.type = "playlist";
+      data.subType = "qualityPlaylist";
     }
     next((vm) => {
       for (const key in data) {
@@ -88,6 +100,11 @@ export default {
         return getDailyRecommendPlaylists;
       } else if (this.subType === "recentPlaylist") {
         return getRecentPlaylists;
+      } else if (this.subType === "moodPlaylist") {
+        return getPlaylistsByCategory;
+      } else if (this.subType === "qualityPlaylist") {
+        // todo
+        return getHighQualityPlaylistsByCategory;
       } else {
         return getUserPlaylists;
       }
