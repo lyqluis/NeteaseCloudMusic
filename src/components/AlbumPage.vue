@@ -65,8 +65,25 @@ export default {
     async getAlbumData() {
       this.loading = true;
       if (this.type === "album") {
+        if (this.subType === "subscribedAlbums") {
+          this.getData({
+            limit: this.limit,
+            offset: this.offset,
+          }).then((res) => {
+            this.loading = false;
+            const { data, hasMore, count } = res;
+            this.list.push(...data);
+            if (count) this.total = count;
+            if (hasMore) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
+            }
+          });
+        }
         // more albums from artist.vue
-        if (this.id && this.getData) {
+        else if (this.id && this.getData) {
           this.getData({
             limit: this.limit,
             offset: this.offset,
@@ -132,6 +149,24 @@ export default {
                 if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
                 this.finished = true;
               }
+            }
+          });
+        } else if (this.subType === "subscribedPodcasts") {
+          // library's subscribed podcasts
+          this.getData({
+            limit: this.limit,
+            offset: this.offset,
+          }).then((res) => {
+            this.loading = false;
+            console.log("📢", res);
+            const { djRadios, hasMore, count } = res;
+            this.list.push(...djRadios);
+            if (count) this.total = count;
+            if (hasMore) {
+              this.page++;
+            } else {
+              if (this.list.length % 2) this.list.push({}); // 补齐 flex 最夯一行左对齐（固定一行 2 个）
+              this.finished = true;
             }
           });
         } else {

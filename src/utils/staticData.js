@@ -58,6 +58,11 @@ export const listTypes = {
     hasImg: 1,
     circleImg: 1,
   },
+  'user': {
+    hasNum: 0,
+    hasImg: 1,
+    circleImg: 1,
+  },
   'rank': {
     hasNum: 1,
     hasImg: 1,

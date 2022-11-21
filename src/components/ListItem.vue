@@ -37,7 +37,7 @@
       </div>
 
       <div class="list-item_detail-center">
-        <p class="name">{{ track.name || track.keyword }}</p>
+        <p class="name">{{ track.name || track.keyword || track.nickname }}</p>
         <!-- // todo 重写一个artists组件, 用来显示多歌手 -->
         <p class="artist" v-if="listType.hasImg && !listType.circleImg">
           {{ artists[0].name }}
@@ -86,6 +86,7 @@ export default {
     },
     picUrl() {
       if (this.type === "artist") return this.track.picUrl;
+      if (this.type === "user") return this.track.avatarUrl;
       return this.track.coverImgUrl ?? this.track.coverUrl ?? this.album.picUrl;
     },
     artists() {
@@ -137,6 +138,7 @@ export default {
     height: 58px;
     border-radius: 3px;
 
+    &.user,
     &.artist {
       border-radius: 50%;
     }

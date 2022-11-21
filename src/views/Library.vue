@@ -34,7 +34,7 @@
     <!-- // todo push more -->
     <base-block
       v-if="subPlaylists.length"
-      @click-right="$router.push(`/moreplaylists/${id}?type=subscribed`)"
+      @click-right="$router.push(`/moreplaylists/${id}?type=album`)"
     >
       <template #title>收藏的专辑</template>
       <slider type="album">
@@ -47,8 +47,10 @@
       </slider>
     </base-block>
 
-    <!-- // todo 收藏的歌手 -->
-    <base-block>
+    <base-block
+      v-if="subArtists.length"
+      @click-right="$router.push(`/moreusers/${id}?type=artist`)"
+    >
       <template #title>关注的艺人</template>
       <slider type="artist">
         <one-cover
@@ -60,10 +62,9 @@
       </slider>
     </base-block>
 
-    <!-- // todo push more -->
     <base-block
       v-if="subPlaylists.length"
-      @click-right="$router.push(`/moreplaylists/${id}?type=subscribed`)"
+      @click-right="$router.push(`/moreplaylists/${id}?type=podcast`)"
     >
       <template #title>订阅的播客</template>
       <slider type="album">
@@ -76,8 +77,10 @@
       </slider>
     </base-block>
 
-    <!-- // todo 关注的用户 -->
-    <base-block>
+    <base-block
+      v-if="subUsers.length"
+      @click-right="$router.push(`/moreusers/${id}?type=user`)"
+    >
       <template #title>关注的用户</template>
       <slider type="artist">
         <one-cover

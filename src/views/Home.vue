@@ -48,6 +48,21 @@
       </swiper>
     </base-block>
 
+    <base-block
+      @click-right="$router.push('/allplaylists')"
+      right-title="查看全部"
+    >
+      <template #title>热门歌单</template>
+      <slider type="album">
+        <one-cover
+          type="playlist"
+          v-for="playlist in hotPlaylists"
+          :key="playlist.id"
+          :coverData="playlist"
+        ></one-cover>
+      </slider>
+    </base-block>
+
     <base-block @click-right="$router.push('')" right-title="">
       <template #title>心情氛围</template>
       <slider type="album">
@@ -95,18 +110,6 @@
         ></one-cover>
       </slider>
     </base-block>
-
-    <base-block @click-right="$router.push('/allplaylists')" right-title="查看全部">
-      <template #title>热门歌单</template>
-      <slider type="album">
-        <one-cover
-          type="playlist"
-          v-for="playlist in hotPlaylists"
-          :key="playlist.id"
-          :coverData="playlist"
-        ></one-cover>
-      </slider>
-    </base-block>
   </div>
 </template>
 
@@ -128,8 +131,6 @@ import {
   getHighQualityPlaylistsByCategory,
   getPlaylistsByCategory,
 } from "api/playlist";
-import { getBanner, getFind, getTopAlbums } from "api/tst";
-import { mapState } from "vuex";
 
 export default {
   name: "Home",
@@ -233,8 +234,8 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  .scroller {
-    height: 100px;
-  }
+  // .scroller {
+  //   height: 100px;
+  // }
 }
 </style>

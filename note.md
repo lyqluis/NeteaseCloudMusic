@@ -2338,6 +2338,8 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
   - [ ] 从搜索 郭德纲 进入歌手页面 【歌手描述】报错
 
+  - [ ] 关注 function、style
+
 - [ ] rank 排行榜
 
   - [x] bug: ranks 页面最后没有左对齐
@@ -2366,9 +2368,9 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
   - [x] 收藏歌单
   - [x] 收藏专辑
-    - [ ] 更多
+    - [x] 更多
   - [x] 收藏电台
-    - [ ] 更多
+    - [x] 更多
   - [x] 关注艺人
     - [ ] 更多
   - [x] 关注用户
@@ -2395,7 +2397,11 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
   - [ ] 间隔 style
 
-- [ ] 浏览页面
+- [x] 浏览页面
 
   - [x] 心情氛围 => 更多
   - [x] 精品歌单
+
+- [ ] cover 组件
+
+  - [ ] 阴影 style

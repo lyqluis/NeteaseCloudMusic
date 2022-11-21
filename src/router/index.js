@@ -263,6 +263,22 @@ const routes = [
     }
   },
   {
+    path: '/moreusers/:uid',  // user - 关注用户 => 更多 / 关注艺人 => 更多
+    name: 'UserMoreUsers',
+    component: () => import('../views/MoreList.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
+    path: '/moreartists/:uid',  // user - 
+    name: 'UserMoreArtists',
+    component: () => import('../views/MoreList.vue'),
+    meta: {
+      scrollToTop: true
+    }
+  },
+  {
     path: '/dailyrecommendplaylists',  // now => 推荐歌单
     name: 'DailyRecommendPlaylists',
     component: () => import('../views/MoreAlbums.vue'),

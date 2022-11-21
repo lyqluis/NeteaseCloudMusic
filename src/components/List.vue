@@ -16,12 +16,19 @@
           ? track.id
           : type === 'suggestion'
           ? track.keyword
+          : type === 'user'
+          ? track.userId
           : `${i}-${track.id}`
       "
       :index="i"
       :track="track"
       :type="type"
-      :active="currentTrack.id === track.id"
+      :active="
+        type !== 'artist' &&
+        type !== 'user' &&
+        type !== 'suggestion' &&
+        currentTrack.id === track.id
+      "
       :topOrBottomLine="topOrBottomLine"
       @click.native="onClick(track, i)"
     >
@@ -40,9 +47,7 @@ export default {
     ListItem,
   },
   data() {
-    return {
-      // listTypes: listTypes,
-    };
+    return {};
   },
   props: {
     value: Boolean,
@@ -53,7 +58,7 @@ export default {
     type: {
       type: String,
       default: "playlist",
-      // album | playlist | artist | rank | songlist (播放列表) | suggestion | podcast
+      // album | playlist | artist | rank | songlist (播放列表) | suggestion | podcast | user
     },
     id: [String, Number], // ?
     topOrBottomLine: {
@@ -115,6 +120,8 @@ export default {
         this.$emit("select", item);
       } else if (this.type === "artist") {
         this.$router.push(`/artist/${item.id}`);
+      } else if (this.type === "user") {
+        this.$router.push(`/user/${item.userId}`);
       } else {
         this.playTrack(item, i);
       }
@@ -144,6 +151,22 @@ export default {
       // playlist-detail | album
       this.play({ track, list, index: i });
       // todo block-list
+    },
+
+    isActive(item) {
+      console.log(
+        this.type !== "artist" ||
+          this.type !== "user" ||
+          this.type !== "suggestion"
+      );
+      console.log(this.currentTrack.id);
+      console.log(this.track?.id);
+      return (
+        (this.type !== "artist" ||
+          this.type !== "user" ||
+          this.type !== "suggestion") &&
+        this.currentTrack.id === this.track?.id
+      );
     },
   },
 };
