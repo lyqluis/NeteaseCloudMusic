@@ -130,13 +130,14 @@ import Description from "components/Description";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 
-import { getUserDetail, getUserPlaylists, subscribe } from "api/user";
+import { getUserDetail, getUserPlaylists } from "api/user";
 import { handlePopup } from "mixins/popupMixin";
+import { handleSubscribe } from "mixins/subscribeMixin";
 import { mapGetters } from "vuex";
 
 export default {
   name: "User",
-  mixins: [handlePopup],
+  mixins: [handlePopup, handleSubscribe('user')],
   components: {
     PageDetail,
     NavHeader,
@@ -182,23 +183,6 @@ export default {
       const now = Date.now();
       const diff = (now - createTime) / (1000 * 60 * 60 * 24 * 365);
       return Math.floor(diff);
-    },
-    handleSubscribe(isSub) {
-      subscribe({
-        id: this.id,
-        t: isSub ? 0 : 1,
-      }).then((res) => {
-        console.log(res);
-        const { code, user } = res;
-        if (code == 200) {
-          // 成功关注
-          user && Object.assign(this.userInfo.profile, res.user);
-        } else {
-          // 取消关注, 直接返回 {code: 200}
-          this.userInfo.profile.followed = false;
-          // or refresh the page
-        }
-      });
     },
   },
 };

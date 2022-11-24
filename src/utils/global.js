@@ -60,3 +60,11 @@ export function isEmptyObject(obj) {
   return Object.keys(obj).length === 0
 }
 
+export function setVal(root, targetString, val) {
+  const keys = targetString.split('.')
+  const target = keys.pop()
+  const targetParent = keys.reduce((parent, child) => {
+    return parent[child]
+  }, root)
+  targetParent[target] = val
+}

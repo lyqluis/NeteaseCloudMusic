@@ -73,7 +73,7 @@ export default {
     transition: all 0.2s ease-out;
   }
   .page-img {
-    height: 280px;
+    height: 375px;  // todo
     overflow: hidden;
     display: flex;
     justify-content: center;

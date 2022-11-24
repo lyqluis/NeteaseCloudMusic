@@ -158,7 +158,7 @@ export function getSubscribedUsers(params) {
  * 取消关注:
  * code: 200
  */
-export function subscribe(params) {
+export function subscribeUser(params) {
   return axios({
     url: '/follow',
     method: 'post',

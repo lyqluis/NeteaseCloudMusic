@@ -19,8 +19,7 @@
         <description>
           <template #name v-if="podcast.name">{{ podcast.name }}</template>
           <template #creator v-if="podcast.dj">
-            <!-- // todo router goto user page ??-->
-            <span @click="$router.push(`/podcast/${podcast.artist.id}`)">
+            <span @click="$router.push(`/user/${podcast.dj.userId}`)">
               {{ podcast.dj.nickname }}
             </span>
           </template>
@@ -31,6 +30,7 @@
             >
             <base-button
               :icon="`heart${podcast.subed ? '-solid' : ''}`"
+              @click="handleSubscribe(podcast.subed)"
             ></base-button>
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
@@ -84,10 +84,11 @@ import Scroller from "base/Scroller";
 
 import { mapMutations, mapActions } from "vuex";
 import { handlePopup } from "mixins/popupMixin";
+import { handleSubscribe } from "mixins/subscribeMixin";
 
 export default {
   name: "Podcast",
-  mixins: [podcastDetail, handlePopup],
+  mixins: [podcastDetail, handlePopup, handleSubscribe("podcast")],
   components: {
     PageDetail,
     List,
@@ -107,10 +108,7 @@ export default {
     next();
   },
   created() {},
-  mounted() {
-    console.log(this.$route.query.song);
-    // this.playAllList(this.$route.query.song);
-  },
+  mounted() {},
   data() {
     return {
       show: false,

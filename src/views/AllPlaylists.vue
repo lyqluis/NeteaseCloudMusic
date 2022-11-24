@@ -20,7 +20,7 @@
       <icon :icon="`arrow-${showTagsPage ? 'up' : 'down'}`"></icon>
     </div>
 
-    <transition name="slide-down">
+    <transition name="tags-slide-down">
       <!-- // todo 禁止滚动 / 滑动事件 -->
       <div
         v-show="showTagsPage"

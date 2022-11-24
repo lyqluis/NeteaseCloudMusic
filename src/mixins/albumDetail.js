@@ -1,13 +1,11 @@
-import { getAlbumDetail } from "api/album"
+import { getAlbumDetail, getAlbumDetailDynamic } from "api/album"
 import { mapMutations } from "vuex"
 
 
 export default {
   data() {
     return {
-      // id: 7123230501, // playlist
       id: this.$route.params.id, // album
-      // id: 2809577409, // rank
       list: [],
       album: {},
       tracksAll: [],
@@ -28,14 +26,15 @@ export default {
 
     getAlbumDetail(id = this.id) {
       this.scrollLoading = true;
-      getAlbumDetail(id).then(async (res) => {
-        console.log("get albumdetail !");
-        const { album, songs } = res
+      Promise.all([getAlbumDetail(id), getAlbumDetailDynamic(id)]).then(res => {
+        console.log("💽 get albumdetail !", res[0], res[1]);
+        res[0]
+        const { album, songs } = res[0]
         this.list = songs;
-        this.album = album
+        this.album = Object.assign(album, res[1])
         this.scrollLoading = false;
         this.albumScrollFinished = true;
-      });
+      })
     },
 
     // set vuex player sequence list

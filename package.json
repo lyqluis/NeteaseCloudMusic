@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "color.js": "^1.2.0",
     "core-js": "^3.6.5",
     "store2": "^2.14.2",
     "vue": "^2.6.11",

@@ -2184,7 +2184,27 @@ export default {
 
 > [vue-router 完整导航钩子流程](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#%E5%AE%8C%E6%95%B4%E7%9A%84%E5%AF%BC%E8%88%AA%E8%A7%A3%E6%9E%90%E6%B5%81%E7%A8%8B)
 
+#### 文字根据背景图片动态调整颜色
 
+- 使用 css 属性
+
+- 获取图片的颜色信息然后计算图片灰度判定
+
+  > https://juejin.cn/post/6844903721776709640
+
+  - 用 color.js 库来获取图片的颜色信息
+
+    > https://github.com/luukdv/color.js
+
+  - 使用 sRGB Luma 方法计算图片灰度灰度（可以看成亮度）   
+
+    ```js
+    grayLevel = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 255
+    ```
+
+  - 将计算的灰度与设定的阈值进行比较（一般将阈值设为 `0.5`）
+
+  - 当灰度 > 阈值，则表示背景色偏浅，需要将文字颜色变深；当灰度 < 阈值，则表示背景色偏深，文字颜色变浅
 
 #### 问题
 
@@ -2305,6 +2325,7 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [ ] 邮箱登录
   - [ ] 手机号登录
   - [ ] 登录完成后跳转原来的目标页面
+  - [ ] 登录页面样式使用卡片样式
 
 - [ ] 电台
 
@@ -2317,9 +2338,7 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
     - [x] 分栏【热门节目】更多
   - [x] 电台详情页
     - [x] 详情描述组件内容
-    - [ ] 订阅按钮
-      - [ ] 样式
-      - [ ] @click
+    - [x] 订阅按钮
   - [x] 电台节目播放
 
 - [x] user 用户页面
@@ -2336,9 +2355,9 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
     - [ ] 单曲排序，偶尔失灵，使用 router.query ？
 
-  - [ ] 从搜索 郭德纲 进入歌手页面 【歌手描述】报错
+  - [x] 部分歌手页面 【歌手描述】报错
 
-  - [ ] 关注 function、style
+  - [x] 关注 function、style
 
 - [ ] rank 排行榜
 
@@ -2372,9 +2391,9 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [x] 收藏电台
     - [x] 更多
   - [x] 关注艺人
-    - [ ] 更多
+    - [x] 更多
   - [x] 关注用户
-    - [ ] 更多
+    - [x] 更多
 
 - [x] 现在就听 页面
 
@@ -2387,7 +2406,10 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
 - [ ] playlist 详情页
 
-  - [ ] img 高度升高？
+  - [x] img 高度升高？
+  - [x] description 文字 color 随着背景图明暗动态变化
+    - [x] 使用了 color.js 来识别图片颜色
+    - [x] button dark style
 
 - [x] 歌单广场 页面
 
@@ -2405,3 +2427,9 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 - [ ] cover 组件
 
   - [ ] 阴影 style
+
+- [x] 所有订阅功能，添加一个检测登录功能
+
+- [ ] 全局通知组件
+
+  - [ ] 警告样式，对比官网和 figma

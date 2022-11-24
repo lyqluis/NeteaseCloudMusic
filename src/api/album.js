@@ -18,6 +18,22 @@ export function getNewAlbums(params) {
 }
 
 /**
+ * 专辑动态信息
+ * 说明 : 调用此接口 , 传入专辑 id, 可获得专辑动态信息,如是否收藏,收藏数,评论数,分享数
+ * 必选参数 : 
+ * @param {Number} id: 专辑 id
+ * 接口地址 : /album/detail/dynamic
+ * 调用例子 : /album/detail/dynamic?id=32311
+ */
+export function getAlbumDetailDynamic(id) {
+  return axios({
+    method: 'get',
+    url: '/album/detail/dynamic',
+    params: { id }
+  })
+}
+
+/**
  * 获取专辑内容
  * 说明 : 调用此接口 , 传入专辑 id, 可获得专辑内容
  * @param {number} id
@@ -160,5 +176,22 @@ export function getSubscribeAlbums() {
   return axios({
     method: 'get',
     url: '/album/sublist',
+  })
+}
+
+/**
+ * 收藏/取消收藏专辑
+ * 说明 : 调用此接口,可收藏/取消收藏专辑
+ * 必选参数 :
+ * @param {Number} params.id : 专辑 id
+ * @param {Number} params.t : 1 为收藏,其他为取消收藏
+ * 接口地址 : /album/sub
+ * 调用例子 : /album/sub?t=1 /album/sub?t=0
+ */
+export function subscribeAlbum(params) {
+  return axios({
+    method: 'get',
+    url: '/album/sub',
+    params
   })
 }

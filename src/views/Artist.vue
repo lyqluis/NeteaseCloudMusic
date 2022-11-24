@@ -22,16 +22,20 @@
               <p>
                 {{ artist.name }}
               </p>
-              <p class="artist-artist_name-identify">
+              <p class="artist-artist_name-identify" v-if="artist.identify">
                 {{ artist.identify.imageDesc }}
               </p>
             </div>
           </template>
 
           <template #btns>
-            <base-button icon="heart" size="big" @click="handleSubsribe(id)"
-              >关注</base-button
+            <base-button
+              size="big"
+              :icon="`heart${artist.followed ? '-solid' : ''}`"
+              @click="handleSubscribe(artist.followed)"
             >
+              {{ artist.followed ? "已关注" : "关注" }}
+            </base-button>
           </template>
 
           <template #des v-if="artist.briefDesc">
@@ -50,13 +54,6 @@
       </template>
 
       <template #content>
-        <!-- //todo 
-        <p>简介</p>
-        <p>歌手热门单曲50</p>
-        <p>歌手全部歌曲</p>
-        <p>歌手单曲</p>
-        <p>歌手mv？？</p>
-        -->
         <base-block @click-right="$router.push(`/moresongs/${id}`)">
           <template #title>热门单曲</template>
           <swiper v-if="topSongs.length" :width="347" :offset="14">
@@ -115,17 +112,18 @@ import List from "components/List";
 
 import { chunk } from "utils/global";
 import { handlePopup } from "mixins/popupMixin";
+import { handleSubscribe } from "mixins/subscribeMixin";
 import {
   getArtistDetail,
   getArtistTopSongs,
   getArtistAlbums,
   getSimilarArtist,
-  subscribeArtist,
+  getArtistInfo,
 } from "api/artist";
 
 export default {
   name: "Artist",
-  mixins: [handlePopup],
+  mixins: [handlePopup, handleSubscribe("artist")],
   components: {
     NavHeader,
     PageDetail,
@@ -138,12 +136,10 @@ export default {
     Slider,
     OneCover,
     Swiper,
-    // Scroller,
     List,
   },
   data() {
     return {
-      show: false,
       artist: {},
       id: this.$route.params.id,
       topSongs: [],
@@ -159,6 +155,7 @@ export default {
       );
     },
   },
+  // 同组建刷新
   beforeRouteUpdate(to, from, next) {
     this.getArtistPageAllData(to.params.id);
     this.$nextTick(next);
@@ -177,32 +174,32 @@ export default {
     },
     getArtistPageAllData(id) {
       this.resetData();
-      getArtistDetail(id).then((res) => {
-        console.log(res);
-        const { artist } = res.data;
-        artist.identify = res.data.identify;
-        artist.preferShow = res.data.preferShow;
-        artist.secondaryExpertIdentiy = res.data.secondaryExpertIdentiy;
-        artist.showPriMsg = res.data.showPriMsg;
-        artist.videoCount = res.data.videoCount;
-        this.artist = artist;
-      });
-      // todo
+      this.getArtistData(id);
       getArtistTopSongs(id).then((res) => {
         console.log("top artist songs", res);
         const n = 5;
         this.topSongs = chunk(res.songs, n);
       });
       getArtistAlbums({ limit: 10, id: id }).then((res) => {
-        console.log(res);
+        console.log("💽", res);
         this.hotAlbums = res.hotAlbums;
       });
       getSimilarArtist(id).then((res) => {
         this.similarArtists = res.artists;
       });
     },
-    handleSubsribe(id) {
-      subscribeArtist();
+    getArtistData(id) {
+      Promise.all([getArtistInfo(id), getArtistDetail(id)]).then((vals) => {
+        console.log("📃", vals[0], vals[1]);
+        const { artist } = vals[0];
+        const { artist: artist1 } = vals[1].data;
+        artist1.identify = vals[1].data.identify;
+        artist1.preferShow = vals[1].data.preferShow;
+        artist1.secondaryExpertIdentiy = vals[1].data.secondaryExpertIdentiy;
+        artist1.showPriMsg = vals[1].data.showPriMsg;
+        artist1.videoCount = vals[1].data.videoCount;
+        this.artist = Object.assign(artist, artist1);
+      });
     },
   },
 };

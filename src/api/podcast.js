@@ -198,6 +198,23 @@ export function getPodcastPrograms(params) {
 // }
 
 /**
+ * 电台 - 订阅
+ * 说明 : 登录后调用此接口 , 传入rid, 可订阅 dj,dj 的 rid 可通过搜索指定 type='1009' 获取其 id, 如/search?keywords= 代码时间 &type=1009
+ * 必选参数 :
+ * @param {Number} params.rid 电台的 id
+ * @param {Number} params.t 1，关注，0，取消关注
+ * 接口地址 : /dj/sub
+ * 调用例子 : /dj/sub?rid=336355127&t=1 ( 对应关注 ' 代码时间 ') /dj/sub?rid=336355127&t=0 ( 对应取消关注 ' 代码时间 ')
+ */
+export function subscribePodcast(params) {
+  return axios({
+    method: 'get',
+    url: '/dj/sub',
+    params
+  });
+}
+
+/**
  * 电台的订阅列表
  * 说明 : 登录后调用此接口 , 可获取订阅的电台列表
  * 接口地址 : /dj/sublist

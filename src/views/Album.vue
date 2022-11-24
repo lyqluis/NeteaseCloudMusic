@@ -28,7 +28,10 @@
             <base-button icon="play" size="big" @click="playAllList(0)"
               >播放</base-button
             >
-            <base-button icon="heart"></base-button>
+            <base-button
+              :icon="`heart${album.isSub ? '-solid' : ''}`"
+              @click="handleSubscribe(album.isSub)"
+            ></base-button>
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
           </template>
@@ -71,8 +74,10 @@ import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
 import Cover from "base/Cover";
+
 import { mapMutations, mapActions } from "vuex";
 import { handlePopup } from "mixins/popupMixin";
+import { handleSubscribe } from "mixins/subscribeMixin";
 
 export default {
   name: "Album",
@@ -86,7 +91,7 @@ export default {
     NavHeader,
     Cover,
   },
-  mixins: [albumDetail, handlePopup],
+  mixins: [albumDetail, handlePopup, handleSubscribe("album")],
   // todo
   beforeRouteUpdate(to, from, next) {
     this.show = false;

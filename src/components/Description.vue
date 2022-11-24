@@ -1,5 +1,5 @@
 <template>
-  <div class="description">
+  <div class="description" :class="colorType">
     <div class="name">
       <slot name="name"></slot>
     </div>
@@ -11,14 +11,11 @@
     </div>
     <div class="des" v-if="hasDes">
       <slot name="des"></slot>
-      <!-- <icon icon="arrow-right" class="des-more"></icon> -->
     </div>
   </div>
 </template>
 
 <script>
-import Ellipsis from "base/Ellipsis";
-
 export default {
   name: "Description",
   props: {
@@ -30,12 +27,17 @@ export default {
       type: Boolean,
       default: true,
     },
+    colorType: {
+      type: String,
+      default: "dark",
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "assets/scss/mixin.scss";
+
 .description {
   padding: 10px var(--padding-row);
   display: flex;
@@ -74,6 +76,22 @@ export default {
       position: absolute;
       bottom: 0;
       right: 0;
+    }
+  }
+
+  &.dark {
+    text-shadow: none;
+
+    .name,
+    .creator,
+    .des {
+      color: var(--color-title);
+    }
+
+    .btns {
+      ::v-deep .base-button {
+        background: rgba(0, 0, 0, 0.8);
+      }
     }
   }
 }

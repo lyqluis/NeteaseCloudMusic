@@ -7,13 +7,16 @@
     <player></player>
     <song-list></song-list>
     <navigation></navigation>
+    <noticer></noticer>
   </div>
 </template>
 
 <script>
-import Navigation from "components/Navigation.vue";
-import Player from "components/Player.vue";
-import SongList from "components/SongList.vue";
+import Navigation from "components/Navigation";
+import Player from "components/Player";
+import SongList from "components/SongList";
+import Noticer from "base/Noticer";
+
 import { mapGetters } from "vuex";
 
 export default {
@@ -21,6 +24,7 @@ export default {
     Navigation,
     Player,
     SongList,
+    Noticer,
   },
   data() {
     return {};
@@ -40,8 +44,11 @@ export default {
 #app {
   height: 100%;
   padding-bottom: 80px;
+
   &.app-with-player {
     padding-bottom: calc(80px + 64px);
   }
+
+
 }
 </style>

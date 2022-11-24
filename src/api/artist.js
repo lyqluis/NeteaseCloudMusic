@@ -56,6 +56,22 @@ export function getArtistDetail(id) {
 }
 
 /**
+ * 获得歌手部分信息和热门歌曲
+ * 说明 : 调用此接口 , 传入歌手 id, 可获得歌手部分信息和热门歌曲
+ * 必选参数 :
+ * @param {Number} id: 歌手 id, 可由搜索接口获得
+ * 调用例子 : /artists?id=6452
+ * @return {*}
+ */
+export function getArtistInfo(id) {
+  return axios({
+    method: 'get',
+    url: '/artists',
+    params: { id }
+  })
+}
+
+/**
  * 获取歌手描述
  * 说明 : 调用此接口 , 传入歌手 id, 可获得歌手描述
  * 必选参数 : id: 歌手 id

@@ -171,3 +171,20 @@ export function getPlaylistTrackAll({ id, limit, offset }) {
     params: { id, limit, offset }
   })
 }
+
+/**
+ * 收藏/取消收藏歌单
+ * 说明 : 调用此接口 , 传入类型和歌单 id 可收藏歌单或者取消收藏歌单
+ * 必选参数 :
+ * @param {Number} params.id : 歌单 id
+ * @param {Numer} params.t: 类型, 1:收藏, 2:取消收藏 
+ * 接口地址 : /playlist/subscribe
+ * 调用例子 : /playlist/subscribe?t=1&id=106697785, /playlist/subscribe?t=2&id=106697785
+ */
+export function subscribePlaylist(params) {
+  return axios({
+    method: 'get',
+    url: '/playlist/subscribe',
+    params
+  })
+}

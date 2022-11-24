@@ -1,6 +1,7 @@
 import { getUserInfo, saveUserInfo, removeUserInfo } from "@/utils/cache"
 import { isLoggedIn, checkServerLoginStatus } from "@/utils/auth"
 
+
 export default {
   namespaced: true,
   state: () => ({
@@ -33,12 +34,11 @@ export default {
       if (isServerLoggedIn) {
         console.log('🔒 checked server logged in')
         await dispatch('handleLogin', userInfo)
-        return true
       } else {
         console.log('🔒 checked server logged out')
         await dispatch('handleLogout')
-        return false
       }
+      return isServerLoggedIn
     },
 
     handleLogin({ commit }, userInfo) {
@@ -58,6 +58,6 @@ export default {
       }
       console.log('🔒 checked local login status')
       return isLoggedIn()
-    }
+    },
   }
 }

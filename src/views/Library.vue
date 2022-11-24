@@ -31,7 +31,6 @@
       </slider>
     </base-block>
 
-    <!-- // todo push more -->
     <base-block
       v-if="subPlaylists.length"
       @click-right="$router.push(`/moreplaylists/${id}?type=album`)"
@@ -91,41 +90,13 @@
         ></one-cover>
       </slider>
     </base-block>
-
-    <!-- <loading></loading> -->
-    <!-- album-detail -->
-    <!-- <scroller
-      :loading="scrollLoading"
-      :finished="albumScrollFinished"
-      @load="getAlbumDetail"
-    >
-      <list type="album" :tracks="list" topOrBottomLine="bottom"></list> -->
-    <!-- playlist-detail -->
-    <!-- <scroller
-      :loading="scrollLoading"
-      :finished="scrollFinished"
-      @load="getPlaylistDetail"
-    >
-      <list type="playlist" :tracks="list" topOrBottomLine="bottom"></list> -->
-    <!-- rank-detail -->
-    <!-- <scroller
-      :loading="scrollLoading"
-      :finished="scrollFinished"
-      @load="getPlaylistDetail"
-    >
-      <list type="rank" :tracks="list" topOrBottomLine="bottom"></list>
-    </scroller> -->
   </div>
 </template>
 
 <script>
-import Swiper from "base/Swiper";
 import BaseBlock from "components/BaseBlock";
 import Slider from "base/Slider";
-import List from "components/List";
 import OneCover from "components/OneCover";
-import Cover from "base/Cover";
-import playlistDetail from "mixins/playlistDetail";
 
 import { mapGetters } from "vuex";
 import { getSubscribedArtists } from "api/artist";
@@ -137,14 +108,9 @@ export default {
   name: "Library",
   components: {
     BaseBlock,
-    // Swiper,
     Slider,
-    // List,
     OneCover,
-    // Cover,
   },
-  // mixins: [playlistDetail],
-  // mixins: [albumDetail],
   data() {
     return {
       createdPlaylists: [],

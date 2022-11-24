@@ -15,8 +15,10 @@
       </template>
 
       <template #description>
-        <description>
-          <template #name v-if="playlist.name">{{ playlist.name }}</template>
+        <description :color-type="desColorType">
+          <template #name v-if="playlist.name">
+            {{ playlist.name }}
+          </template>
           <template #creator v-if="playlist.creator">
             <span @click="$router.push(`/user/${playlist.creator.userId}`)">
               {{ playlist.creator.nickname }}
@@ -26,7 +28,10 @@
             <base-button icon="play" size="big" @click="playAllList"
               >播放</base-button
             >
-            <base-button icon="heart"></base-button>
+            <base-button
+              :icon="`heart${playlist.subscribed ? '-solid' : ''}`"
+              @click="handleSubscribe(playlist.subscribed)"
+            ></base-button>
             <base-button icon="plus"></base-button>
             <base-button icon="more"></base-button>
           </template>
@@ -74,8 +79,11 @@ import Ellipsis from "base/Ellipsis";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 import NavHeader from "base/NavHeader";
+
 import { mapMutations, mapActions } from "vuex";
 import { handlePopup } from "mixins/popupMixin";
+import { handleSubscribe } from "mixins/subscribeMixin";
+import colorParser from "mixins/color";
 
 export default {
   name: "Playlist",
@@ -89,7 +97,12 @@ export default {
     Popup,
     NavHeader,
   },
-  mixins: [playlistDetail, handlePopup],
+  mixins: [
+    playlistDetail,
+    handlePopup,
+    handleSubscribe("playlist"),
+    colorParser,
+  ],
   // todo
   // 重复调用组件激活
   beforeRouteUpdate(to, from, next) {
