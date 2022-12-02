@@ -198,9 +198,23 @@ export default {
         isPlaying ? audio.play() : audio.pause();
       });
     },
-    // currentTrack(track) {
-    //   this.play({ track });
-    // },
+    currentTrack(track) {
+      // todo validate privilege
+      const fees = {
+        0: "免费或无版权",
+        1: "VIP 歌曲",
+        4: "购买专辑",
+        8: "非会员可免费播放低音质，会员可播放高音质及下载",
+      };
+      const { mp3 } = track;
+      if (mp3) {
+        const { fee, paid, freeTrialPrivilege } = mp3;
+        if (fee && !paid) {
+          this.$notice({ message: fees[mp3.fee], type: "warn" });
+        }
+      }
+      // this.play({ track });
+    },
   },
   methods: {
     ...mapMutations("player", [

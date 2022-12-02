@@ -2,12 +2,16 @@
   <div class="tst">
     <p>this is tst page: {{ $route.params.id }}</p>
     <h2>心情氛围</h2>
-    <p v-for="cat in moodCats" :key="cat.name">{{cat.name}}</p>
+    <p v-for="cat in moodCats" :key="cat.name">{{ cat.name }}</p>
     <div class="wrapper">
       <div class="track">
-        <p v-for="i in 20" :key="i">{{i}}</p>
+        <p v-for="i in 20" :key="i">{{ i }}</p>
       </div>
     </div>
+
+    <button @click="onClick">toggle noticer</button>
+    <button @click="onClick1">toggle $noticer</button>
+    <button @click="onClick2">close noticer</button>
   </div>
 </template>
 
@@ -18,6 +22,7 @@ import {
   getHightQualityPlaylistCategories,
 } from "api/playlist";
 import Playing from "base/Playing";
+import Notice from "utils/notice";
 
 export default {
   // name: " tst",
@@ -59,7 +64,16 @@ export default {
   },
   methods: {
     onClick(e) {
-      console.log("get data from tst.vue");
+      console.log("on click");
+      this.noticer = Notice("this is message from tst");
+    },
+    onClick1(e) {
+      console.log("on click");
+      this.$notice("this is $message from tst");
+    },
+    onClick2(e) {
+      // this.noticer.value = false
+      this.noticer.close()
     },
     onTouch(e) {
       console.log("touch event");
@@ -104,7 +118,7 @@ export default {
     }
   }
 
-  .wrapper{
+  .wrapper {
     width: 100%;
     height: 50px;
     // height: 200px;
@@ -112,10 +126,10 @@ export default {
     padding: 10px;
     display: flex;
 
-    .track{
+    .track {
       display: flex;
 
-      p{
+      p {
         flex-shrink: 0;
         width: 50px;
         height: 50px;

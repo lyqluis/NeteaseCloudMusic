@@ -2372,6 +2372,7 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [x] player 展开时的背景模糊图片替换成数据给到的模糊图片
   - [ ] 私人 fm
   - [ ] 心动播放模式
+  - [ ] 检测歌曲权限
 
 - [x] 全剧导航守卫，检测登陆状态
 
@@ -2433,3 +2434,4 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 - [ ] 全局通知组件
 
   - [ ] 警告样式，对比官网和 figma
+  - [ ] 独立组件，重复调动

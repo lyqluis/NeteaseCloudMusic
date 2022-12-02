@@ -29,7 +29,7 @@ export default {
     },
     colorType: {
       type: String,
-      default: "dark",
+      default: "",
     },
   },
 };

@@ -85,3 +85,16 @@ export function observeResize(el, fn, unobserve = false) {
   }
   observer.observe(el)
 }
+
+export function getElement(selector) {
+  if (typeof selector === 'string') {
+    return document.querySelector(selector)
+  }
+}
+
+export function removeNode(el) {
+  const parent = el.parentNode
+  if (parent) {
+    parent.removeChild(el)
+  }
+}

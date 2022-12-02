@@ -1,11 +1,11 @@
 <template>
-  <transition name="slide-down">
-    <div class="noticer" v-show="showNotice" :class="noticeType">
+  <transition name="slide-down" @after-leave="onAfterLeave">
+    <div class="noticer" v-show="value" :class="type">
       <div class="left" @click="handleLeft">
         <slot name="left"></slot>
       </div>
 
-      <slot>{{ noticeMsg }}</slot>
+      <slot>{{ message }}</slot>
 
       <div class="right">
         <slot name="right"></slot>
@@ -15,41 +15,39 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import insertNode from "mixins/insertNode";
+import { popupMixin } from "mixins/popupMixin";
 
 export default {
   name: "Noticer",
+  mixins: [popupMixin, insertNode],
   props: {
-    lastTime: {
+    value: {
+      type: Boolean,
+      default: false,
+    },
+    type: {
+      type: String,
+      default: "normal", // normal | warn
+    },
+    message: {
+      type: String,
+      default: "请先绑定手机号，然后扫码登录, 请先绑定手机号，然后扫码登录", // todo
+    },
+    duration: {
       type: Number,
-      default: 5000, // ms
+      default: 3000, // ms
     },
     handleLeft: {
       type: Function,
       default: () => undefined,
     },
   },
-  data() {
-    return {
-      timer: null,
-    };
-  },
-  computed: {
-    ...mapGetters(["showNotice", "noticeMsg", "noticeType"]),
-  },
-  watch: {
-    // auto close
-    showNotice(val) {
-      if (val) {
-        if (this.timer) clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          this.setShowNotice(false);
-        }, this.lastTime);
-      }
-    },
-  },
+  computed: {},
   methods: {
-    ...mapMutations(["setShowNotice"]),
+    onAfterLeave() {
+      this.$emit("closed");
+    },
   },
 };
 </script>
@@ -73,7 +71,7 @@ export default {
   font-size: var(--font-size-medium);
   line-height: var(--line-height);
   background: rgba(250, 250, 250);
-  box-shadow: 0 5px 50px 5px var(--color-player-background-blur);
+  box-shadow: 0 5px 20px 3px var(--color-player-background-blur);
 
   &.warn {
     background: var(--color-theme);

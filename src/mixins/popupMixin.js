@@ -1,12 +1,26 @@
 import Vue from "vue"
-import Overlay from 'base/Overlay.vue'
-
+import Overlay from 'base/Overlay'
+import { zIndexCtx } from 'utils/context.js'
 
 class OverlayControl {
-  constructor() {
-    this.zIndex = 1000
-    this.stack = []
+  constructor(context) {
+    this.context = context
   }
+
+  get zIndex() {
+    return this.context.zIndex
+  }
+  set zIndex(val) {
+    if (val !== undefined || val !== null) {
+      this.context.zIndex = val
+    }
+  }
+
+  get stack() {
+    return this.context.stack
+  }
+
+
   // 更新overlay dom 元素
   updateOverlay(vm) {
     // get overlay matched vm
@@ -34,7 +48,23 @@ class OverlayControl {
       ctx.config = config
     } else {
       // 创建overlay实例
-      const overlay = this.mountOverlay(vm)
+      // const overlay = this.mountOverlay(vm)
+      const overlay = new (Vue.extend(Overlay))({
+        el: document.createElement('div'),
+        // ? 为什么一定需要重新设置渲染函数
+        render(h) {
+          return h(Overlay, {
+            props: this.$props,
+            // on 事件监控
+            on: {
+              click() {
+                vm.close()
+              }
+            }
+          })
+        }
+      })
+
       // 绑定弹窗组件实例、配置进ctx
       this.stack.push({ vm, overlay, config })
     }
@@ -48,7 +78,6 @@ class OverlayControl {
     ctx.overlay.show = false
   }
 
-  // overlay.vue是一个vue文件，没法变成一个函数，使用overlay-render.js，因为导出了一个js函数
   mountOverlay(vm) {
     return mount(Overlay, {
       // on 事件监控
@@ -58,13 +87,13 @@ class OverlayControl {
         }
       }
     })
-
   }
 }
 
-function mount(Component, vnodeData) {
+function mount(Component, vnodeData, el) {
+  // 实例化函数式组件
   const instance = new Vue({
-    el: document.createElement('div'),
+    el: el ?? document.createElement('div'),
     props: Component.props,
     render(h) {
       return h(Component, {
@@ -76,18 +105,17 @@ function mount(Component, vnodeData) {
   return instance
 }
 
-const overlayControl = new OverlayControl()
+const overlayControl = new OverlayControl(zIndexCtx)
 
 import { onTouchStart, onTouchMove } from "utils/touch"
 import { addClass, removeClass, bindEvent, removeEvent, getScroller, preventDefault } from "utils/dom"
-
 /**
  * use in Popup component
  */
 export const popupMixin = {
   data() {
     return {
-      opened: false,  // todo 不是响应式数据
+      // opened: false,  // todo 不是响应式数据
       zIndex: 0,
     }
   },
@@ -95,11 +123,12 @@ export const popupMixin = {
     value: {
       type: Boolean,
       default: false,
-    }
+    },
+    overlay: Boolean,
   },
   watch: {
-    value(isShow) {
-      if (isShow) {
+    value(needShow) {
+      if (needShow) {
         // open overlay
         console.log("open overlay");
         this.open()
@@ -113,6 +142,8 @@ export const popupMixin = {
   methods: {
     open() {
       this.opened = true
+      // todo
+      this.updateZIndex(this.overlay ? 1 : 0)
       this.renderOverlay()
       this.lockTouchMove()
     },
@@ -123,10 +154,13 @@ export const popupMixin = {
       this.unlockTouchMove()
       this.$emit('input', false)
     },
+    updateZIndex(val = 0) {
+      this.$el.style.zIndex = ++overlayControl.zIndex + val
+    },
     renderOverlay() {
-      // update z-index
-      this.$el.style.zIndex = overlayControl.zIndex + 1
-      overlayControl.openOverlay(this, { zIndex: overlayControl.zIndex })
+      if (this.overlay) {
+        overlayControl.openOverlay(this, { zIndex: overlayControl.zIndex })
+      }
     },
     lockTouchMove() {
       addClass(document.body, 'overlay-overflow-hidden')

@@ -5,9 +5,7 @@
       v-show="value"
       :class="[{ radius: 'radius', 'no_padding-top': !paddingTop }]"
     >
-      <!-- <div class="popup-content"> -->
       <slot></slot>
-      <!-- </div> -->
     </div>
   </transition>
 </template>
@@ -24,6 +22,10 @@ export default {
       default: true,
     },
     paddingTop: {
+      type: Boolean,
+      default: true,
+    },
+    overlay: {
       type: Boolean,
       default: true,
     },

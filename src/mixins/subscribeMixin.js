@@ -5,6 +5,7 @@ import { subscribeArtist } from "api/artist";
 import { subscribeUser } from 'api/user'
 import { subscribePlaylist } from 'api/playlist'
 import { subscribeAlbum } from 'api/album'
+import Notice from 'utils/notice'
 
 const subFns = {
   'podcast': {
@@ -52,10 +53,9 @@ export function handleSubscribe(type) {
       ...mapState('user', ['isLoggedIn'])
     },
     methods: {
-      ...mapActions(["openNotice"]),
       handleSubscribe(isSub) {
         if (!this.isLoggedIn) {
-          this.openNotice({ msg: '请先登录', type: 'warn' })
+          Notice({ msg: '请先登录', type: 'warn' })
           return
         }
 
@@ -72,11 +72,11 @@ export function handleSubscribe(type) {
             } else {
               msg = res.message ?? '出错了'
             }
-            this.openNotice({ msg })
+            Notice({ message: msg })
           })
           .catch(err => {
             console.error('Error', err)
-            this.openNotice({ msg: err.data.blockText ?? '出错了' })
+            Notice({ message: err.data.blockText ?? '出错了' })
           })
       }
     }
