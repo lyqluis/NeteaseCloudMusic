@@ -38,12 +38,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "assets/scss/animation.scss";
+@import "assets/scss/mixin.scss";
 
 .cover {
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
+  @include shadow();
   // // list
   // width: 58px;
   // height: 58px;

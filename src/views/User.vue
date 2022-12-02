@@ -38,7 +38,6 @@
           </template>
 
           <template #btns>
-            <!-- // todo button style, if is followed-->
             <base-button
               v-if="id != profile.userId"
               size="big"
@@ -114,6 +113,10 @@
             ></one-cover>
           </slider>
         </base-block>
+
+        <base-button className="logout" v-if="id == account.id" @click="logout">
+          退出登录
+        </base-button>
       </template>
     </page-detail>
   </div>
@@ -130,14 +133,15 @@ import Description from "components/Description";
 import BaseButton from "base/BaseButton";
 import Popup from "base/Popup";
 
+import { logout } from "api/auth";
 import { getUserDetail, getUserPlaylists } from "api/user";
 import { handlePopup } from "mixins/popupMixin";
 import { handleSubscribe } from "mixins/subscribeMixin";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "User",
-  mixins: [handlePopup, handleSubscribe('user')],
+  mixins: [handlePopup, handleSubscribe("user")],
   components: {
     PageDetail,
     NavHeader,
@@ -171,18 +175,27 @@ export default {
     });
   },
   computed: {
-    ...mapGetters("user", ["profile"]),
+    ...mapGetters("user", ["profile", "account"]),
     genderTxt() {
+      if (this.id == this.account?.id) {
+        return "我";
+      }
       return this.userInfo.profile.gender == 1 ? "他" : "她";
     },
   },
   methods: {
+    ...mapActions("user", ["handleLogout"]),
     getDiffTime(val) {
       if (val < 0) return;
       const createTime = new Date(val);
       const now = Date.now();
       const diff = (now - createTime) / (1000 * 60 * 60 * 24 * 365);
       return Math.floor(diff);
+    },
+    async logout() {
+      await logout();
+      this.handleLogout();
+      this.$router.push("/login");
     },
   },
 };
@@ -249,8 +262,18 @@ export default {
     }
   }
 
-  & ::v-deep .page-content .page-des {
-    background: none;
+  & ::v-deep .page-content {
+    & .page-des {
+      background: none;
+    }
+
+    .logout {
+      margin: auto;
+      width: 290px;
+      height: 50px;
+      background: var(--color-theme);
+      color: var(--color-text-sub);
+    }
   }
 
   .description {

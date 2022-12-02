@@ -1,32 +1,40 @@
 <template>
   <div class="login">
     <div class="page_title">账户</div>
-    <div class="login-title">
+
+    <div class="login-title" v-if="loginMode !== 'qrcode'">
       <img src="https://s1.music.126.net/style/favicon.ico?v20180307" alt="" />
-      <p>登陆网易云音乐账号</p>
+      <p>登陆网易云音乐</p>
     </div>
+
     <div class="login-inputs" v-if="loginMode == 'email'">
       <base-input iconName="mail" type="email"></base-input>
       <base-input iconName="lock" type="password"></base-input>
     </div>
 
-    <div class="login-qr" v-if="loginMode == 'qrcode'">
-      <div class="login-qr-wrapper">
+    <div class="login-card" v-if="loginMode === 'qrcode'">
+      <img src="https://s1.music.126.net/style/favicon.ico?v20180307" alt="" />
+
+      <div class="qr-wrapper">
         <img :src="qrimg" alt="" />
         <div
-          class="login-qr-img-layer"
+          class="qr-img-layer"
           v-show="needCoverQrCode"
           :style="{ width: `180px`, height: `180px` }"
         >
           <icon
             icon="refresh"
-            class="login-qr-img-refresh"
+            class="qr-img-refresh"
             v-if="needRefreshQrCode"
             @click="resetQrCode"
           ></icon>
         </div>
       </div>
-      <p>{{ qrMsg }}</p>
+
+      <div class="login-card-des">
+        <p class="login-card-des-title">登陆网易云音乐</p>
+        <p>{{ qrMsg }}</p>
+      </div>
     </div>
 
     <div class="login-buttons">
@@ -34,15 +42,6 @@
       <p class="switch-login-button" @click="changLoginMode">
         {{ switchLoginModeMsg }}
       </p>
-    </div>
-
-    <div class="tst-button">
-      <button @click="logout">logout</button>
-      <div class="tst-button">log status: {{ isLoggedIn }}</div>
-      account:
-      {{ account }}
-      profile:
-      {{ profile }}
     </div>
   </div>
 </template>
@@ -57,10 +56,7 @@ import {
   checkLoginQrCode,
   qrCodeStatusMsg,
   getLoginStatus,
-  loginWithVisitor,
-  logout,
 } from "api/auth";
-// import { checkLog } from "utils/auth";
 
 export default {
   name: "Login",
@@ -182,6 +178,7 @@ export default {
           // this.updateData({ key: "loginMode", value: "account" });
           // get user file & user info
           // router go to /library
+          this.$router.push("/library");
           // this.$store.dispatch("fetchUserProfile").then(() => {
           //   this.$store.dispatch("fetchLikedPlaylist").then(() => {
           //     this.$router.push({ path: "/library" });
@@ -197,29 +194,29 @@ export default {
         this.timer = null;
       }
     },
-
-    async logout() {
-      await logout();
-      this.handleLogout();
-    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "assets/scss/mixin.scss";
+
 .login {
   &-title {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: var(--padding-row);
 
     img {
-      margin: 10px;
+      margin-bottom: 10px;
     }
 
     p {
-      font-size: var(--font-size-large);
-      font-weight: 500;
+      color: var(--color-title);
+      font-size: var(--font-size-large-plus);
+      font-weight: 600;
+      letter-spacing: 0.009em;
     }
   }
 
@@ -227,21 +224,33 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--padding-row);
-    padding-bottom: 0;
+    padding: 0 var(--padding-row);
 
     .base-input {
       margin: 5px;
+      width: 294px;
+      height: 49px;
     }
   }
 
-  &-qr {
+  .login-card {
+    margin: auto;
+    position: relative;
+    width: 294px;
+    height: 427px;
+    border-radius: 18px;
+    background: var(--color-theme);
+    background: #eeeeef;
+    opacity: 0.9;
+    @include shadow();
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    padding: var(--padding-row) 0;
 
-    &-wrapper {
+    .qr-wrapper {
+      margin: 20px auto;
       position: relative;
       display: flex;
       justify-content: center;
@@ -250,7 +259,7 @@ export default {
         margin: 0 auto;
       }
 
-      .login-qr-img {
+      .qr-img {
         &-layer {
           position: absolute;
           top: 0;
@@ -267,18 +276,48 @@ export default {
         }
       }
     }
+
+    &-des {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 127px;
+      background: #eeeeef;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.5;
+      color: var(--color-text-detail);
+      font-size: var(--font-size-medium);
+
+      &-title {
+        color: var(--color-title);
+        font-size: var(--font-size-large-plus);
+        font-weight: 600;
+        letter-spacing: 0.009em;
+      }
+    }
   }
 
   &-buttons {
+    margin: 10px auto;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    & ::v-deep .base-button {
+      width: 294px;
+      height: 49px;
+      background: var(--color-theme);
+      color: var(--color-text-sub);
+      border-radius: 8px;
+    }
+
     .switch-login-button {
-      margin: 5px;
+      margin: 15px auto;
       font-size: var(--font-size-medium);
-      color: var(--color-inactive);
+      color: var(--color-theme);
     }
   }
 }

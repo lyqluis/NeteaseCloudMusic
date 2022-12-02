@@ -2318,15 +2318,23 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - 已登陆，添加本地 store / localStorage 信息
   - 未登陆，全局变量设为未登陆
 
+### 打包优化
+
+
+
 ### todo
 
 - [ ] 登录页面
   - [x] 二维码登陆
   - [ ] 邮箱登录
   - [ ] 手机号登录
-  - [ ] 登录完成后跳转原来的目标页面
-  - [ ] 登录页面样式使用卡片样式
+  - [x] 登录完成后跳转 library
+  - [x] 登录页面样式使用卡片样式
 
+- [ ] home
+  
+  - [ ] 推荐艺人 - 更多
+  
 - [ ] 电台
 
   - [x] allpodcast 页面
@@ -2341,7 +2349,9 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
     - [x] 订阅按钮
   - [x] 电台节目播放
 
-- [x] user 用户页面
+- [ ] user 用户页面
+
+  - [x] 本人页面 - 登出
 
 - [ ] 歌手页面
 
@@ -2425,13 +2435,13 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
   - [x] 心情氛围 => 更多
   - [x] 精品歌单
 
-- [ ] cover 组件
+- [x] cover 组件
 
-  - [ ] 阴影 style
+  - [x] 阴影 style
 
 - [x] 所有订阅功能，添加一个检测登录功能
 
-- [ ] 全局通知组件
+- [x] 全局通知组件
 
-  - [ ] 警告样式，对比官网和 figma
-  - [ ] 独立组件，重复调动
+  - [x] 警告样式，对比官网和 figma
+  - [x] 独立组件，重复调动

@@ -1,7 +1,7 @@
 <template functional>
   <button
     class="base-button"
-    :class="`base-button-${props.size}`"
+    :class="[props.size ? `base-button-${props.size}` : '', props.className]"
     v-bind="data.attrs"
     v-on="listeners"
   >
@@ -23,6 +23,10 @@ export default {
     size: {
       type: String,
       default: "small",
+    },
+    className: {
+      type: String,
+      default: "",
     },
   },
 };
@@ -60,7 +64,7 @@ export default {
     box-shadow: none;
     color: var(--color-text-sub);
   }
-  
+
   // active的遮罩层
   &::before {
     position: absolute;
@@ -83,6 +87,7 @@ export default {
 
   &-big {
     width: 163px;
+
     .base-button-name {
       margin: 0 5px;
     }

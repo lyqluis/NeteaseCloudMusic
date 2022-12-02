@@ -336,11 +336,11 @@ const routes = [
   },
 
   // todo delete
-  {
-    path: '/tst',
-    name: 'tst',
-    component: () => import('../base/tst.vue')
-  },
+  // {
+  //   path: '/tst',
+  //   name: 'tst',
+  //   component: () => import('../base/tst.vue')
+  // },
 ]
 
 const router = new VueRouter({

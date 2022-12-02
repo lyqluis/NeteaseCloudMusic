@@ -7,7 +7,6 @@
     <player></player>
     <song-list></song-list>
     <navigation></navigation>
-    <!-- <noticer></noticer> -->
   </div>
 </template>
 
@@ -24,7 +23,6 @@ export default {
     Navigation,
     Player,
     SongList,
-    // Noticer,
   },
   data() {
     return {};

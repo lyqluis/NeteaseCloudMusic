@@ -2,6 +2,10 @@
   <div class="home">
     <div class="page_title">现在就听</div>
 
+    <div class="avatar" @click="$router.push(`/user/${id}`)">
+      <img :src="profile.avatarUrl" alt="" />
+    </div>
+
     <!-- // todo avatar -->
 
     <swiper v-if="recommends.length" :width="347" :offset="14">
@@ -93,7 +97,10 @@
       </slider>
     </base-block>
 
-    <base-block @click-right="$router.push('/recentsongs')" v-if="recentSongs.length">
+    <base-block
+      @click-right="$router.push('/recentsongs')"
+      v-if="recentSongs.length"
+    >
       <template #title>最近播放</template>
       <swiper v-if="recentSongs.length" :width="347" :offset="14">
         <list
@@ -106,7 +113,10 @@
       </swiper>
     </base-block>
 
-    <base-block @click-right="$router.push('/recentplaylists')" v-if="recentPlaylists.length">
+    <base-block
+      @click-right="$router.push('/recentplaylists')"
+      v-if="recentPlaylists.length"
+    >
       <template #title>最近播放的歌单</template>
       <slider type="album">
         <one-cover
@@ -140,6 +150,7 @@ import {
   getRecentSongs,
   getRecentAlbum,
 } from "api/history";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Now",
@@ -162,6 +173,9 @@ export default {
       index: 0,
       scrollLoading: false,
     };
+  },
+  computed: {
+    ...mapGetters("user", ["profile", "id"]),
   },
   created() {
     getDailyRecommendSongs().then((res) => {
@@ -187,9 +201,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "assets/scss/mixin.scss";
+
 .home {
   .scroller {
     height: 100px;
+  }
+
+  .avatar {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    top: var(--padding-row);
+    right: var(--padding-row);
+    border-radius: 50%;
+    overflow: hidden;
+    @include shadow();
+
+    img {
+      width: 100%;
+    }
   }
 }
 </style>
