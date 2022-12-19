@@ -531,6 +531,12 @@ import '@/icons'
 </style>
 ```
 
+##### 缺点
+
+使用 `require.context()` 会导致将 `svg` 目录下的所有 `.svg` 文件都打包出来，从而增大了最后打包文件的体积，无法做到 `.svg` 文件的 tree shaking
+
+> 如果要 `.svg` 文件的 tree shaking，就要一个个按需 `import` 进项目，或者将 `svg` 目录下的多余 `.svg` 文件手动删除
+
 ##### 相关
 
 - 下载的 svg 无法改变颜色
@@ -2320,6 +2326,368 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
 ### 打包优化
 
+#### 打包体积分析
+
+通过 `webpack-bundle-analyzer` 插件能够在 Webpack 构建结束后生成构建产物体积报告，配合可视化的页面，能够直观知道产物中的具体占用体积
+
+```bash
+npm i webpack-bundle-analyzer -D
+```
+
+```js
+// vue.config.js
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
+module.exports = {
+  configWebpack: {
+    plugins: [
+      new BundleAnalyzerPlugin(),
+    ]
+    // ...
+  }
+}
+```
+
+打包并分析
+
+```bash
+npm run build --report
+```
+
+打包完成后会自动生成一个分析页面
+
+![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/10/1729bf9a6a2182d3~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp)
+
+初始包体积：
+
+```bash
+File                                  Size           Gzipped
+
+dist/js/chunk-vendors.0c7cd95a.js     238.04 KiB     81.84 KiB
+dist/js/app.8b833f19.js               107.06 KiB     31.45 KiB
+dist/js/chunk-0f85aad3.1edba62f.js    23.40 KiB      6.95 KiB
+dist/js/chunk-595813c7.047f94e8.js    15.97 KiB      4.45 KiB
+dist/js/chunk-eba1aea6.7d988198.js    13.55 KiB      4.12 KiB
+dist/js/chunk-33cfe199.52e60c76.js    13.50 KiB      4.08 KiB
+dist/js/chunk-482bcac9.cff70b90.js    13.12 KiB      4.21 KiB
+dist/js/chunk-4c3f7214.a103f16b.js    13.09 KiB      4.01 KiB
+dist/js/chunk-9346e82c.989ca41d.js    12.46 KiB      3.70 KiB
+dist/js/chunk-f1ec6b50.4b37412c.js    12.40 KiB      4.29 KiB
+dist/js/chunk-41399bf4.88558bdd.js    12.18 KiB      3.95 KiB
+dist/js/chunk-2e38f106.d4ec866f.js    12.02 KiB      3.83 KiB
+dist/js/chunk-d34d4886.7a18ce6a.js    10.68 KiB      2.79 KiB
+dist/js/chunk-2c573cb3.c3229528.js    10.58 KiB      3.53 KiB
+dist/js/chunk-40e37a18.4c0352ae.js    10.49 KiB      3.90 KiB
+dist/js/chunk-75a0c8d4.6f762942.js    9.45 KiB       3.36 KiB
+dist/js/chunk-761d1ed9.ab52ab82.js    8.94 KiB       3.07 KiB
+dist/js/chunk-4b09d8ba.729f129e.js    7.77 KiB       1.87 KiB
+dist/js/chunk-d49b8696.4c777670.js    7.75 KiB       2.61 KiB
+dist/js/chunk-0f6bda70.53aa7ea0.js    6.21 KiB       2.21 KiB
+dist/js/chunk-6f825a9a.6c4126ab.js    5.31 KiB       2.12 KiB
+dist/js/chunk-115cb6f6.4cb6122c.js    4.88 KiB       1.83 KiB
+dist/js/chunk-1b78918c.5a0326e3.js    1.12 KiB       0.67 KiB
+dist/css/app.bc9d96d9.css             24.24 KiB      4.29 KiB
+dist/css/chunk-0f85aad3.b9c9e928.css  7.96 KiB       1.76 KiB
+dist/css/chunk-761d1ed9.479a916c.css  4.74 KiB       1.12 KiB
+dist/css/chunk-f1ec6b50.27778a9a.css  4.28 KiB       0.99 KiB
+dist/css/chunk-41399bf4.ed854b8c.css  4.15 KiB       1.06 KiB
+dist/css/chunk-9346e82c.91bda685.css  4.13 KiB       0.94 KiB
+dist/css/chunk-eba1aea6.48968567.css  4.13 KiB       0.95 KiB
+dist/css/chunk-d49b8696.18cf61a8.css  4.12 KiB       1.09 KiB
+dist/css/chunk-33cfe199.efd5f8ec.css  3.76 KiB       0.85 KiB
+dist/css/chunk-595813c7.fbeb2043.css  3.69 KiB       0.83 KiB
+dist/css/chunk-2e38f106.45755df0.css  3.49 KiB       0.95 KiB
+dist/css/chunk-75a0c8d4.fb016a15.css  3.10 KiB       0.87 KiB
+dist/css/chunk-d34d4886.d826509b.css  2.82 KiB       0.71 KiB
+dist/css/chunk-482bcac9.fa13dcc1.css  2.62 KiB       0.87 KiB
+dist/css/chunk-4c3f7214.7d02f19a.css  2.43 KiB       0.69 KiB
+dist/css/chunk-2c573cb3.9f23831a.css  2.33 KiB       0.69 KiB
+dist/css/chunk-40e37a18.a19afd81.css  2.26 KiB       0.66 KiB
+dist/css/chunk-115cb6f6.706ec33c.css  1.65 KiB       0.62 KiB
+dist/css/chunk-0f6bda70.43d41f58.css  1.43 KiB       0.52 KiB
+dist/css/chunk-6f825a9a.8288ce71.css  1.03 KiB       0.41 KiB
+dist/css/chunk-1b78918c.c49488b1.css  0.24 KiB       0.16 KiB
+dist/css/chunk-4b09d8ba.e8329fe4.css  0.20 KiB       0.15 KiB
+
+Images and other types of assets omitted.
+```
+
+
+
+####  去除 map 文件
+
+> https://cli.vuejs.org/zh/config/#productionsourcemap
+
+sourceMap 资源映射文件保存了打包前后的代码位置，方便开发使用，这个占用一部分空间
+
+```js
+// vue.config.js
+module.exports = {
+  productionSourceMap: false, // 去除生产环境的 map 文件
+  // ...
+}
+```
+
+
+
+#### 压缩 js
+
+压缩 js 文件，并去除 `console.*` 代码来减少 js 文件体积
+
+> [这些操作删除console.log的方法，你都知道吗](https://zhuanlan.zhihu.com/p/396677874)
+
+- terser-webpack-plugin
+
+  > webpack 文档：[terser-webpack-plugin](https://webpack.docschina.org/plugins/terser-webpack-plugin/#root)
+  >
+  > github：[terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin)
+
+  webpack 5 自带该插件，但是 webpack 4 需要额外安装
+
+  ```bash
+  npm i terser-webpack-plugin@4.2.3 -D
+  ```
+
+  ```js
+  // vue.config.js
+  const TerserWebpackPlugin = require('terser-webpack-plugin')
+  
+  module.exports = {
+    configureWebpack: {
+      // ...
+      optimization: {
+        minimizer: [
+          new TerserWebpackPlugin({
+            // test: /\.(jsx|js)$/,  // default: /\.m?js(\?.*)?$/i
+            // extractComments: true,  // default: true
+            // parallel: true, // default: true
+            terserOptions: {
+              compress: {
+                warnings: true,
+                drop_console: true, // 去除 console.* 函数
+                drop_debugger: true,  // default: true
+                // pure_funcs: ['console.log', "console.table"] // 指定弃掉的函数
+              }
+            }
+          })
+        ]
+      }
+      // ...
+    }
+  }
+  ```
+
+  最后打包后的 `app.js` 减小了 1.8%，`vendors.js` 减小 1.66% 体积
+
+  ```bash
+  File                                  Size           Gzipped
+  
+  dist/js/chunk-vendors.7930ff88.js     234.08 KiB     80.23 KiB
+  dist/js/app.51669877.js               105.05 KiB     30.79 KiB
+  dist/js/chunk-0f85aad3.cf7722ac.js    22.43 KiB      6.66 KiB
+  dist/js/chunk-595813c7.74a90ac0.js    15.41 KiB      4.31 KiB
+  dist/js/chunk-eba1aea6.36d642ef.js    13.16 KiB      4.01 KiB
+  dist/js/chunk-33cfe199.d7a8ff1a.js    13.08 KiB      3.96 KiB
+  dist/js/chunk-482bcac9.51d1f8b8.js    12.55 KiB      4.06 KiB
+  dist/js/chunk-4c3f7214.63199a45.js    12.50 KiB      3.84 KiB
+  dist/js/chunk-f1ec6b50.9bf07dbd.js    12.06 KiB      4.19 KiB
+  dist/js/chunk-9346e82c.6004d22a.js    11.85 KiB      3.53 KiB
+  dist/js/chunk-41399bf4.7fcd699a.js    11.83 KiB      3.85 KiB
+  dist/js/chunk-2e38f106.f976a761.js    11.46 KiB      3.68 KiB
+  dist/js/chunk-d34d4886.2e1160ff.js    10.39 KiB      2.72 KiB
+  dist/js/chunk-2c573cb3.2347e961.js    10.05 KiB      3.37 KiB
+  dist/js/chunk-40e37a18.849fecd7.js    9.97 KiB       3.71 KiB
+  dist/js/chunk-75a0c8d4.0481c02b.js    9.01 KiB       3.21 KiB
+  dist/js/chunk-761d1ed9.37c87e95.js    8.75 KiB       3.02 KiB
+  dist/js/chunk-4b09d8ba.ef724ec9.js    7.56 KiB       1.83 KiB
+  dist/js/chunk-d49b8696.c4595d86.js    7.48 KiB       2.52 KiB
+  dist/js/chunk-0f6bda70.1fe49f18.js    6.04 KiB       2.16 KiB
+  dist/js/chunk-6f825a9a.3e7556f4.js    5.08 KiB       2.05 KiB
+  dist/js/chunk-115cb6f6.1097e47b.js    4.60 KiB       1.73 KiB
+  dist/js/chunk-1b78918c.5e801721.js    1.09 KiB       0.65 KiB
+  ```
+
+
+
+#### 压缩 CSS
+
+- mini-css-extract-plugin
+
+  > github：[mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
+
+  ```bash
+  npm i mini-css-extract-plugin@1.6.2 -D
+  ```
+
+  > v1.6.2 位最后一个支持 wepack 4 的版本，v2.0 开始支持 webpack 5 了
+
+  vue-cli@4 自带了 mini-css-extract-plugin 来剥离样式代码
+
+  使用 `vue inspect` 命令可以查看 webpack 配置信息
+
+  ```bash
+  vue inspect > webpack.js
+  ```
+
+  得到的 webpack.js 配置信息中，针对样式代码调用了 `mini-css-extact-plugin`、`css-loader`、`sass-loader` 3 种 loader
+
+  ```js
+  // webpack.js
+  export default {
+    // ...
+    module: {
+      rules: [
+        // ...
+        {
+          test: /\.(css|scss)$/i,
+          use: [
+            '/Users/GULA/Desktop/vue-music-player/node_modules/mini-css-extract-plugin/dist/loader.js',
+            'css-loader',
+            'sass-loader'
+          ]
+        },
+      ],
+    },
+    // ...
+  }
+  ```
+
+  
+
+
+
+#### tree shaking
+
+```bash
+File                                  Size           Gzipped
+
+dist/js/chunk-vendors.da82037a.js     150.21 KiB     52.80 KiB
+dist/js/app.5e5142de.js               57.43 KiB      16.55 KiB
+dist/js/chunk-2b1ced16.895dee2c.js    22.44 KiB      6.66 KiB
+dist/js/chunk-19fefd42.b3422537.js    15.41 KiB      4.31 KiB
+dist/js/chunk-260e7c67.7b6be258.js    13.16 KiB      4.02 KiB
+dist/js/chunk-45c87cbe.2735cbb6.js    13.08 KiB      3.96 KiB
+dist/js/chunk-03303319.9bc963ef.js    12.55 KiB      4.06 KiB
+dist/js/chunk-18017358.2d2fc026.js    12.50 KiB      3.84 KiB
+dist/js/chunk-36518050.b30c2b2c.js    12.07 KiB      4.18 KiB
+dist/js/chunk-26529082.61a3aabb.js    11.85 KiB      3.53 KiB
+dist/js/chunk-1efd92f8.3041a56d.js    11.83 KiB      3.85 KiB
+dist/js/chunk-6aeb1274.2f997c8f.js    11.46 KiB      3.68 KiB
+dist/js/chunk-e0e63ebc.20ae3b9d.js    10.40 KiB      2.72 KiB
+dist/js/chunk-f902353c.78e6667b.js    10.06 KiB      3.37 KiB
+dist/js/chunk-2f57e433.f1fdd158.js    9.97 KiB       3.71 KiB
+dist/js/chunk-55939bf0.436807d2.js    9.01 KiB       3.22 KiB
+dist/js/chunk-28eef621.58309c68.js    8.75 KiB       3.02 KiB
+dist/js/chunk-24078e6a.4de8f231.js    7.56 KiB       1.83 KiB
+dist/js/chunk-1ac42224.b475e0a4.js    7.48 KiB       2.51 KiB
+dist/js/chunk-39c64264.80f4b4b5.js    6.03 KiB       2.16 KiB
+dist/js/chunk-455779b6.6f85a237.js    5.09 KiB       2.06 KiB
+dist/js/chunk-eceaff1a.2b9c3709.js    4.60 KiB       1.73 KiB
+dist/js/chunk-47095e40.85ed5577.js    1.09 KiB       0.65 KiB
+dist/css/app.bc9d96d9.css             24.24 KiB      4.29 KiB
+dist/css/chunk-2b1ced16.b9c9e928.c    7.96 KiB       1.76 KiB
+ss
+dist/css/chunk-28eef621.479a916c.c    4.74 KiB       1.12 KiB
+ss
+dist/css/chunk-36518050.27778a9a.c    4.28 KiB       0.99 KiB
+ss
+dist/css/chunk-1efd92f8.ed854b8c.c    4.15 KiB       1.06 KiB
+ss
+dist/css/chunk-26529082.91bda685.c    4.13 KiB       0.94 KiB
+ss
+dist/css/chunk-260e7c67.48968567.c    4.13 KiB       0.95 KiB
+ss
+dist/css/chunk-1ac42224.18cf61a8.c    4.12 KiB       1.09 KiB
+ss
+dist/css/chunk-45c87cbe.efd5f8ec.c    3.76 KiB       0.85 KiB
+ss
+dist/css/chunk-19fefd42.fbeb2043.c    3.69 KiB       0.83 KiB
+ss
+dist/css/chunk-6aeb1274.45755df0.c    3.49 KiB       0.95 KiB
+ss
+dist/css/chunk-55939bf0.fb016a15.c    3.10 KiB       0.87 KiB
+ss
+dist/css/chunk-e0e63ebc.d826509b.c    2.82 KiB       0.71 KiB
+ss
+dist/css/chunk-03303319.fa13dcc1.c    2.62 KiB       0.87 KiB
+ss
+dist/css/chunk-18017358.7d02f19a.c    2.43 KiB       0.69 KiB
+ss
+dist/css/chunk-f902353c.9f23831a.c    2.33 KiB       0.69 KiB
+ss
+dist/css/chunk-2f57e433.a19afd81.c    2.26 KiB       0.66 KiB
+ss
+dist/css/chunk-eceaff1a.706ec33c.c    1.65 KiB       0.62 KiB
+ss
+dist/css/chunk-39c64264.43d41f58.c    1.43 KiB       0.52 KiB
+ss
+dist/css/chunk-455779b6.8288ce71.c    1.03 KiB       0.41 KiB
+ss
+dist/css/chunk-47095e40.c49488b1.c    0.24 KiB       0.16 KiB
+ss
+dist/css/chunk-24078e6a.e8329fe4.c    0.20 KiB       0.15 KiB
+ss
+```
+
+
+
+#### CDN
+
+会显著降低打包出来后的 `vendors.js` 的体积，减小 30% 的体积
+
+- 写好 cdn 配置
+
+- html-webpack-plugin 插入 cdn link
+
+- webpack.externals 
+
+- ~~delete import package code（可以不用去除）~~
+
+  - justify package.json eslint rules
+    - "no-undef":"off"
+
+- ? es6 import { } 如何使用 cdn 替代
+
+- ? vue cdn 没有返回 icon
+
+- ? vue-router 无法切换到所有歌单页面
+
+  
+
+  ```bash
+  File                                  Size           Gzipped
+  
+  dist/js/chunk-vendors.9953ee19.js     162.26 KiB     56.66 KiB
+  dist/js/app.5522fe32.js               105.21 KiB     30.84 KiB
+  dist/js/chunk-2b1ced16.77d2a79c.js    22.44 KiB      6.66 KiB
+  dist/js/chunk-19fefd42.59d66cfa.js    15.41 KiB      4.31 KiB
+  dist/js/chunk-260e7c67.53ed3421.js    13.16 KiB      4.02 KiB
+  dist/js/chunk-45c87cbe.4050e4dd.js    13.08 KiB      3.96 KiB
+  dist/js/chunk-03303319.215e77e9.js    12.55 KiB      4.06 KiB
+  dist/js/chunk-18017358.1084da3d.js    12.50 KiB      3.84 KiB
+  dist/js/chunk-36518050.2fcd5855.js    12.07 KiB      4.18 KiB
+  dist/js/chunk-aad89fde.21fe8f96.js    11.85 KiB      3.53 KiB
+  dist/js/chunk-1efd92f8.7b3f401a.js    11.83 KiB      3.85 KiB
+  dist/js/chunk-6aeb1274.cfdadd5d.js    11.46 KiB      3.68 KiB
+  dist/js/chunk-e0e63ebc.b29b12f5.js    10.40 KiB      2.72 KiB
+  dist/js/chunk-f902353c.7156b3d4.js    10.06 KiB      3.37 KiB
+  dist/js/chunk-2f57e433.af2df4ab.js    9.97 KiB       3.71 KiB
+  dist/js/chunk-55939bf0.b428c23c.js    9.01 KiB       3.22 KiB
+  dist/js/chunk-28eef621.437967dd.js    8.75 KiB       3.02 KiB
+  dist/js/chunk-24078e6a.982fe569.js    7.56 KiB       1.83 KiB
+  dist/js/chunk-1ac42224.d8616d0e.js    7.48 KiB       2.51 KiB
+  dist/js/chunk-39c64264.a3cdd692.js    6.04 KiB       2.16 KiB
+  dist/js/chunk-455779b6.094eca25.js    5.09 KiB       2.06 KiB
+  dist/js/chunk-eceaff1a.eba577b6.js    4.60 KiB       1.73 KiB
+  dist/js/chunk-47095e40.5c32360e.js    1.09 KiB       0.65 KiB
+  ```
+
+
+
+#### 开启 gzip
+
+
+
 
 
 ### todo
@@ -2445,3 +2813,8 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
   - [x] 警告样式，对比官网和 figma
   - [x] 独立组件，重复调动
+  
+- [ ] bugs
+
+  - [ ] 打开 player 后无法滑动页面（估计是把滑动手势禁掉了）
+  - [ ] 所有新设备打开都会自动登陆一个账号
