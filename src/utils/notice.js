@@ -1,5 +1,5 @@
 import Noticer from 'base/Noticer'
-import Vue from 'vue'
+// import Vue from 'vue'
 import { removeNode } from 'utils/dom.js'
 
 const defaultOptions = {

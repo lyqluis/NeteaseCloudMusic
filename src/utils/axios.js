@@ -1,4 +1,4 @@
-import axios from 'axios'
+// import axios from 'axios'
 
 const baseURL = process.env.VUE_APP_BASE_API;
 
@@ -18,8 +18,12 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   // todo auth cookies
-  // config => {
-  // }
+  config => {
+    console.log(config)
+    // config.params.realIP = '116.25.146.177'
+    // config.params.proxy = 'http://127.0.0.1:1089'
+    return config
+  }
 )
 
 // 回应拦截器
@@ -33,6 +37,7 @@ service.interceptors.response.use(
     }
   },
   err => {
+    console.log(err)
     console.log('axios res interceptor err:', err.toJSON())
     return Promise.reject(err)
   }

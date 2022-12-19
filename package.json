@@ -30,7 +30,9 @@
     "sass": "^1.46.0",
     "sass-loader": "^10.2.0",
     "svg-sprite-loader": "^6.0.11",
-    "vue-template-compiler": "^2.6.11"
+    "terser-webpack-plugin": "^4.2.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.7.0"
   },
   "eslintConfig": {
     "root": true,
@@ -45,7 +47,8 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "no-undef":"off"
     }
   },
   "browserslist": [

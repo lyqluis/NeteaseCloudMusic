@@ -1,10 +1,38 @@
 const path = require('path')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
+const IS_PRO = process.env.NODE_ENV !== 'development'
+
+const CDN = {
+  // cdn模块名称：引入的模块作用域名城
+  externals: {
+    vue: 'Vue',
+    // vuex: 'Vuex',
+    'vue-router': 'VueRouter',
+    'axios': 'axios',
+    'store2': 'store',
+    'vue-lazyload': 'VueLazyload',
+  },
+  build: {
+    js: [
+      'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+      'https://cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js',
+      'https://cdn.jsdelivr.net/npm/vue-router@3.2.0/dist/vue-router.min.js',
+      // 'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
+      'https://cdn.jsdelivr.net/npm/store2@2.14.2/dist/store2.min.js',
+      'https://cdn.jsdelivr.net/npm/vue-lazyload@1.3.3/vue-lazyload.min.js',
+    ]
+  }
+}
+
 module.exports = {
+  publicPath: './',
   // 简单配置webpack
   configureWebpack: {
     // 别名
@@ -21,49 +49,81 @@ module.exports = {
         // 'assets': path.join(__dirname, 'src/assets')
       }
     },
-    // plugins: [
-    //       new SkeletonWebpackPlugin({
-    //         webpackConfig: {
-    //           entry: {
-    //             app: path.join(__dirname, './src/skeleton/entry-skeleton.js'), //这里为上面的entry-skeleton.js
-    //           }
-    //         },
-    //         minimize: true,
-    //         quiet: true,
-    //         router: {
-    //           mode: 'hash',
-    //           routes: [
-    //             {
-    //               path: '/new', //和router.js中的路径一样就行
-    //               skeletonId: 'skeleton' //之前的id
-    //             },
-    //             // {
-    //             //   path: '/personal', //和router.js中的路径一样就行
-    //             //   skeletonId: 'skeleton' //之前的id
-    //             // },
-    //             // {
-    //             //   path: '/podcast', //和router.js中的路径一样就行
-    //             //   skeletonId: 'skeleton' //之前的id
-    //             // },
-    //             // {
-    //             //   path: '/about',
-    //             //   skeletonId: 'skeleton2'
-    //             // }
-    //           ]
-    //         }
-    //       }),
-    // ]
+    plugins: [
+      // 打包分析工具
+      new BundleAnalyzerPlugin(),
+      // // 压缩 css
+      // new MiniCssExtractPlugin(),
+      // new SkeletonWebpackPlugin({
+      //   webpackConfig: {
+      //     entry: {
+      //       app: path.join(__dirname, './src/skeleton/entry-skeleton.js'), //这里为上面的entry-skeleton.js
+      //     }
+      //   },
+      //   minimize: true,
+      //   quiet: true,
+      //   router: {
+      //     mode: 'hash',
+      //     routes: [
+      //       {
+      //         path: '/new', //和router.js中的路径一样就行
+      //         skeletonId: 'skeleton' //之前的id
+      //       },
+      //       // {
+      //       //   path: '/personal', //和router.js中的路径一样就行
+      //       //   skeletonId: 'skeleton' //之前的id
+      //       // },
+      //       // {
+      //       //   path: '/podcast', //和router.js中的路径一样就行
+      //       //   skeletonId: 'skeleton' //之前的id
+      //       // },
+      //       // {
+      //       //   path: '/about',
+      //       //   skeletonId: 'skeleton2'
+      //       // }
+      //     ]
+      //   }
+      // }),
+    ],
+    optimization: {
+      minimizer: [
+        new TerserWebpackPlugin({
+          // test: /\.(jsx|js)$/,  // default: /\.m?js(\?.*)?$/i
+          // extractComments: true,  // default: true
+          // parallel: true, // default: true
+          terserOptions: {
+            compress: {
+              warnings: true,
+              drop_console: true, // 去除 console.* 函数
+              drop_debugger: true,  // default: true
+              // pure_funcs: ['console.log', "console.table"] // 指定弃掉的函数
+            }
+          }
+        })
+      ]
+    },
+    // 注入 cdn 后需要排除打包的文件
+    externals: IS_PRO ? CDN.externals : null,
   },
   chainWebpack: config => {
     // 排除file-loader的svg规则扫描src/icons目录
     config.module.rule('svg')
       .exclude.add(resolve('src/assets/icons'))
+
     // 增加icon规则
     config.module.rule('icon').test(/\.svg$/)
       .include.add(resolve('src/assets/icons')).end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
       .options({ symbolId: 'icon-[name]' })
+
+    // 利用 html-webpack-plugin 注入 cdn
+    if (IS_PRO) {
+      config.plugin('html').tap(args => {
+        args[0].cdn = CDN.build
+        return args
+      })
+    }
   },
   css: {
     //     // 是否使用css分离插件 ExtractTextPlugin

@@ -9,7 +9,7 @@
 
 <script>
 import Vue from "vue";
-import VueLazyload from "vue-lazyload";
+// import VueLazyload from "vue-lazyload";
 import Playing from "base/Playing";
 
 Vue.use(VueLazyload, {

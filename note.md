@@ -2320,6 +2320,204 @@ VueRouter.prototype.replace = function (location, onResolve, onReject) {
 
 ### 打包优化
 
+#### 打包体积分析
+
+通过 `webpack-bundle-analyzer` 插件能够在 Webpack 构建结束后生成构建产物体积报告，配合可视化的页面，能够直观知道产物中的具体占用体积
+
+```bash
+npm i webpack-bundle-analyzer -D
+```
+
+```js
+// vue.config.js
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
+module.exports = {
+  configWebpack: {
+    plugins: [
+      new BundleAnalyzerPlugin(),
+    ]
+    // ...
+  }
+}
+```
+
+打包并分析
+
+```bash
+npm run build --report
+```
+
+打包完成后会自动生成一个分析页面
+
+![](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/6/10/1729bf9a6a2182d3~tplv-t2oaga2asx-zoom-in-crop-mark:4536:0:0:0.awebp)
+
+初始包体积：
+
+```bash
+File                                  Size           Gzipped
+
+dist/js/chunk-vendors.0c7cd95a.js     238.04 KiB     81.84 KiB
+dist/js/app.8b833f19.js               107.06 KiB     31.45 KiB
+dist/js/chunk-0f85aad3.1edba62f.js    23.40 KiB      6.95 KiB
+dist/js/chunk-595813c7.047f94e8.js    15.97 KiB      4.45 KiB
+dist/js/chunk-eba1aea6.7d988198.js    13.55 KiB      4.12 KiB
+dist/js/chunk-33cfe199.52e60c76.js    13.50 KiB      4.08 KiB
+dist/js/chunk-482bcac9.cff70b90.js    13.12 KiB      4.21 KiB
+dist/js/chunk-4c3f7214.a103f16b.js    13.09 KiB      4.01 KiB
+dist/js/chunk-9346e82c.989ca41d.js    12.46 KiB      3.70 KiB
+dist/js/chunk-f1ec6b50.4b37412c.js    12.40 KiB      4.29 KiB
+dist/js/chunk-41399bf4.88558bdd.js    12.18 KiB      3.95 KiB
+dist/js/chunk-2e38f106.d4ec866f.js    12.02 KiB      3.83 KiB
+dist/js/chunk-d34d4886.7a18ce6a.js    10.68 KiB      2.79 KiB
+dist/js/chunk-2c573cb3.c3229528.js    10.58 KiB      3.53 KiB
+dist/js/chunk-40e37a18.4c0352ae.js    10.49 KiB      3.90 KiB
+dist/js/chunk-75a0c8d4.6f762942.js    9.45 KiB       3.36 KiB
+dist/js/chunk-761d1ed9.ab52ab82.js    8.94 KiB       3.07 KiB
+dist/js/chunk-4b09d8ba.729f129e.js    7.77 KiB       1.87 KiB
+dist/js/chunk-d49b8696.4c777670.js    7.75 KiB       2.61 KiB
+dist/js/chunk-0f6bda70.53aa7ea0.js    6.21 KiB       2.21 KiB
+dist/js/chunk-6f825a9a.6c4126ab.js    5.31 KiB       2.12 KiB
+dist/js/chunk-115cb6f6.4cb6122c.js    4.88 KiB       1.83 KiB
+dist/js/chunk-1b78918c.5a0326e3.js    1.12 KiB       0.67 KiB
+dist/css/app.bc9d96d9.css             24.24 KiB      4.29 KiB
+dist/css/chunk-0f85aad3.b9c9e928.css  7.96 KiB       1.76 KiB
+dist/css/chunk-761d1ed9.479a916c.css  4.74 KiB       1.12 KiB
+dist/css/chunk-f1ec6b50.27778a9a.css  4.28 KiB       0.99 KiB
+dist/css/chunk-41399bf4.ed854b8c.css  4.15 KiB       1.06 KiB
+dist/css/chunk-9346e82c.91bda685.css  4.13 KiB       0.94 KiB
+dist/css/chunk-eba1aea6.48968567.css  4.13 KiB       0.95 KiB
+dist/css/chunk-d49b8696.18cf61a8.css  4.12 KiB       1.09 KiB
+dist/css/chunk-33cfe199.efd5f8ec.css  3.76 KiB       0.85 KiB
+dist/css/chunk-595813c7.fbeb2043.css  3.69 KiB       0.83 KiB
+dist/css/chunk-2e38f106.45755df0.css  3.49 KiB       0.95 KiB
+dist/css/chunk-75a0c8d4.fb016a15.css  3.10 KiB       0.87 KiB
+dist/css/chunk-d34d4886.d826509b.css  2.82 KiB       0.71 KiB
+dist/css/chunk-482bcac9.fa13dcc1.css  2.62 KiB       0.87 KiB
+dist/css/chunk-4c3f7214.7d02f19a.css  2.43 KiB       0.69 KiB
+dist/css/chunk-2c573cb3.9f23831a.css  2.33 KiB       0.69 KiB
+dist/css/chunk-40e37a18.a19afd81.css  2.26 KiB       0.66 KiB
+dist/css/chunk-115cb6f6.706ec33c.css  1.65 KiB       0.62 KiB
+dist/css/chunk-0f6bda70.43d41f58.css  1.43 KiB       0.52 KiB
+dist/css/chunk-6f825a9a.8288ce71.css  1.03 KiB       0.41 KiB
+dist/css/chunk-1b78918c.c49488b1.css  0.24 KiB       0.16 KiB
+dist/css/chunk-4b09d8ba.e8329fe4.css  0.20 KiB       0.15 KiB
+
+Images and other types of assets omitted.
+```
+
+
+
+
+
+#### 压缩 js
+
+压缩 js 文件，并去除 `console.*` 代码来减少 js 文件体积
+
+> [这些操作删除console.log的方法，你都知道吗](https://zhuanlan.zhihu.com/p/396677874)
+
+- terser-webpack-plugin
+
+  > webpack 文档：[terser-webpack-plugin](https://webpack.docschina.org/plugins/terser-webpack-plugin/#root)
+  >
+  > github：[terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin)
+
+  webpack 5 自带该插件，但是 webpack 4 需要额外安装
+
+  ```bash
+  npm i terser-webpack-plugin@4.2.3 -D
+  ```
+
+  ```js
+  // vue.config.js
+  const TerserWebpackPlugin = require('terser-webpack-plugin')
+  
+  module.exports = {
+    configureWebpack: {
+      // ...
+      optimization: {
+        minimizer: [
+          new TerserWebpackPlugin({
+            // test: /\.(jsx|js)$/,  // default: /\.m?js(\?.*)?$/i
+            // extractComments: true,  // default: true
+            // parallel: true, // default: true
+            terserOptions: {
+              compress: {
+                warnings: true,
+                drop_console: true, // 去除 console.* 函数
+                drop_debugger: true,  // default: true
+                // pure_funcs: ['console.log', "console.table"] // 指定弃掉的函数
+              }
+            }
+          })
+        ]
+      }
+      // ...
+    }
+  }
+  ```
+
+  最后打包后的 `app.js` 减小了 1.8%，`vendors.js` 减小 1.66% 体积
+
+  ```bash
+  File                                  Size           Gzipped
+  
+  dist/js/chunk-vendors.7930ff88.js     234.08 KiB     80.23 KiB
+  dist/js/app.51669877.js               105.05 KiB     30.79 KiB
+  dist/js/chunk-0f85aad3.cf7722ac.js    22.43 KiB      6.66 KiB
+  dist/js/chunk-595813c7.74a90ac0.js    15.41 KiB      4.31 KiB
+  dist/js/chunk-eba1aea6.36d642ef.js    13.16 KiB      4.01 KiB
+  dist/js/chunk-33cfe199.d7a8ff1a.js    13.08 KiB      3.96 KiB
+  dist/js/chunk-482bcac9.51d1f8b8.js    12.55 KiB      4.06 KiB
+  dist/js/chunk-4c3f7214.63199a45.js    12.50 KiB      3.84 KiB
+  dist/js/chunk-f1ec6b50.9bf07dbd.js    12.06 KiB      4.19 KiB
+  dist/js/chunk-9346e82c.6004d22a.js    11.85 KiB      3.53 KiB
+  dist/js/chunk-41399bf4.7fcd699a.js    11.83 KiB      3.85 KiB
+  dist/js/chunk-2e38f106.f976a761.js    11.46 KiB      3.68 KiB
+  dist/js/chunk-d34d4886.2e1160ff.js    10.39 KiB      2.72 KiB
+  dist/js/chunk-2c573cb3.2347e961.js    10.05 KiB      3.37 KiB
+  dist/js/chunk-40e37a18.849fecd7.js    9.97 KiB       3.71 KiB
+  dist/js/chunk-75a0c8d4.0481c02b.js    9.01 KiB       3.21 KiB
+  dist/js/chunk-761d1ed9.37c87e95.js    8.75 KiB       3.02 KiB
+  dist/js/chunk-4b09d8ba.ef724ec9.js    7.56 KiB       1.83 KiB
+  dist/js/chunk-d49b8696.c4595d86.js    7.48 KiB       2.52 KiB
+  dist/js/chunk-0f6bda70.1fe49f18.js    6.04 KiB       2.16 KiB
+  dist/js/chunk-6f825a9a.3e7556f4.js    5.08 KiB       2.05 KiB
+  dist/js/chunk-115cb6f6.1097e47b.js    4.60 KiB       1.73 KiB
+  dist/js/chunk-1b78918c.5e801721.js    1.09 KiB       0.65 KiB
+  ```
+
+
+
+#### 压缩 CSS
+
+- mini-css-extract-plugin
+
+  > github：[mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
+
+  ```bash
+  npm i mini-css-extract-plugin@1.6.2 -D
+  ```
+
+  > v1.6.2 位最后一个支持 wepack 4 的版本，v2.0 开始支持 webpack 5 了
+
+  
+
+
+
+
+
+#### CDN
+
+- 写好 cdn 配置
+- html-webpack-plugin 插入 cdn link
+- webpack.externals 
+- delete import package code
+- justify package.json eslint rules
+  - "no-undef":"off"
+- es6 import { } 如何使用 cdn 替代
+- ？ 没有返回 icon
+
 
 
 ### todo

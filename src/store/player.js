@@ -1,6 +1,6 @@
 import { getSongUrl, getLyric } from "../api/song"
 import { shuffle } from 'utils/global'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 const PLAY_MODE = [
   'sequence',
