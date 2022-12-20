@@ -1,5 +1,5 @@
 const path = require('path')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
 
 function resolve(dir) {
@@ -53,8 +53,9 @@ module.exports = {
       }
     },
     plugins: [
-      // 打包分析工具
-      new BundleAnalyzerPlugin(),
+      // // 打包分析工具
+      // new BundleAnalyzerPlugin(),
+      
       // new SkeletonWebpackPlugin({
       //   webpackConfig: {
       //     entry: {
