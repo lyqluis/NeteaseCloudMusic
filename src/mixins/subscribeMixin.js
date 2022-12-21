@@ -1,4 +1,4 @@
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 import { setVal } from 'utils/global'
 import { subscribePodcast } from "api/podcast";
 import { subscribeArtist } from "api/artist";

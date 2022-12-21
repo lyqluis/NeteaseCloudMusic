@@ -13,7 +13,7 @@ export default {
   output: {
     path: '/Users/GULA/Desktop/vue-music-player/dist',
     filename: 'js/[name].js',
-    publicPath: '/',
+    publicPath: '',
     chunkFilename: 'js/[name].js'
   },
   resolve: {
@@ -94,7 +94,7 @@ export default {
             loader: '/Users/GULA/Desktop/vue-music-player/node_modules/cache-loader/dist/cjs.js',
             options: {
               cacheDirectory: '/Users/GULA/Desktop/vue-music-player/node_modules/.cache/vue-loader',
-              cacheIdentifier: '33c89bac'
+              cacheIdentifier: '26375f02'
             }
           },
           {
@@ -104,7 +104,7 @@ export default {
                 whitespace: 'condense'
               },
               cacheDirectory: '/Users/GULA/Desktop/vue-music-player/node_modules/.cache/vue-loader',
-              cacheIdentifier: '33c89bac'
+              cacheIdentifier: '26375f02'
             }
           }
         ]
@@ -1889,7 +1889,7 @@ export default {
             loader: '/Users/GULA/Desktop/vue-music-player/node_modules/cache-loader/dist/cjs.js',
             options: {
               cacheDirectory: '/Users/GULA/Desktop/vue-music-player/node_modules/.cache/babel-loader',
-              cacheIdentifier: '2f0791ea'
+              cacheIdentifier: '225632a8'
             }
           },
           {
@@ -1915,7 +1915,7 @@ export default {
                 '.vue'
               ],
               cache: true,
-              cacheIdentifier: '0021af9f',
+              cacheIdentifier: '1996a709',
               emitWarning: false,
               emitError: false,
               eslintPath: '/Users/GULA/Desktop/vue-music-player/node_modules/eslint',
@@ -1937,14 +1937,6 @@ export default {
               symbolId: 'icon-[name]'
             }
           }
-        ]
-      },
-      {
-        test: /\.(css|scss)$/i,
-        use: [
-          '/Users/GULA/Desktop/vue-music-player/node_modules/mini-css-extract-plugin/dist/loader.js',
-          'css-loader',
-          'sass-loader'
         ]
       }
     ]
@@ -2045,10 +2037,10 @@ export default {
     new DefinePlugin(
       {
         'process.env': {
-          VUE_APP_BASE_API: '"https://netease-cloud-music-api-lyart-nine.vercel.app/"',
+          VUE_APP_BASE_API: '"http://localhost:3000"',
           VUE_APP_BASE_DESIGN_WIDTH: '"375"',
           NODE_ENV: '"development"',
-          BASE_URL: '"/"'
+          BASE_URL: '""'
         }
       }
     ),
@@ -2134,24 +2126,12 @@ export default {
           'silent'
         ])
       }
-    },
-    {
-      options: {
-        filename: '[name].css',
-        ignoreOrder: false,
-        experimentalUseImportModule: false,
-        chunkFilename: '[name].css'
-      },
-      runtimeOptions: {
-        insert: undefined,
-        linkType: 'text/css',
-        attributes: undefined
-      }
     }
   ],
   entry: {
     app: [
       './src/main.js'
     ]
-  }
+  },
+  externals: {}
 }

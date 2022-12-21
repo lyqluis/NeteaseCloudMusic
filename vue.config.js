@@ -1,30 +1,32 @@
 const path = require('path')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const TerserWebpackPlugin = require('terser-webpack-plugin')
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const IS_PRO = process.env.NODE_ENV !== 'development'
+const IS_PROD = process.env.NODE_ENV !== 'development'
 
+// todo bug: vue 放到 cdn 中，navHeader 组件的返回图标会消失
+// todo bug: vue-router 改为 cdn，切换到所有歌单页面没有出发加载
+// todo bug: vuex 使用 es6 对象引入，无法正确打包
 const CDN = {
   // cdn模块名称：引入的模块作用域名城
   externals: {
-    vue: 'Vue',
+    // vue: 'Vue',
+    // 'vue-router': 'VueRouter',
     // vuex: 'Vuex',
-    'vue-router': 'VueRouter',
     'axios': 'axios',
     'store2': 'store',
     'vue-lazyload': 'VueLazyload',
   },
   build: {
     js: [
-      'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
-      'https://cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js',
-      'https://cdn.jsdelivr.net/npm/vue-router@3.2.0/dist/vue-router.min.js',
+      // 'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+      // 'https://cdn.jsdelivr.net/npm/vue-router@3.2.0/dist/vue-router.min.js',
       // 'https://cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js',
+      'https://cdn.jsdelivr.net/npm/axios@0.24.0/dist/axios.min.js',
       'https://cdn.jsdelivr.net/npm/store2@2.14.2/dist/store2.min.js',
       'https://cdn.jsdelivr.net/npm/vue-lazyload@1.3.3/vue-lazyload.min.js',
     ]
@@ -33,6 +35,7 @@ const CDN = {
 
 module.exports = {
   publicPath: './',
+  productionSourceMap: !IS_PROD, // 去除生产环境的 map 文件
   // 简单配置webpack
   configureWebpack: {
     // 别名
@@ -50,10 +53,9 @@ module.exports = {
       }
     },
     plugins: [
-      // 打包分析工具
-      new BundleAnalyzerPlugin(),
-      // // 压缩 css
-      // new MiniCssExtractPlugin(),
+      // // 打包分析工具
+      // new BundleAnalyzerPlugin(),
+      
       // new SkeletonWebpackPlugin({
       //   webpackConfig: {
       //     entry: {
@@ -103,7 +105,7 @@ module.exports = {
       ]
     },
     // 注入 cdn 后需要排除打包的文件
-    externals: IS_PRO ? CDN.externals : null,
+    externals: IS_PROD ? CDN.externals : {},
   },
   chainWebpack: config => {
     // 排除file-loader的svg规则扫描src/icons目录
@@ -111,19 +113,23 @@ module.exports = {
       .exclude.add(resolve('src/assets/icons'))
 
     // 增加icon规则
-    config.module.rule('icon').test(/\.svg$/)
+    config.module.rule('icon')
+      .test(/\.svg$/)
       .include.add(resolve('src/assets/icons')).end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
       .options({ symbolId: 'icon-[name]' })
 
     // 利用 html-webpack-plugin 注入 cdn
-    if (IS_PRO) {
+    if (IS_PROD) {
       config.plugin('html').tap(args => {
         args[0].cdn = CDN.build
         return args
       })
     }
+
+    // tree-shaking
+    // config.optimization.sideEffects(false)
   },
   css: {
     //     // 是否使用css分离插件 ExtractTextPlugin
@@ -161,8 +167,8 @@ module.exports = {
     //     // requireModuleExtension: true
   },
   // 自动获取当前ip
-  devServer: {
-    public: require("os").networkInterfaces()['en0'][0].address + `:${process.env.port || 8080}`
-  }
+  // devServer: {
+  //   public: require("os").networkInterfaces()['en0'][0].address + `:${process.env.port || 8080}`
+  // }
   //   // ...
 }

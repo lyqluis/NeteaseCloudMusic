@@ -20,7 +20,7 @@ import { popupMixin } from "mixins/popupMixin";
 
 export default {
   name: "Noticer",
-  mixins: [popupMixin, insertNode],
+  mixins: [insertNode],
   props: {
     value: {
       type: Boolean,
