@@ -59,16 +59,13 @@ export default {
       });
     },
     handleTouchEnd(event) {
-      const { drag } = onTouchEnd(event);
-      const {
-        isZoom,
-        el: { img, content },
-      } = drag;
-      if (isZoom) {
+      const { drag: { isZoom, el } } = onTouchEnd(event)
+      const { img, content } = el ?? {}
+      if (isZoom && el) {
         // reset style
-        [img, content].map((el) => addClass(el, "rebound"));
-        img.style.transform = "scale(1)";
-        content.style.transform = "";
+        [img, content].map((el) => addClass(el, "rebound"))
+        img.style.transform = "scale(1)"
+        content.style.transform = ""
         // reset touch
         resetTouch();
       }

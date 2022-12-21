@@ -6,8 +6,6 @@
       <img :src="profile.avatarUrl" alt="" />
     </div>
 
-    <!-- // todo avatar -->
-
     <swiper v-if="recommends.length" :width="347" :offset="14">
       <base-block
         class="swiper-item"
@@ -34,7 +32,7 @@
       </base-block>
     </swiper>
 
-    <base-block @click-right="$router.push('/dailyrecommendplaylists')">
+    <base-block v-if="dailyPlaylists.length" @click-right="$router.push('/dailyrecommendplaylists')">
       <template #title>推荐歌单</template>
       <slider type="album">
         <one-cover
@@ -46,7 +44,7 @@
       </slider>
     </base-block>
 
-    <base-block @click-right="$router.push('/dailysongs')">
+    <base-block  v-if="dailySongs.length" @click-right="$router.push('/dailysongs')">
       <template #title>每日推荐</template>
       <swiper v-if="dailySongs.length" :width="347" :offset="14">
         <list
@@ -60,7 +58,7 @@
     </base-block>
 
     <!-- // todo push more to all playlist page-->
-    <base-block @click-right="$router.push('/newalbums')" rightTitle="">
+    <base-block v-if="radarPlaylists.length" @click-right="$router.push('/newalbums')" rightTitle="">
       <template #title>歌单雷达</template>
       <slider type="album">
         <one-cover
@@ -72,7 +70,7 @@
       </slider>
     </base-block>
 
-    <base-block right-title="">
+    <base-block  v-if="findSongs.length" right-title="">
       <template #title>根据你听的相似推荐</template>
       <swiper v-if="findSongs.length" :width="347" :offset="14">
         <list
@@ -85,7 +83,7 @@
       </swiper>
     </base-block>
 
-    <base-block @click-right="$router.push('/radio')">
+    <base-block  v-if="findPodcasts.length" @click-right="$router.push('/radio')">
       <template #title>推荐播客</template>
       <slider type="album">
         <one-cover
@@ -98,8 +96,8 @@
     </base-block>
 
     <base-block
-      @click-right="$router.push('/recentsongs')"
       v-if="recentSongs.length"
+      @click-right="$router.push('/recentsongs')"
     >
       <template #title>最近播放</template>
       <swiper v-if="recentSongs.length" :width="347" :offset="14">
@@ -114,8 +112,8 @@
     </base-block>
 
     <base-block
-      @click-right="$router.push('/recentplaylists')"
       v-if="recentPlaylists.length"
+      @click-right="$router.push('/recentplaylists')"
     >
       <template #title>最近播放的歌单</template>
       <slider type="album">
