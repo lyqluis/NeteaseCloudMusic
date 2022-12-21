@@ -14,7 +14,8 @@
 import Navigation from "components/Navigation";
 import Player from "components/Player";
 import SongList from "components/SongList";
-import Noticer from "base/Noticer";
+// import Noticer from "base/Noticer";
+import Notice from "utils/notice";
 
 import { mapGetters } from "vuex";
 
@@ -46,7 +47,5 @@ export default {
   &.app-with-player {
     padding-bottom: calc(80px + 64px);
   }
-
-
 }
 </style>

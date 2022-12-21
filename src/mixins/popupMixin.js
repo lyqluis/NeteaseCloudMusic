@@ -112,6 +112,8 @@ import { addClass, removeClass, bindEvent, removeEvent, getScroller, preventDefa
 /**
  * use in Popup component
  */
+// export function popupMixin(noLock) {
+// return {
 export const popupMixin = {
   data() {
     return {
@@ -171,7 +173,7 @@ export const popupMixin = {
     unlockTouchMove() {
       removeClass(document.body, 'overlay-overflow-hidden')
       removeEvent(document.body, 'touchstart', onTouchStart)
-      removeEvent(document.body, 'touchmove', this.handleTouchMove)
+      removeEvent(document.body, 'touchmove', this.handleTouchMove, { capture: false, passive: false })
     },
     handleTouchMove(e) {
       const { drag } = onTouchMove(e)
@@ -187,9 +189,9 @@ export const popupMixin = {
     // handleTouchEnd(e) {
     //   resetTouch()
     // }
-
   }
 }
+// }
 
 /**
  * use in thhe components used Popup
