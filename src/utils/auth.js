@@ -15,7 +15,7 @@
 // MUSIC_U 只有在账户登录的情况下才有
 
 import { isEmptyObject } from './global'
-import { getUserInfo } from './cache'
+import { getUserInfo, removeUserInfo } from './cache'
 import { getLoginStatus } from 'api/auth'
 import store from 'store/index'
 
@@ -32,10 +32,20 @@ export function checkLocalLoginStatus() {
 
 export async function checkServerLoginStatus() {
   const { data } = await getLoginStatus()
+
+  // exclude one wired & unvalidate accoount
+  if (data.account?.id == 8023474819) {
+    // just directly delete account in the local storage
+    return await removeUserInfo()
+  }
+
   // if logged in, data.account is not null
   return data
 }
 
+/**
+ * use as vue router global guard
+ */
 export async function globalCheck(to, from, next) {
   console.log('global 🧭')
   const isLoggedIn = await store.dispatch('user/checkLoginStatus')

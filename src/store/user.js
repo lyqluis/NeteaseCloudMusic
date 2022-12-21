@@ -1,7 +1,6 @@
 import { getUserInfo, saveUserInfo, removeUserInfo } from "@/utils/cache"
 import { isLoggedIn, checkServerLoginStatus } from "@/utils/auth"
 
-
 export default {
   namespaced: true,
   state: () => ({
