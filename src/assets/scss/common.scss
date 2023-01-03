@@ -1,0 +1,36 @@
+@import "assets/scss/mixin.scss";
+
+.page-header-show {
+	// display: block;
+	transition: all 0.2s ease-in-out;
+	@include background-blur(--color-background-blur, --filter-blur);
+	@include line-1px(bottom, fixed);
+}
+
+.tags {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	position: relative;
+	padding: 0 var(--padding-col);
+
+	&-tag {
+		flex-shrink: 0;
+		margin: 5px;
+		padding: 10px 14px;
+		border-radius: 16px;
+		font-size: var(--font-size-medium);
+		background: #eeeeef;
+
+		&:active {
+			color: var(--color-text-sub);
+			background: var(--color-inactive);
+		}
+		
+		&.inactive {
+			color: var(--color-text-sub);
+			background: var(--color-inactive);
+		}
+	}
+}

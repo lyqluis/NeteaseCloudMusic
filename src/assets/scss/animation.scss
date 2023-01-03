@@ -1,0 +1,88 @@
+$animation-duration: 0.3s;
+
+// slide
+.slide-down-enter-active,	// from top to bottom
+.slide-left-enter-active,	// from right to left
+.slide-up-enter-active {
+	// from bottom to top
+	transition: transform $animation-duration ease-out;
+}
+
+.slide-down-leave-active,
+.slide-left-leave-active,
+.slide-up-leave-active {
+	transition: transform $animation-duration ease-in;
+}
+
+.slide-up-enter,
+/* leave-to 也是可以的 */
+.slide-up-leave-active {
+	transform: translateY(100%);
+}
+
+.slide-left-enter,
+/* leave-to 也是可以的 */
+.slide-left-leave-active {
+	transform: translateX(100%);
+}
+
+.slide-down-enter,
+/* leave-to 也是可以的 */
+.slide-down-leave-active {
+	transform: translateY(-100%);
+}
+
+// player-img cd rotate
+@keyframes rotate {
+	0% {
+		transform: rotate(0);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+// skeleton
+$skeleton-animation-duration: 1.2s;
+$skeleton-animation: skeleton-change $skeleton-animation-duration ease-in-out
+	infinite;
+
+@keyframes skeleton-change {
+	50% {
+		opacity: 0.6;
+	}
+}
+
+// list
+// (delete list item in songlist)
+.songlist-list-item {
+	&.list-move,
+	&.list-leave-active {
+		transition: all $animation-duration ease-in-out;
+	}
+
+	&.list-leave-to {
+		opacity: 0;
+		transform: translatex(100%);
+	}
+
+	&.list-leave-active {
+		// position: absolute;
+	}
+}
+
+// allpodcasts page tags
+.tags-slide-down-enter-active {
+	transition: all $animation-duration ease-out;
+}
+.slide-down-leave-active {
+	transition: all $animation-duration ease-in;
+}
+
+.tags-slide-down-enter,
+/* leave-to 也是可以的 */
+.tags-slide-down-leave-active {
+	// z-index: 0;
+	top: calc(45px + 50px);
+	bottom: calc(100vh - 45px - 50px);
+}

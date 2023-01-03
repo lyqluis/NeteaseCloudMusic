@@ -1,6 +1,8 @@
 <template>
   <div class="block">
-    <div :class="{ 'block-title': true, 'top-line': topLine }">
+    <div
+      :class="[{ 'block-title': true, 'top-line': topLine }, titleClassName]"
+    >
       <slot name="title"></slot>
       <span class="block-title-right" @click="handleRight">{{
         rightTitle
@@ -26,10 +28,12 @@ export default {
       type: String,
       default: "更多",
     },
+    titleClassName: String,
   },
   methods: {
     handleRight(e, url) {
       console.log(e, url);
+      this.$emit("click-right", e, url);
     },
   },
 };
@@ -52,7 +56,7 @@ export default {
     padding-top: var(--padding-col);
     padding-bottom: var(--padding-col);
     &.top-line {
-      @include line-1px-top;
+      @include line-1px(top);
     }
     .block-title-right {
       font-size: var(--font-size-medium);

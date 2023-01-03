@@ -1,127 +1,232 @@
 <template>
   <div class="home">
-    <div class="page_title">发现</div>
-    <!-- <swiper v-if="banners.length" :width="347" :offset="14">
-      <base-block
-        class="swiper-item"
-        v-for="item in banners"
-        :key="item.targetId"
-        rightTitle=""
-      >
-        <template #title>
-          <p class="swiper-item_title">{{ item.typeTitle }}</p>
-        </template>
-        <img :src="item.imageUrl" :alt="item.imageUrl" />
-      </base-block>
-    </swiper> -->
+    <div class="page_title">浏览</div>
+
     <swiper v-if="recommends.length" :width="347" :offset="14">
       <base-block
         class="swiper-item"
         v-for="item in recommends"
-        :key="item.targetId"
+        :key="item.id"
         rightTitle=""
+        @click.native="$router.push(`/playlist/${item.id}`)"
       >
         <template #title>
           <div class="swiper-item_title">
             <p class="swiper-item_title-s swiper-item_title-sub">
-              {{ item.copywriter }}
+              {{ item.copywriter || `热门推荐` }}
             </p>
             <p class="swiper-item_title-m">
               {{ item.name }}
             </p>
           </div>
         </template>
-        <img :src="item.picUrl" :alt="item.picUrl" />
+        <cover className="swiper-item_img" :imgSrc="item.picUrl"></cover>
       </base-block>
     </swiper>
-    <base-block>
+
+    <base-block @click-right="$router.push('/newalbums')">
       <template #title>新专辑</template>
-      this is new albums groups
+      <slider type="album">
+        <one-cover
+          v-for="album in newAlbums"
+          :key="album.id"
+          :coverData="album"
+        ></one-cover>
+      </slider>
     </base-block>
-    <base-block>
+
+    <base-block @click-right="$router.push('/newsongs')">
       <template #title>新歌速递</template>
-      this is new songs groups
+      <swiper v-if="newSongs.length" :width="347" :offset="14">
+        <list
+          v-for="(list, i) in newSongs"
+          :key="`newSongs-${i}`"
+          :tracks="list"
+          topOrBottom="top"
+        >
+        </list>
+      </swiper>
     </base-block>
+
+    <base-block
+      @click-right="$router.push('/allplaylists')"
+      right-title="查看全部"
+    >
+      <template #title>热门歌单</template>
+      <slider type="album">
+        <one-cover
+          type="playlist"
+          v-for="playlist in hotPlaylists"
+          :key="playlist.id"
+          :coverData="playlist"
+        ></one-cover>
+      </slider>
+    </base-block>
+
+    <base-block @click-right="$router.push('')" right-title="">
+      <template #title>心情氛围</template>
+      <slider type="album">
+        <one-cover
+          type="mood"
+          v-for="cat in moods"
+          :key="cat.id"
+          :coverData="cat"
+        ></one-cover>
+      </slider>
+    </base-block>
+
     <base-block>
       <template #title>推荐艺人</template>
-      this is recommend players list
+      <slider type="artist">
+        <one-cover
+          type="artist"
+          v-for="artist in topArtists"
+          :key="artist.id"
+          :coverData="artist"
+        ></one-cover>
+      </slider>
     </base-block>
-    <scroller :loading="scrollLoading" @load="getScrollData">
-      <p v-for="item in list" :key="item.id">{{ item.name }}</p>
-    </scroller>
+
+    <base-block @click-right="$router.push('/ranks')">
+      <template #title>排行榜</template>
+      <slider type="album">
+        <one-cover
+          type="rank"
+          v-for="rank in ranks"
+          :key="rank.id"
+          :coverData="rank"
+        ></one-cover>
+      </slider>
+    </base-block>
+
+    <base-block @click-right="$router.push('/allqualityplaylists')">
+      <template #title>精选歌单</template>
+      <slider type="album">
+        <one-cover
+          type="playlist"
+          v-for="playlist in hightQualityPlaylists"
+          :key="playlist.id"
+          :coverData="playlist"
+        ></one-cover>
+      </slider>
+    </base-block>
   </div>
 </template>
 
 <script>
-// import TopBar from "components/TopBar";
 import Swiper from "base/Swiper";
 import BaseBlock from "components/BaseBlock";
-import Scroller from "base/Scroller";
+import Slider from "base/Slider";
+import List from "components/List";
+import OneCover from "components/OneCover";
+import Cover from "base/Cover";
 
+import { chunk } from "utils/global";
+import { getNewSongs, getRecommendList } from "api/recommend";
+import { getNewAlbums } from "api/album";
+import { getTopArtists } from "api/artist";
+import { getRanks } from "api/rank";
 import {
-  getBanner,
-  getFind,
-  getRecommendList,
-  getNewAlbums,
-  getTopAlbums,
-  newAlbums,
-} from "api/tst";
+  getHightQualityPlaylistCategories,
+  getHighQualityPlaylistsByCategory,
+  getPlaylistsByCategory,
+} from "api/playlist";
 
 export default {
   name: "Home",
   components: {
     BaseBlock,
     Swiper,
-    Scroller,
-    // TopBar,
+    Slider,
+    List,
+    OneCover,
+    Cover,
   },
   data() {
     return {
       banners: [],
       recommends: [],
+      newSongs: [],
+      newAlbums: [],
       list: [],
+      topArtists: [],
+      ranks: [],
+      hightQualityPlaylists: [],
+      hotPlaylists: [],
+      moods: [],
       index: 0,
       scrollLoading: false,
     };
   },
   created() {
-    // console.log('start fetch')
-    getBanner().then((res) => {
-      console.log("banner");
-      console.log(res);
-      this.banners = res.banners;
-    });
-    getFind().then((res) => {
-      console.log("homepage find");
-      console.log(res);
-    });
     getRecommendList(6).then((res) => {
-      console.log("recommends");
-      console.log(res);
+      console.log("👂", res);
       this.recommends = res.result;
     });
-    getNewAlbums().then((res) => {
-      console.log("new albums");
-      console.log(res);
-    });
-    getTopAlbums().then((res) => {
-      console.log("top albums");
-      console.log(res);
-    });
+    this.getNewSongs();
+    this.getNewAlbums();
+    this.getTopArtists();
+    this.getRanks();
+    this.getHighQualityPlaylists();
+    this.getMoods();
+    this.getHotPlaylists();
   },
+  computed: {},
   methods: {
-    getScrollData() {
-      this.scrollLoading = true;
-      console.log("outside getdata touched");
-      const limit = 30;
-      newAlbums({
-        offset: limit * this.index++,
-      }).then((res) => {
-        console.log("get scroll data", this.index);
-        console.log(res);
-        this.list.push(...res.albums);
-        this.scrollLoading = false;
+    getNewSongs(length = 9, n = 3) {
+      let songs;
+      getNewSongs().then((res) => {
+        console.log("get new songs", res);
+        songs = res.data.slice(0, length);
+        songs = chunk(songs, n);
+        this.newSongs.push(...songs);
       });
+    },
+    getNewAlbums(length = 10) {
+      const limit = length;
+      getNewAlbums({ limit }).then((res) => {
+        console.log("new albums");
+        console.log(res);
+        this.newAlbums.push(...res.albums);
+      });
+    },
+    getTopArtists(n = 10) {
+      getTopArtists({ limit: n, offset: 0 }).then((res) => {
+        console.log("get top artists");
+        console.log(res);
+        this.topArtists.push(...res.artists);
+      });
+    },
+    getRanks(n = 10) {
+      getRanks().then((res) => {
+        this.ranks.push(...res.list.slice(0, n));
+      });
+    },
+    getHighQualityPlaylists(n = 10) {
+      getHighQualityPlaylistsByCategory({ limit: n }).then((res) => {
+        console.log("hight quality playlist", res);
+        this.hightQualityPlaylists = res.playlists;
+      });
+    },
+    getMoods() {
+      getHightQualityPlaylistCategories().then((res) => {
+        console.log("tags: ", res);
+        this.moods = res.tags
+          .filter((tag) => tag.category == 2 || tag.category == 3)
+          .map((tag, i) => {
+            tag.index = i;
+            return tag;
+          });
+      });
+    },
+    getHotPlaylists() {
+      getPlaylistsByCategory({ limit: 10 }).then((res) => {
+        console.log("💽", res);
+        this.hotPlaylists = res.playlists;
+      });
+    },
+    routerGo(e) {
+      console.log(e);
     },
   },
 };
@@ -129,8 +234,8 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  .scroller {
-    height: 100px;
-  }
+  // .scroller {
+  //   height: 100px;
+  // }
 }
 </style>

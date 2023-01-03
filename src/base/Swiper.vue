@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { addClass, bindEvent } from "utils/dom";
+import { addClass } from "utils/dom";
+import { initTouch } from "utils/touch";
 import { transPxToVw, clamp } from "utils/global";
 
 export default {
@@ -60,17 +61,18 @@ export default {
     this.$nextTick(() => {
       this._initSwiper();
     });
-    console.log("swiper.vue end");
+    console.log("swiper.vue mounted end");
   },
   watch: {
-    children() {
-      console.log("see the children");
-    },
+    // 响应式数组的变化
+    // children() {
+    //   console.log("see the children");
+    // },
   },
   methods: {
     _initSwiper() {
       this._setSwiperWidth();
-      this._initTouch();
+      this._initTouch(this.$refs.swiperGroup, this);
     },
     // 设置swiper中group的item的宽度，group的宽度以及offset偏移量
     _setSwiperWidth() {
@@ -90,19 +92,7 @@ export default {
       }
     },
     // 给el绑定touch事件
-    _initTouch() {
-      const el = this.$refs.swiperGroup;
-      const events = ["start", "move", "end"];
-      events.forEach((type) => {
-        let name = "touch";
-        const event = name + type;
-        const method =
-          "handle" +
-          name.replace(/^./, name[0].toUpperCase()) +
-          type.replace(/^./, type[0].toUpperCase());
-        bindEvent(el, event, (e) => this[method](e));
-      });
-    },
+    _initTouch: initTouch,
     handleTouchStart(e) {
       const drag = this.drag;
       const touch = e.touches[0];
@@ -191,14 +181,13 @@ export default {
 </script>
 
 <style lang="scss">
+@import "assets/scss/mixin.scss";
+
 .swiper {
   width: 100%;
   overflow: hidden;
   padding-bottom: var(--padding-col);
-  &::-webkit-scrollbar {
-    width: 0 !important;
-    height: 0 !important;
-  }
+  @include no-scrollbar();
   .swiper-group {
     display: flex;
     box-sizing: content-box;
@@ -218,11 +207,12 @@ export default {
       .swiper-item_title-m {
         font-size: var(--font-size-large);
         font-weight: 400;
+        @include inline-text-ellipsis(1);
       }
       .swiper-item_title-sub {
         color: var(--color-text-detail);
       }
-      img {
+      &_img {
         width: 100%;
         border-radius: 5px;
       }
