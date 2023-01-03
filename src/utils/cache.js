@@ -1,5 +1,5 @@
 // https://github.com/nbubna/store
-import store from 'store2'
+// import store from 'store2'
 
 const SEARCH_KEY = '__search__'
 const SEARCH_MAX_LENGTH = 10
